@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div class="left_menu">
+  <div class="left_menu">
+    <div class="left_menu2">
       <div class="logo">
         <img src="//pic.cpsdb.com/72747ee92c3fdf007ae76c8e259f46cf?w=120&f=png">
         <h3>
@@ -12,32 +12,35 @@
       <div class="left-nav">
         <nav>
           <ul>
-            <li v-for="(v, i) of menu">
+            <li v-for="(v, i) of menu" style="position: relative;">
                 <router-link v-if="v.link" :to="v.link">
-                  <img v-if="v.icon" class="xzyc" :src="v.icon" />
                   {{v.title}}
                 </router-link>
-                <a href="javascript:void 0" v-if="!v.link" class="link" @click="foldMenu('menu' + i, 'sidebar')">
+                <a href="javascript:void 0" v-if="!v.link" class="link" @click="foldMenu(i)">
                   {{v.title}}
+                  <img :src="v.icon" class="licon"></img>
+                  <span v-if="!v.link" class="glyphicon glyphicon-triangle-right lplay" :style="v.transformObject"></span>
                 </a>
               <!-- <span v-if="v.tip">{{v.tip}}</span> -->
-              <div class="sidebar" :id="'sidebar' + i">
-                <ul :id="'menu' + i" >
-                  <li v-for="(v2, m) of v.menu">
+              <div class="sidebar" :style="v.heightObject">
+                <ul :ref="'menu' + i">
+                  <li v-for="(v2, m) of v.menu" style="position: relative;">
                     <router-link v-if="v2.link" :to="v2.link">
-                      <img v-if="v2.icon" :src="v2.icon" />
                       {{v2.title}}
+                      <span v-if="v2.link" class="glyphicon glyphicon-minus lplay2"></span>
                     </router-link>
-                    <a v-if="!v2.link" href="javascript:void 0" @click="foldMenu('menu2' + m, 'subSidebar', 'menu' + i)">{{v2.title}}</a>
+                    <a v-if="!v2.link" href="javascript:void 0" @click="foldSubMenu(i, m)">
+                      {{v2.title}}
+                      <span v-if="!v2.link" class="glyphicon glyphicon-menu-right lplay2" :style="v2.transformObject"></span>
+                    </a>
                     <!-- <span v-if="v2.tip">{{v2.tip}}</span> -->
-                    <div class="subSidebar">
-                      <ul :id="'menu2' + m">
-                        <li v-for="v3 of v2.menu">
-                          <router-link v-if="v3.link" :to="v3.link">
-                          <img v-if="v3.icon" class="xzyc" :src="v3.icon" />
+                    <div class="subSidebar" :style="v2.heightObject">
+                      <ul :ref="'menu2' + i + m">
+                        <li v-for="v3 of v2.menu" style="position: relative;">
+                          <router-link :to="v3.link" style="position: relative;left: 30px;">
                             {{v3.title}}
+                            <span class="glyphicon glyphicon-minus lplay3"></span>
                           </router-link>
-                          <a v-if="!v3.link" href="javascript:void 0">{{v3.title}}</a>
                           <!-- <span v-if="v3.tip">{{v3.tip}}</span> -->
                         </li>
                       </ul>
@@ -54,30 +57,51 @@
 </template>
 
 <script>
+import homeIcon from '@/assets/img/home_icon@2x.png';
+import qiyeIcon from '@/assets/img/qiye_icon@2x.png';
+import erweimaIcon from '@/assets/img/erweima_icon@2x.png';
+import renzhengguanIcon from '@/assets/img/renzhengguan_icon@2x.png';
+import shenbaoIcon from '@/assets/img/shenbao_icon@2x.png';
+import noticeIcon from '@/assets/img/notice_icon@2x.png';
+import setupIcon from '@/assets/img/setup_icon@2x.png';
+import wodebutieIcon from '@/assets/img/wodebutie_icon@2x.png';
 
 export default {
   name: 'leftMemu',
-  props: {
-    value: {
-      type: String,
-    },
-  },
   data() {
     return {
       menu: [
         {
           title: '首　　页',
           link: '/index',
-          icon: '',
+          icon: homeIcon,
           menu: [],
         },
         {
           title: '企业管理',
-          icon: '',
+          icon: qiyeIcon,
+          open: false,
+          heightObject: {
+            transition: 'height 0.2s linear',
+            height: '0px',
+          },
+          transformObject: {
+            transition: 'transform 0.2s linear',
+            transform: 'rotate(0deg)',
+          },
           menu: [
             {
               title: '企业状态',
               icon: '',
+              open: false,
+              heightObject: {
+                transition: 'height 0.2s linear',
+                height: '0px',
+              },
+              transformObject: {
+                transition: 'transform 0.2s linear',
+                transform: 'rotate(0deg)',
+              },
               menu: [
                 {
                   title: '待初审',
@@ -108,6 +132,15 @@ export default {
             {
               title: '商品中心',
               icon: '',
+              open: false,
+              heightObject: {
+                transition: 'height 0.2s linear',
+                height: '0px',
+              },
+              transformObject: {
+                transition: 'transform 0.2s linear',
+                transform: 'rotate(0deg)',
+              },
               menu: [
                 {
                   title: '分类管理',
@@ -150,6 +183,15 @@ export default {
             {
               title: '工厂中心',
               icon: '',
+              open: false,
+              heightObject: {
+                transition: 'height 0.2s linear',
+                height: '0px',
+              },
+              transformObject: {
+                transition: 'transform 0.2s linear',
+                transform: 'rotate(0deg)',
+              },
               menu: [
                 {
                   title: '工厂列表',
@@ -168,6 +210,15 @@ export default {
             {
               title: '操作员工',
               icon: '',
+              open: false,
+              heightObject: {
+                transition: 'height 0.2s linear',
+                height: '0px',
+              },
+              transformObject: {
+                transition: 'transform 0.2s linear',
+                transform: 'rotate(0deg)',
+              },
               menu: [
                 {
                   title: '员工列表',
@@ -180,6 +231,15 @@ export default {
             {
               title: '经销商',
               icon: '',
+              open: false,
+              heightObject: {
+                transition: 'height 0.2s linear',
+                height: '0px',
+              },
+              transformObject: {
+                transition: 'transform 0.2s linear',
+                transform: 'rotate(0deg)',
+              },
               menu: [
                 {
                   title: '经销商列表',
@@ -193,7 +253,16 @@ export default {
         },
         {
           title: '二维码管理',
-          icon: '',
+          icon: erweimaIcon,
+          open: false,
+          heightObject: {
+            transition: 'height 0.2s linear',
+            height: '0px',
+          },
+          transformObject: {
+            transition: 'transform 0.2s linear',
+            transform: 'rotate(0deg)',
+          },
           menu: [
             {
               title: '二维码列表',
@@ -205,7 +274,16 @@ export default {
         },
         {
           title: '认证官管理',
-          icon: '',
+          icon: renzhengguanIcon,
+          open: false,
+          heightObject: {
+            transition: 'height 0.2s linear',
+            height: '0px',
+          },
+          transformObject: {
+            transition: 'transform 0.2s linear',
+            transform: 'rotate(0deg)',
+          },
           menu: [
             {
               title: '添加认证官',
@@ -223,7 +301,16 @@ export default {
         },
         {
           title: '申报管理',
-          icon: '',
+          icon: shenbaoIcon,
+          open: false,
+          heightObject: {
+            transition: 'height 0.2s linear',
+            height: '0px',
+          },
+          transformObject: {
+            transition: 'transform 0.2s linear',
+            transform: 'rotate(0deg)',
+          },
           menu: [
             {
               title: '申报机构',
@@ -253,10 +340,28 @@ export default {
         },
         {
           title: '系统消息',
-          icon: '',
+          icon: noticeIcon,
+          open: false,
+          heightObject: {
+            transition: 'height 0.2s linear',
+            height: '0px',
+          },
+          transformObject: {
+            transition: 'transform 0.2s linear',
+            transform: 'rotate(0deg)',
+          },
           menu: [
             {
               title: '公告通知',
+              open: false,
+              heightObject: {
+                transition: 'height 0.2s linear',
+                height: '0px',
+              },
+              transformObject: {
+                transition: 'transform 0.2s linear',
+                transform: 'rotate(0deg)',
+              },
               menu: [
                 {
                   title: '创建公告',
@@ -282,8 +387,23 @@ export default {
         },
         {
           title: '系统管理',
-          icon: '',
+          icon: setupIcon,
+          open: false,
+          heightObject: {
+            transition: 'height 0.2s linear',
+            height: '0px',
+          },
+          transformObject: {
+            transition: 'transform 0.2s linear',
+            transform: 'rotate(0deg)',
+          },
           menu: [
+            {
+              title: '菜单列表',
+              link: '/system/menu',
+              tip: 1,
+              icon: '',
+            },
             {
               title: '用户列表',
               link: '/system/user',
@@ -311,15 +431,25 @@ export default {
           ],
         },
         {
-          title: '补贴审核',
-          link: '/subsidy/pending',
-          tip: 1,
-          icon: '',
-          menu: [],
-        },
-        {
-          title: '我的补贴',
+          title: '补贴管理',
+          icon: wodebutieIcon,
+          open: false,
+          heightObject: {
+            transition: 'height 0.2s linear',
+            height: '0px',
+          },
+          transformObject: {
+            transition: 'transform 0.2s linear',
+            transform: 'rotate(0deg)',
+          },
           menu: [
+            {
+              title: '补贴审核',
+              link: '/subsidy/pending',
+              tip: 1,
+              icon: '',
+              menu: [],
+            },
             {
               title: '申请补贴',
               link: '/subsidy/apply',
@@ -343,76 +473,41 @@ export default {
       ],
     };
   },
-  computed: {
-  },
   methods: {
-    foldMenu(id, menu, id2) {
-      if (typeof window.getComputedStyle === 'undefined') return;
-      // 获取点击菜单
-      const e = document.getElementById(id);
-      // 复原点击外菜单
-      this.menuRecover(e, menu);
-      e.open = status || e.open;
-      // 打开关或闭子菜单
-      this.heightTransition(e);
-      if (id2) {
-        setTimeout(() => this.heightTransition(document.getElementById(id2), 'open'), 405);
-      }
-    },
-    menuRecover(e, menu) {
-      const s = this.siblings(e.parentNode, menu);
-      [...s].forEach((doc) => {
-        doc.style.height = '0px';
-        doc.open = false;
-      });
-    },
-    heightTransition(e, status) {
-      const height = window.getComputedStyle(e).height;
-      if (status === 'open') {
-        e.parentNode.open = false;
-      }
-      if (!e.parentNode.open) {
-        e.parentNode.style.height = height;
+    foldMenu(i, open) {
+      const e = this.menu[i];
+      if (open === 'open') e.open = false;
+      if (!e.open) {
+        e.transformObject.transform = 'rotate(90deg)';
+        e.heightObject.height = `${this.$refs[`menu${i}`][0].clientHeight}px`;
       } else {
-        e.parentNode.style.height = '0px';
+        e.transformObject.transform = 'rotate(0deg)';
+        e.heightObject.height = '0px';
       }
-      e.parentNode.open = !e.parentNode.open;
+      e.open = !e.open;
     },
-    // 获取兄弟节点
-    siblings(elem, menu) {
-      const a = [];
-      const b = document.getElementsByClassName(menu);
-      for (let i = 0; i < b.length; i += 1) {
-        if (b[i] !== elem) a.push(b[i]);
+    foldSubMenu(i, m) {
+      const e = this.menu[i].menu[m];
+      if (!e.open) {
+        e.transformObject.transform = 'rotate(90deg)';
+        e.heightObject.height = `${this.$refs[`menu2${i}${m}`][0].clientHeight}px`;
+      } else {
+        e.transformObject.transform = 'rotate(0deg)';
+        e.heightObject.height = '0px';
       }
-      return a;
+      e.open = !e.open;
+      setTimeout(() => this.foldMenu(i, 'open'), 201);
     },
-  },
-  watch: {
-  },
-  components: {
-  },
-  beforeCreate() {
-  },
-  cteated() {
-  },
-  beforeMount() {
-  },
-  mounted() {
-  },
-  beforeUpdate() {
-  },
-  updated() {
-  },
-  beforeDestroy() {
-  },
-  destroyed() {
   },
 };
 </script>
 
 <style lang="scss" scoped>
 @import '../../assets/css/mixin.scss';
+
+* {
+  font-size: 16px;
+}
 
 .left_menu {
     width: 240px;
@@ -424,8 +519,13 @@ export default {
     background-size: 100% 100%;
     text-align: center;
     z-index: 101;
-    overflow-y: auto;
-    overflow-x: hidden;
+    overflow: hidden;
+}
+.left_menu2 {
+  width: 257px;
+  overflow-y: auto;  
+  overflow-x: hidden;
+  height: 100%;
 }
 .logo {
     width: 240px;
@@ -447,108 +547,69 @@ export default {
 .left-nav{
     padding: 20px 0 60px 0;
     margin-top: 250px;
+    width: 240px;
 }
 
-/*ul > li {
-  padding: 10px;
+nav > ul > li > a {
+  font-weight: bold;
 }
-*/
 
 a {
     display: block;
     padding: 15px;
     color: #4e4e4e;
-    font-size: 16px;
-    border-left: 3px solid #fff;
 }
 
 a:focus {
     color: #015FE5;
-    border-left: 3px solid #015FE5;
 }
 
-.sidebar > ul > li:hover {
-    background: #e2e2e2;
+a:focus > img {
+    filter: drop-shadow(77px 0px 0px #015FE5);
+    left: -32px;
 }
 
-.subSidebar > ul > li > a {
-    font-size: 16px;
+.subSidebar > ul > li:hover {
+  background: #e2e2e2;
 }
 
-.sidebar {
-  height: 0px;overflow: hidden;transition: all 0.4s ease;
-  background: #fbfbfb;
+.subSidebar > ul > li:focus {
+  background: #e2e2e2;
 }
 
-.subSidebar {
-  height: 0px;overflow: hidden;transition: all 0.4s ease;
-  background: #090c0c0a;
+.sidebar, .subSidebar {
+  height: 0px;
+  overflow: hidden;
+  transition: height 0.2s ease;
 }
 
+.lplay {
+  position: absolute;
+  left: 20px;
+  top: 19px;
+  font-size: 12px;
+}
 
-/*webkit内核*/
-.scroll_content::-webkit-scrollbar {
-    width:0px;
-    height:0px;
+.lplay2 {
+  position: absolute;
+  left: 50px;
+  top: 19px;
+  font-size: 12px;
 }
-.scroll_content::-webkit-scrollbar-button    {
-    background-color:rgba(0,0,0,0);
+
+.lplay3 {
+  position: absolute;
+  left: 58px;
+  top: 19px;
+  font-size: 12px;
 }
-.scroll_content::-webkit-scrollbar-track     {
-    background-color:rgba(0,0,0,0);
+
+.licon {
+  position: absolute;
+  left: 45px;
+  top: 10px;
 }
-.scroll_content::-webkit-scrollbar-track-piece {
-    background-color:rgba(0,0,0,0);
-}
-.scroll_content::-webkit-scrollbar-thumb{
-    background-color:rgba(0,0,0,0);
-}
-.scroll_content::-webkit-scrollbar-corner {
-    background-color:rgba(0,0,0,0);
-}
-.scroll_content::-webkit-scrollbar-resizer  {
-    background-color:rgba(0,0,0,0);
-}
-.scroll_content::-webkit-scrollbar {
-    width:10px;
-    height:10px;
-}
-/*o内核*/
-.scroll_content .-o-scrollbar{
-    -moz-appearance: none !important;   
-    background: rgba(0,255,0,0) !important;  
-}
-.scroll_content::-o-scrollbar-button    {
-    background-color:rgba(0,0,0,0);
-}
-.scroll_content::-o-scrollbar-track     {
-    background-color:rgba(0,0,0,0);
-}
-.scroll_content::-o-scrollbar-track-piece {
-    background-color:rgba(0,0,0,0);
-}
-.scroll_content::-o-scrollbar-thumb{
-    background-color:rgba(0,0,0,0);
-}
-.scroll_content::-o-scrollbar-corner {
-    background-color:rgba(0,0,0,0);
-}
-.scroll_content::-o-scrollbar-resizer  {
-    background-color:rgba(0,0,0,0);
-}
-/*IE10,IE11,IE12*/
-.scroll_content{
-    -ms-scroll-chaining: chained;
-    -ms-overflow-style: none;
-    -ms-content-zooming: zoom;
-    -ms-scroll-rails: none;
-    -ms-content-zoom-limit-min: 100%;
-    -ms-content-zoom-limit-max: 500%;
-    -ms-scroll-snap-type: proximity;
-    -ms-scroll-snap-points-x: snapList(100%, 200%, 300%, 400%, 500%);
-    -ms-overflow-style: none;
-    overflow: auto;
-}
+
 
 
 </style>
