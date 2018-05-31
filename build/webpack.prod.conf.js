@@ -124,11 +124,6 @@ const webpackConfig = merge(baseWebpackConfig, {
         to: path.resolve(__dirname, '../dist/static')
       },
     ]),
-    new webpack.ProvidePlugin({
-        jQuery: 'jquery',
-        $: 'jquery',
-        "window.jQuery": 'jquery',
-    }),
   ]
 })
 

@@ -30,9 +30,6 @@ a, a:link, a:hover {
   cursor: pointer;
 }
 
-.btn:hover {
-  color: #fff !important;
-}
 .req {
   color: #f0820c;
   margin-right: 30px;
@@ -107,4 +104,49 @@ a, a:link, a:hover {
   border-radius: 18px;
 }
 
+/*--------------------------简易图标-------------------------------*/
+/*左三角形*/
+.triangle-left {
+  border-top: 5px solid transparent;
+  border-left: 7px solid #606F7D;
+  border-bottom: 5px solid transparent;
+}
+
+/*左空心三角形*/
+.triangle-Hollow-left {
+  border-top: 5px solid transparent;
+  border-left: 7px solid #606F7D;
+  border-bottom: 5px solid transparent;
+}
+.triangle-Hollow-left::after {
+  position: absolute;
+  left: -11px;
+  top: -5px;
+  border-left: 9px solid rgb(255, 255, 255);
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  content: "";
+}
+/*横线*/
+.horizontal-line {
+  height: 2px;
+  width: 10px;
+  background: #606F7D;
+}
+
+.content {
+  margin-left: 300px;
+  position: relative;
+  background: #F2F6F7;
+  z-index: 99;
+  top: 90px;
+  right: 60px;
+  padding: 30px;
+}
+.content_con {
+    background: #fff;
+    border-radius: 5px;
+    margin: 30px;
+    padding: 30px;
+}
 

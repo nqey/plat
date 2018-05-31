@@ -91,7 +91,7 @@ export default {
         window.sessionStorage.setItem('username', this.username);
         window.sessionStorage.setItem('avatar', res.data.data.logo);
         setCookie('platform_user', res.data.data.token, 1000 * 60);
-        this.$router.push('/agencymgt/list');
+        this.$router.push('/index');
       } else {
         this.lo = '登录';
       }
