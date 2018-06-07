@@ -2,35 +2,47 @@
   <div>
     <div class="header">
       <a style="display: block;height: 40px;width: 65px;" href="javascript:void 0">
-        <img src="//pic.cpsdb.com/72747ee92c3fdf007ae76c8e259f46cf?w=40&amp;h=40&amp;f=png" style="height: 40px;">
+        <img :src="imgSrv + avatar + '?w=40&amp;h=40&amp;f=png'" style="height: 40px;">
         <div class="caret"></div>
       </a>
       <div class="userModal">
-        <img src="//pic.cpsdb.com/72747ee92c3fdf007ae76c8e259f46cf?">
+        <img :src="imgSrv + avatar + '?f=png'">
         <h5>{{username}}</h5>
-        <button class="btn" @click="$store.commit('isModalVisible')">修改密码</button>
+        <button class="btn" @click="open">修改密码</button>
         <button class="btn" @click="logout">退出登录</button>
       </div>
     </div>
     <div class="bj"></div>
+    <v-modal ref="modal"></v-modal>
   </div>
 </template>
 
 <script>
 import { delCookie } from '@/config/cookie';
+import modal from '@/components/header/modal';
+import { IMAGE_SERVER_URL } from '@/config/env';
+
 
 export default {
   name: 'topHeader',
   data() {
     return {
+      imgSrv: IMAGE_SERVER_URL,
       username: window.sessionStorage.getItem('username'),
+      avatar: window.sessionStorage.getItem('avatar'),
     };
+  },
+  components: {
+    'v-modal': modal,
   },
   methods: {
     logout() {
       delCookie('platform_user');
       window.sessionStorage.clear();
       this.$router.push('/login');
+    },
+    open() {
+      this.$refs.modal.$refs.modal.toggle();
     },
   },
 };

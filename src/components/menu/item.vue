@@ -1,18 +1,18 @@
 <template>
-    <li style="position: relative;">
-      <router-link v-if="node.hash" :to="node.hash">
+    <li style="position: relative;" >
+      <router-link v-if="node.hash" :to="node.hash" :class="{ active: selected.indexOf(node.id) > -1 }" @click.native="handler(node.id)">
         {{node.text}}
         <div  v-if="level === 3" class="lplay3 horizontal-line"></div>
         <div  v-if="level === 2" class="lplay32 horizontal-line" :style="transformObject"></div>
       </router-link>
-      <a href="javascript:void 0" v-if="!node.hash" @click="foldMenu">
+      <a href="javascript:void 0" v-if="!node.hash" @click="handler(node.id);foldMenu();" :class="{ active: selected.indexOf(node.id) > -1 }">
         {{node.text}}
         <img v-if="node.icon" :src="icon[node.icon]" class="licon"></img>
         <div v-if="level === 1" class="lplay triangle-left" :style="transformObject"></div>
         <div v-if="level === 2" class="lplay2 triangle-Hollow-left" :style="transformObject"></div>
       </a>
       <ul v-if="isFolder" v-show="open">
-         <item v-for="(n, i) of node.nodes" :node="n" :level="level + 1" :key="i"></item>
+         <item v-for="(n, i) of node.nodes" :node="n" :level="level + 1" :key="i" :selected="selected" :handler="handler"></item>
       </ul>
     </li>
 </template>
@@ -35,6 +35,14 @@ export default {
     level: {
       type: Number,
       default: 1,
+    },
+    selected: {
+      type: Array,
+      default: () => [],
+    },
+    handler: {
+      type: Function,
+      default: () => '',
     },
   },
   data() {
@@ -84,10 +92,17 @@ a {
   padding: 15px;
   color: #4e4e4e;
 }
-a:focus {
+/*a:focus {
     color: #015FE5;
 }
 a:focus > img {
+    filter: drop-shadow(77px 0px 0px #015FE5);
+    left: -32px;
+}*/
+.active {
+    color: #015FE5;
+}
+.active > img {
     filter: drop-shadow(77px 0px 0px #015FE5);
     left: -32px;
 }

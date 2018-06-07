@@ -13,9 +13,12 @@ import VueQuillEditor from 'vue-quill-editor';
 import App from './App';
 import router from './router';
 import store from './store/store';
+import validator from './config/validator';
+
 
 Vue.config.productionTip = false;
-Vue.prototype.$xhr = http.xhr;
+Vue.prototype.$http = http;
+validator(Vue);
 
 /* eslint-disable no-new */
 new Vue({

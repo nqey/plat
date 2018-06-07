@@ -79,7 +79,7 @@
     },
     computed: {
       totalPages() {
-        return +(this.totalCount / this.pageSize)
+        return window.parseInt(this.totalCount / this.pageSize)
           + ((this.totalCount % this.pageSize) ? 1 : 0);
       },
     },
@@ -106,7 +106,7 @@
           pageNo = 1;
         }
 
-        const totalPages = +(this.totalCount / pageSize)
+        const totalPages = window.parseInt(this.totalCount / pageSize)
           + ((this.totalCount % pageSize) ? 1 : 0);
         if (pageNo > totalPages) {
           pageNo = totalPages;

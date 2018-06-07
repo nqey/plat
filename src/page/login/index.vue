@@ -86,11 +86,11 @@ export default {
         checknumber: this.checknumber,
       };
       this.lo = '正在登录...';
-      const res = await this.$xhr('post', DECLARE_LOGIN_DO_ADDRESS, data);
-      if (res.data.code === 0) {
+      const res = await this.$http.post(DECLARE_LOGIN_DO_ADDRESS, data);
+      if (res.success) {
         window.sessionStorage.setItem('username', this.username);
-        window.sessionStorage.setItem('avatar', res.data.data.logo);
-        setCookie('platform_user', res.data.data.token, 1000 * 60);
+        window.sessionStorage.setItem('avatar', res.data.logo);
+        setCookie('platform_user', res.data.token, 1000 * 60);
         this.$router.push('/index');
       } else {
         this.lo = '登录';

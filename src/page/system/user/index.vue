@@ -28,6 +28,7 @@
             field: 'logo',
             header: 'logo',
             width: 70,
+            html: true,
             formatter(row, index, value) {
               return `<img src='${getPictureUrl(value, { w: 40, h: 40, q: 40 })}'>`;
             },

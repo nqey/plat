@@ -416,10 +416,8 @@ export default {
       option.fansChart.clear();
       // 选择日期
       if (this.timeFlag === 0) {
-        if (this.fansDateRange) {
-          this.startDate = formatDate(this.fansDateRange[0], 'yyyy-MM-dd');
-          this.endDate = formatDate(this.fansDateRange[1], 'yyyy-MM-dd');
-        }
+        this.startDate = formatDate(this.fansDateRange[0], 'yyyy-MM-dd');
+        this.endDate = formatDate(this.fansDateRange[1], 'yyyy-MM-dd');
       } else {
         this.getDateDiff(this.timeFlag);
       }
@@ -428,9 +426,9 @@ export default {
         startDate: this.startDate,
         endDate: this.endDate,
       };
-      const res = await this.$xhr('get', FANS_ADDRESS, data);
-      if (res.data.success) {
-        const d = that.dataPackage(res.data.data);
+      const res = await this.$http.get(FANS_ADDRESS, data);
+      if (res.success) {
+        const d = that.dataPackage(res.data);
         // 粉丝数据组装
         const fansOption = that.getFansLineChartOption(d);
         // 重新绘制图
@@ -496,9 +494,9 @@ export default {
         startDate: this.startDate,
         endDate: this.endDate,
       };
-      const res = await this.$xhr('get', ENTERPRISE_ADDRESS, data);
-      if (res.data.success) {
-        const data2 = that.dataPackage(res.data.data);
+      const res = await this.$http.get(ENTERPRISE_ADDRESS, data);
+      if (res.success) {
+        const data2 = that.dataPackage(res.data);
         // 企业数据组装
         const enterpriseOption = that.getEnterpriseLineChartOption(data2);
         // 重新绘制图
@@ -550,9 +548,9 @@ export default {
         startDate: this.startDate,
         endDate: this.endDate,
       };
-      const res = await this.$xhr('get', QR_CODE_ADDRESS, data);
-      if (res.data.success) {
-        const d = that.dataPackage(res.data.data);
+      const res = await this.$http.get(QR_CODE_ADDRESS, data);
+      if (res.success) {
+        const d = that.dataPackage(res.data);
         // 粉丝数据组装
         const qrCodeOption = that.getQrCodeLineChartOption(d);
         // 重新绘制图
@@ -613,10 +611,10 @@ export default {
         startDate: this.startDate,
         endDate: this.endDate,
       };
-      const res = await this.$xhr('get', FACTORY_ADDRESS, param);
-      if (res.data.success) {
-        const fmgc = res.data.data[0].fmgc;
-        const scgc = res.data.data[0].scgc;
+      const res = await this.$http.get(FACTORY_ADDRESS, param);
+      if (res.success) {
+        const fmgc = res.data[0].fmgc;
+        const scgc = res.data[0].scgc;
         const data = that.dataPackage(fmgc);
         const scgcData = that.dataPackage(scgc);
         data.yData2 = scgcData.yData;
@@ -687,9 +685,9 @@ export default {
         startDate: this.startDate,
         endDate: this.endDate,
       };
-      const res = await this.$xhr('get', GOODS_ADDRESS, param);
-      if (res.data.success) {
-        const data = that.dataPackage(res.data.data);
+      const res = await this.$http.get(GOODS_ADDRESS, param);
+      if (res.success) {
+        const data = that.dataPackage(res.data);
         // 商品数据组装
         const goodsOption = that.getGoodsLineChartOption(data);
         // 重新绘制图
@@ -737,9 +735,9 @@ export default {
     // 实时状态
     async setMakeStatus() {
       const that = this;
-      const res = await this.$xhr('get', STATUS_ADDRESS);
-      if (res.data.success) {
-        const data = res.data.data;
+      const res = await this.$http.get(STATUS_ADDRESS);
+      if (res.success) {
+        const data = res.data;
         // 待审核企业
         this.pendingEnterprise = data[0];
         // 待审核经销商
@@ -751,9 +749,9 @@ export default {
     },
     async makeSummary() {
       const that = this;
-      const res = await this.$xhr('get', SUMMARY_ADDRESS);
-      if (res.data.success) {
-        const data = res.data.data[0];
+      const res = await this.$http.get(SUMMARY_ADDRESS);
+      if (res.success) {
+        const data = res.data[0];
         // 扫码数量
         that.todayTotal = data.total;
         // 经销商验货
@@ -772,6 +770,7 @@ export default {
     },
     timeLight(time) {
       this.timeFlag = time;
+      window.console.log(time === 0);
       if (time === 0) {
         this.isFansDisabled = false;
       } else {
@@ -785,9 +784,9 @@ export default {
         startDate: this.startDate,
         endDate: this.endDate,
       };
-      const res = await this.$xhr('get', FANS_NUMBER_ADDRESS, data);
-      if (res.data.success) {
-        const fansNumberList = res.data.data;
+      const res = await this.$http.get(FANS_NUMBER_ADDRESS, data);
+      if (res.success) {
+        const fansNumberList = res.data;
         // 新增关注人数
         this.fc.fc1 = fansNumberList[0];
         // 取消关注人数

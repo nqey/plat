@@ -1,10 +1,10 @@
-const ENTERPRISE_PAY_TYPE = {
+export const ENTERPRISE_PAY_TYPE = {
   wait: '待支付',
   success: '支付成功',
   failed: '支付失败',
 };
 
-const ENTERPRISE_EVENT = {
+export const ENTERPRISE_EVENT = {
   create: '创建',
   pay: '支付',
   confirm: '通过',
@@ -15,13 +15,13 @@ const ENTERPRISE_EVENT = {
   pending2Modify: '复审修改',
 };
 
-const PAY_METHOD = {
+export const PAY_METHOD = {
   alipayWeb: '支付宝',
   wechatpayQrcode: '微信',
   free: '全额补贴',
 };
 
-const ENTERPRISE_TYPE = {
+export const ENTERPRISE_TYPE = {
   wait: '待支付',
   pending: '待初审',
   collectting: '待认证官上门采集',
@@ -32,13 +32,13 @@ const ENTERPRISE_TYPE = {
   passed: '通过审核',
 };
 
-const ID_TYPE = {
+export const ID_TYPE = {
   1: '身份证',
   2: '驾驶证',
   3: '军官证',
 };
 
-const CODE_SCAN_EVENT = {
+export const CODE_SCAN_EVENT = {
   create: '创建',
 
   // 工厂事件
@@ -55,7 +55,7 @@ const CODE_SCAN_EVENT = {
   scanValidate: '扫码验真伪',
 };
 
-const CODE_SCAN_APP_USER = {
+export const CODE_SCAN_APP_USER = {
   zhsapp: '用户',
   franchiserapp: '经销商',
   factoryapp: '工厂员工',
@@ -63,7 +63,7 @@ const CODE_SCAN_APP_USER = {
   other: '其他',
 };
 
-const FRANCHISER_USER_STATE = {
+export const FRANCHISER_USER_STATE = {
   unusering: '信息未完善',
   wait: '信息待审核',
   failed: '审核未通过',
@@ -71,19 +71,19 @@ const FRANCHISER_USER_STATE = {
   lock: '锁定',
 };
 
-const FACTORY_TYPE = {
+export const FACTORY_TYPE = {
   1: '生产工厂',
   2: '赋码工厂',
 };
 
-const FACTORY_STATE = {
+export const FACTORY_STATE = {
   pending: '待审核',
   passed: '已审核',
   // deleted: '已作废',
   failed: '未通过',
 };
 
-const FACTORY_EVENT = {
+export const FACTORY_EVENT = {
   create: '创建',
   modify: '修改',
   submit: '提交审核',
@@ -92,49 +92,49 @@ const FACTORY_EVENT = {
   reject: '不通过审核',
 };
 
-const TEMPLATE_TYPE = {
+export const TEMPLATE_TYPE = {
   goods: '商品模板',
   push: '推送模板',
 };
 
-const VALID_PERIOD_TYPE = {
+export const VALID_PERIOD_TYPE = {
   year: '年',
   month: '个月',
   day: '天',
 };
 
-const getShelflife = (value, type) => {
+export const getShelflife = (value, type) => {
   if (value === -1) {
     return '永久';
   }
   return value + VALID_PERIOD_TYPE[type];
 };
 
-const GOODS_STATE = {
+export const GOODS_STATE = {
   onshelf: '上架',
   deleted: '删除',
   offshelf: '下架',
 };
 
-const CODE_TYPE = {
+export const CODE_TYPE = {
   1: '数据一物一码',
   2: '图像一物一码',
   3: '普通图像',
 };
 
-const CODE_DETAIL_STATE = {
+export const CODE_DETAIL_STATE = {
   normal: '正常',
   highRisk: '异常',
 };
 
-const PLATFORM_USER_TYPE = {
+export const PLATFORM_USER_TYPE = {
   1: '平台',
   2: '省级服务中心',
   3: '市级服务中心',
   4: '市场部',
 };
 
-const CODE_STATE = {
+export const CODE_STATE = {
   pending: '待审核',
   wait: '待支付',
   prepared: '可生产',
@@ -143,24 +143,8 @@ const CODE_STATE = {
   abnormal: '异常',
 };
 
-export {
-  ENTERPRISE_PAY_TYPE,
-  ENTERPRISE_EVENT,
-  PAY_METHOD,
-  ENTERPRISE_TYPE,
-  ID_TYPE,
-  CODE_SCAN_EVENT,
-  CODE_SCAN_APP_USER,
-  FRANCHISER_USER_STATE,
-  FACTORY_TYPE,
-  FACTORY_STATE,
-  FACTORY_EVENT,
-  TEMPLATE_TYPE,
-  VALID_PERIOD_TYPE,
-  getShelflife,
-  GOODS_STATE,
-  CODE_TYPE,
-  CODE_DETAIL_STATE,
-  PLATFORM_USER_TYPE,
-  CODE_STATE,
+export const TRAFFIC_LIGHT = {
+  red: 'color: red',
+  yellow: 'color: #ec971f',
+  green: 'color: #5cb85c',
 };

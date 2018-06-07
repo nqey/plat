@@ -21,7 +21,7 @@ html, body {
   height: 100%;
   font-family: "微软雅黑", "宋体";
   background: #fff;
-  min-width: 1024px;
+  min-width: 1366px;
 }
 
 a, a:link, a:hover {
@@ -138,15 +138,26 @@ a, a:link, a:hover {
   margin-left: 300px;
   position: relative;
   background: #F2F6F7;
-  z-index: 99;
   top: 90px;
   right: 60px;
   padding: 30px;
+  min-width: 1306px;
 }
 .content_con {
     background: #fff;
     border-radius: 5px;
     margin: 30px;
     padding: 30px;
+    min-width: 1086px;
+}
+.el-date-editor.el-input, .el-date-editor.el-input__inner {
+  width: 170px;
 }
 
+.modal-content {
+  top: 100px;
+}
+
+.required::after {
+  content: '必须输入！！！',
+}

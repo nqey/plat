@@ -12,7 +12,7 @@
       <div class="left-nav">
         <nav>
           <ul>
-            <v-item v-for="(m, i) of nodes" :node="m" :key="i"></v-item>
+            <v-item v-for="(m, i) of nodes" :node="m" :key="i" :selected="selected" :handler="handler"></v-item>
           </ul>
         </nav>
       </div>
@@ -27,14 +27,18 @@ export default {
   name: 'leftMemu',
   data() {
     return {
+      selected: [],
       nodes: null,
     };
   },
   methods: {
+    handler(id) {
+      this.selected = [id];
+    },
     async initMenu() {
-      const res = await this.$xhr('get', MENU_MINE);
-      if (res.data.success) {
-        this.nodes = res.data.data;
+      const res = await this.$http.get(MENU_MINE);
+      if (res.success) {
+        this.nodes = res.data;
       }
     },
   },

@@ -10,7 +10,7 @@
   import datagrid from '@/components/datagrid';
 
   export default {
-    name: 'user',
+    name: 'userEdit',
     data() {
       return {};
     },

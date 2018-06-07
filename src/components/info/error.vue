@@ -17,12 +17,12 @@ export default {
 
 </script>
 <style scoped>
-.errMsg{
+.errMsg {
   position: fixed;
   top: 20px;
   margin: 0 25%;
   text-align: center;
-  z-index: 1000;
+  z-index: 1200;
   width: 50%;
 }
 </style>

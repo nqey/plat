@@ -1,7 +1,7 @@
 <template>
   <div class="content">
     <div class="content_con">
-      <v-datagrid :toolbar="toolbar" :columns="columns" :data-url="dataUrl" :count-url="countUrl"></v-datagrid>
+      <v-datagrid :toolbar="toolbar" :columns="columns" :data-url="dataUrl" :count-url="countUrl" ></v-datagrid>
     </div>
   </div>
 </template>

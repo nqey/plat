@@ -4,61 +4,36 @@
       商品分类筛选
       <span class="icon expand-icon glyphicon glyphicon-plus"></span>
     </button>
-    <v-item v-show="open" v-for="node of nodes" :node="node" :key="node.id"></v-item>
+    <v-item v-show="open" v-for="node of nodes" :node="node" :key="node.id" :getTreeNode="getTreeNode" :selected="selected"></v-item>
   </div>
 </template>
 
 <script>
 import item from '@/components/tree/item';
-import { CATEGORY_TREE } from '@/config/env';
 
 export default {
   name: 'tree',
   data() {
     return {
       open: false,
-      nodes: null,
     };
   },
-  computed: {
-  },
-  methods: {
-    async init() {
-      const res = await this.$xhr('get', CATEGORY_TREE);
-      if (res.data.success) {
-        this.nodes = res.data.data;
-      }
+  props: {
+    getTreeNode: {
+      type: Function,
+      default: null,
     },
-    setOpen() {
-      this.open = !this.open;
-      if (this.open) {
-        this.fl.height = window.getComputedStyle(this.$refs.unfold).height;
-      } else {
-        this.fl.height = '0px';
-      }
+    nodes: {
+      type: Array,
+      default: null,
     },
-  },
-  watch: {
+    selected: {
+      type: Array,
+      default: [],
+    },
   },
   components: {
     'v-item': item,
-  },
-  beforeCreate() {
-  },
-  cteated() {
-  },
-  beforeMount() {
-  },
-  mounted() {
-    this.init();
-  },
-  beforeUpdate() {
-  },
-  updated() {
-  },
-  beforeDestroy() {
-  },
-  destroyed() {
   },
 };
 </script>

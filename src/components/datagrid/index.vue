@@ -37,7 +37,8 @@
 
         <td class="datagrid-body-cell" v-for="(col, colIndex) in columns"
             :style="{ width: col.width > 0 ? (col.width + 'px') : 'auto'}">
-          <div v-html="computeValue(col, row, rowIndex)"></div>
+          <div v-if="col.html" v-html="computeValue(col, row, rowIndex)"></div>
+          <div v-if="!col.html"> {{computeValue(col, row, rowIndex)}}</div>
           <div v-if="col.actions != null && col.actions.length > 0">
             <a class="datagrid-action" v-for="(action, index) in col.actions"
                v-if="action.show != null ? action.show(row) === true: true"
@@ -68,6 +69,7 @@
 * title:String        - title，默认没有
 * sortBy:String       - 按什么字段排序，默认不排序
 * orderBy:String      - ASC（正序）/DESC（倒序）排序，默认不排序
+* toolbar:Array       - 工具栏，格式为：{title:'toolbar',handler(){ doSomething }}
 * dataUrl:String      - 数据请求的url路径，不设置则不请求数据
 * countUrl:String     - 数据条数请求的url路径，当pageable为true时有效，不设置则不请求总条数（分页不起效）
 * params:String       - 请求参数，当改变时，自动请求数据
@@ -135,12 +137,12 @@
       // 格式为：{title:'toolbar',handler(){ doSomething }}
       toolbar: {
         type: Array,
-        default: [],
+        default: () => [],
       },
       // 头部 格式：{ field: 'id', header: '序号', sort: 'id', width: 50 }
       columns: {
         type: Array,
-        default: [],
+        default: () => [],
         required: true,
       },
       // 请求数据的url
@@ -218,7 +220,7 @@
       params() {
         this.paramsChanged = true;
         this.requestParams = Object.assign({}, this.params,
-          this.requestParams, this.getPagerParams());
+          this.getPagerParams());
         // 这里需要pager初始化；
         this.total = 0;
         this.page = 1;
@@ -261,7 +263,7 @@
       },
       getPagerParams() {
         // 支持分页的时候才有分页参数
-        return this.pageable ? { page: this.page, rows: this.rows } : {};
+        return this.pageable ? ({ page: this.page, rows: this.rows }) : ({});
       },
       getOrderParams() {
         const p = {};
@@ -282,21 +284,21 @@
             return;
           }
 
-          const res = await this.$xhr('get', this.dataUrl, this.requestParams);
-          if (res.data.success) {
-            if (this.onLoadSuccess != null && this.onLoadSuccess(res.data.data) === false) {
+          const res = await this.$http.get(this.dataUrl, this.requestParams);
+          if (res.success) {
+            if (this.onLoadSuccess != null && this.onLoadSuccess(res) === false) {
               return;
             }
 
-            this.data = res.data.data;
+            this.data = res.data;
           }
         }
 
         // 查询总条数
         if (this.pageable && this.countUrl && this.paramsChanged) {
-          const res = await this.$xhr('get', this.countUrl, this.requestParams);
-          if (res.data.success) {
-            this.total = res.data.data;
+          const res = await this.$http.get(this.countUrl, this.requestParams);
+          if (res.success) {
+            this.total = res.data;
           }
 
           this.paramsChanged = false;
@@ -366,7 +368,7 @@
 
   .datagrid-toolbar-button {
     color: #fff;
-    background-color: #4786ff;
+    background-color: #337ab7;
     display: inline-block;
     padding: 6px 12px;
     margin: 0 10px;
@@ -383,7 +385,7 @@
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-    border: 1px solid #4786ff;
+    border: 1px solid #2e6da4;
     border-radius: 4px;
   }
 
@@ -408,7 +410,7 @@
   }
 
   .datagrid-header-cell {
-    text-align: left;
+    text-align: center;
     line-height: 1.42857143;
     cursor: pointer;
     padding: 15px;
@@ -420,7 +422,7 @@
   }
 
   .datagrid-body {
-    text-align: left;
+    text-align: center;
   }
 
   .datagrid-body-row {

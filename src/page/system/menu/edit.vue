@@ -1,23 +1,21 @@
 <template>
   <div class="content">
     <div class="content_con">
-
     </div>
   </div>
 </template>
 
 <script>
-  import datagrid from '@/components/datagrid';
 
   export default {
-    name: 'user',
+    name: 'menu-edit',
     data() {
-      return {};
+      return {
+        data: {},
+      };
     },
     methods: {},
-    components: {
-      'v-datagrid': datagrid,
-    },
+    components: {},
   };
 </script>
 

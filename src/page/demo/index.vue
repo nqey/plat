@@ -10,6 +10,10 @@
 
       <div @click="onclick">点我获取datagrid的全局句柄</div>
 
+      <fade></fade>
+
+      <v-node :level="1">Hello world!</v-node>
+
       <v-datagrid :toolbar="toolbar" :columns="columns" :checkable="checkable"
                   :data-url="dataUrl" :count-url="countUrl" ref="dg"
                   :onBeforeLoad="onBeforeLoad" :onLoadSuccess="onLoadSuccess" :onBeforeRenderRow="onBeforeRenderRow"
@@ -76,9 +80,7 @@
                 return true;
               },
               // 处理器，参数：row-当前行数据，index当前行所属数据的第几行
-              handler(row, index) {
-                window.console.log(row, index);
-              },
+              handler: this.view1,
             }, {
               text: '【查看2】',
               show(row) {
@@ -92,8 +94,15 @@
       };
     },
     methods: {
+      view1(row, index) {
+        this.$set(row, 'id', row.id + 1);
+        window.console.log(row, index);
+      },
       onclick() {
         window.dg = this.$refs.dg;
+      },
+      alert() {
+        window.console.log('alert');
       },
     },
     components: {
@@ -117,12 +126,48 @@
                     </footer>
                   </div>`,
       },
+      fade: {
+        data() {
+          return {
+            show: true,
+          };
+        },
+        template: `<div id="demo">
+                  <button v-on:click="show = !show">
+                    Toggle
+                  </button>
+                  <transition name="fade">
+                    <p v-if="show">hello</p>
+                  </transition>
+                </div>`,
+      },
+      'v-node': {
+        methods: {},
+        render(createElement) {
+          return createElement(`h${this.level}`, [createElement('slot')]);
+        },
+        props: {
+          level: {
+            type: Number,
+            required: true,
+          },
+        },
+      },
     },
   }
   ;
 </script>
 
 <style scoped>
+  .fade-enter-to, .fade-leave {
+    opacity: 1;
+  }
 
+  .fade-enter-active, .fade-leave-active {
+    transition: opacity .5s;
+  }
 
+  .fade-enter, .fade-leave-to {
+    opacity: 0;
+  }
 </style>
