@@ -13,7 +13,7 @@
               <div style="width: 170px;display: inline-block;"><el-input v-model="organizName" placeholder="请输入机构名称"></el-input></div>
             </div>
             <div class="form-group">
-              <label for="">时间</label>
+              <label for="">时间段</label>
               <el-date-picker
                 v-model="startTime"
                 type="date"
@@ -38,11 +38,12 @@
               </el-select>
             </div>
             <div class="form-group">
-            <el-button type="primary" @click="search(1, 2)">搜索</el-button>
+            <el-button class="width" type="primary" @click="search(1, 2)">搜索</el-button>
+            <el-button class="width" type="primary" @click="claer(1, 2)">清除</el-button>
             </div>
           </form>
         </div>
-        <span v-if="lists.length === 0">无数据</span>
+        <div v-if="lists.length === 0" style="text-align: center;color: #999;font-size: 18px;">暂无相关数据！</div>
         <div v-show="lists.length > 0">
           <table class="table table-hover">
             <thead>
@@ -94,11 +95,11 @@ export default {
       page: 1,
       rows: 10,
       pages: 0,
-      name: '',
-      organizName: '',
+      name: null,
+      organizName: null,
       startTime: '',
       endTime: '',
-      state: '',
+      state: null,
       count: 0,
       status: {
         '': '请选择',
@@ -176,6 +177,47 @@ export default {
         this.count = res2.data;
       }
     },
+    // 清除筛选条件
+    async claer(page, type) {
+      const param = {};
+      this.name = null;
+      this.organizName = null;
+      this.state = null;
+      if (this.startTime) {
+        param.startTime = new Date(this.startTime).getTime();
+      }
+      if (this.endTime) {
+        param.endTime = new Date(this.endTime).getTime();
+      }
+      param.page = page;
+      param.rows = this.rows;
+      const res = await this.$http.get(PLATFORM_GET_DECLARER_ENTERPRISE_QUERY, param);
+      if (res.success) {
+        this.lists = res.data;
+        this.lists.forEach((o) => {
+          // o.state = this.status[o.state];
+          o.createTime = formatDate(new Date(o.createTime), 'yyyy-MM-dd hh:mm:ss');
+        });
+      }
+      const param2 = {};
+      param2.name = this.name;
+      param2.organizName = this.organizName;
+      if (this.startTime) {
+        param2.startTime = new Date(this.startTime).getTime();
+      }
+      if (this.endTime) {
+        param2.endTime = new Date(this.endTime).getTime();
+      }
+      param2.state = this.state;
+      if (type === 2) {
+        this.pages = 0;
+      }
+      const res2 = await this.$http.get(PLATFORM_GET_DECLARER_ENTERPRISE_COUNT, param2);
+      if (res2.success) {
+        this.pages = Math.ceil(res2.data / param.rows);
+        this.count = res2.data;
+      }
+    },
   },
   components: {
     'v-pagination': pagination,
@@ -194,7 +236,9 @@ export default {
 <style lang="scss" scoped>
 @import '../../../assets/css/mixin.scss';
 
-
+.width{
+  width: 100px;
+}
 .current a {
   color: #000 !important;
 }
@@ -218,8 +262,7 @@ export default {
   margin-bottom: 20px;
 }
 .index_table_search .form-group {
-  margin-right:20px;
-  margin-bottom: 15px;
+  margin: 15px 10px;
 }
 .index_table_search input, .index_table_search select {
   padding: 5px 10px;

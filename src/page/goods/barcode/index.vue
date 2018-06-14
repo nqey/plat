@@ -8,7 +8,7 @@
           <div class="form-inline row clearfix">
               <div class="form-group col-md-4">
                   <label>条码</label>
-                  <input type="text" v-qc-validator="validator" class="form-control" v-model="barcode" placeholder="请输入条码">
+                  <input type="text" class="form-control" v-model="barcode" placeholder="请输入条码">
               </div>
               <div class="form-group col-md-4">
                   <button type="button" class="search btn-primary btn datagrid-search" @click="search">
@@ -40,14 +40,6 @@ export default {
   name: 'barcode',
   data() {
     return {
-      validator: {
-        type: ['required', 'maxlen'],
-        message: {
-          required: 'aaa',
-          maxlen: 'bbb',
-        },
-        length: 2,
-      },
       modalHandler: () => {
         this.datagridParams = {};
       },

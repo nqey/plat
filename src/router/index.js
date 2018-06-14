@@ -191,6 +191,11 @@ const router = new Router({
       component: r => require.ensure([], require => r(require('@/page/authofficer/list/view')), 'authofficerView'),
     },
     {
+      path: '/franchiser/list',
+      name: 'franchiserList',
+      component: r => require.ensure([], require => r(require('@/page/franchiser/list')), 'franchiserList'),
+    },
+    {
       path: '/franchiser/list/scan/:id',
       name: 'franchiserScan',
       component: r => require.ensure([], require => r(require('@/page/franchiser/list/scan')), 'franchiserScan'),
@@ -274,6 +279,12 @@ const router = new Router({
       path: '/template/list',
       name: 'goodstemplate',
       component: r => require.ensure([], require => r(require('@/page/goods/template')), 'goodstemplate'),
+    },
+    // 投诉列表
+    {
+      path: '/complaint/list',
+      name: 'complaintList',
+      component: r => require.ensure([], require => r(require('@/page/complaint/list')), 'complaintList'),
     },
   ],
 });

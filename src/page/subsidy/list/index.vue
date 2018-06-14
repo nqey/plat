@@ -2,8 +2,12 @@
   <div class="content">
           <div class="content_con">
               <div class="export">导出</div>
-              <v-datagrid :toolbar="toolbar" :columns="columns" :checkable="checkable"
-                  :data-url="dataUrl" :count-url="countUrl"></v-datagrid>
+              <v-datagrid 
+                  :columns="columns"
+                  :checkable="checkable"
+                  :data-url="dataUrl"
+                  :count-url="countUrl">
+              </v-datagrid>
           </div>
       </div>
   </div>
@@ -13,23 +17,11 @@
   import datagrid from '@/components/datagrid';
 
   export default {
-    name: 'user',
+    name: 'subsidyList',
     data() {
       return {
         dataUrl: '',
         countUrl: '',
-        toolbar: [{
-          title: '查询',
-          handler() {
-            window.console.log('查询');
-          },
-        }],
-        exp: [{
-          title: '导出',
-          handler() {
-            window.console.log('导出');
-          },
-        }],
         checkable: true,
         columns: [{ field: 'name', header: '企业名称', sort: 'name', width: 300 },
           { field: 'cardNumber', header: '数码量', width: 300 },
@@ -71,17 +63,5 @@
 
 <style lang="scss" scoped>
 @import '../../../assets/css/mixin.scss';
-.export{
-  width: 70px;
-  height: 34px;
-  line-height: 34px;
-  display: inline-block;
-  position: absolute;
-  border-radius: 5px;
-  text-align: center;
-  left: 1270px;
-  color: #fff;
-  margin: 15px 0;
-  background-color: #4786ff;
-}
+
 </style>

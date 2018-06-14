@@ -1,4 +1,4 @@
-<!-- <template>
+<template>
   <div class="content">
     <div class="content_con">
     </div>
@@ -195,4 +195,4 @@ a:hover {
 }
 
 
-</style> -->
+</style>

@@ -1,9 +1,16 @@
 <template>
   <div class="content">
     <div class="content_con">
-      <div class="export">导出</div>
-      <v-datagrid :toolbar="toolbar" :columns="columns" :checkable="checkable"
-                  :data-url="dataUrl" :count-url="countUrl"></v-datagrid>
+      <div style="width: 1250px;">
+          <div class="hos height">公告列表</div>
+        <div class="hos" style="text-align: right;">
+          <button class="export">导出</button>
+        </div>
+      </div>
+      <v-datagrid :columns="columns"
+                  :data-url="dataUrl"
+                  :count-url="countUrl">
+      </v-datagrid>
     </div>
   </div>
 </template>
@@ -18,13 +25,6 @@
       return {
         dataUrl: '',
         countUrl: '',
-        toolbar: [{
-          title: '公告列表',
-          handler() {
-            window.console.log('公告列表');
-          },
-        }],
-        checkable: true,
         columns: [{ field: 'name', header: '标题', sort: 'name', width: 230 },
           { field: 'enterprise', header: '企业', sort: 'name', width: 230 },
           { field: 'code', header: '状态', sort: 'name', width: 230 },
@@ -75,17 +75,25 @@
 
 <style lang="scss" scoped>
 @import '../../../assets/css/mixin.scss';
+
 .export{
   width: 70px;
   height: 34px;
   line-height: 34px;
-  display: inline-block;
-  position: absolute;
   border-radius: 5px;
   text-align: center;
-  left: 1320px;
   color: #fff;
+  border: none;
   margin: 15px 0;
   background-color: #4786ff;
+}
+.hos{
+  width: 50%;
+  height: 64px;
+  float: left;
+}
+.height{
+  line-height: 64px;
+  font-size: 25px;
 }
 </style>

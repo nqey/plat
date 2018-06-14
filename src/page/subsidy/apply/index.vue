@@ -4,7 +4,7 @@
       <div style="width: 100%;height: 300px;text-align: center;">
         <img :src="subsidies" style="width: 124px;height: 124px;margin: 125px auto 0;">
       </div>
-      <div class="money center"><span v-for="money in moneys">{{money.amount}}</span>元</div>
+      <div class="money center"><span v-for="money in moneys">{{money}}</span>元</div>
       <div class="mx center">
         <router-link to="/subsidy/list">
           查看补贴明细
@@ -21,7 +21,7 @@
 
 <script>
   import subsidies from '@/assets/img/subsidies.png';
-  import { } from '@/config/env';
+  import { ORGANIZ_SUBSIDY_AMOUNT } from '@/config/env';
 
   export default {
     name: 'apply',
@@ -42,18 +42,10 @@
     },
     methods: {
       async getData() {
-        // const param = {
-        //   param1: '',
-        //   param2: '',
-        //   param3: '',
-        // };
-        // const res = await this.$http.get(APPLY_WITHDRAWALS_ADDRESS, param);
-        // if (res.sucess) {
-        //   this.list = res;
-        // }
-        this.moneys = [{
-          amount: '15000,00',
-        }];
+        const res = await this.$http.get(ORGANIZ_SUBSIDY_AMOUNT);
+        if (res.sucess) {
+          this.money = res.data.amount;
+        }
       },
     },
   };

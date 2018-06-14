@@ -42,7 +42,8 @@
         <div class="datagrid-title">
           <v-datagrid :columns="columns"
                       :data-url="dataUrl"
-                      :count-url="countUrl">
+                      :count-url="countUrl"
+                      :params="datagridParams">
           </v-datagrid>
         </div>
       </div>
@@ -52,6 +53,8 @@
 
 <script>
   import datagrid from '@/components/datagrid';
+  import { PLATFORM_EMPLOYEE_QUERY, PLATFORM_EMPLOYEE_QUERY_COUNT } from '@/config/env';
+  import { formatDate } from '@/config/utils';
 
   export default {
     name: 'index',
@@ -62,33 +65,43 @@
     },
     data() {
       return {
-        name: '',
-        cellphone: '',
-        duty: '',
-        factoryName: '',
+        datagridParams: {
+          name: null,
+          cellphone: null,
+          duty: null,
+          factoryName: null,
+          page: 1,
+          rows: 20,
+        },
+        name: null,
+        cellphone: null,
+        duty: null,
+        factoryName: null,
         liveAddress: '',
-        dataUrl: '',
-        countUrl: '',
-        toolbar: [{
-          title: '员工列表',
-          handler() {
-            window.console.log('员工列表');
-          },
-        }],
-        checkable: true,
+        stateObj: {
+          0: '不可用',
+          1: '可用',
+        },
+        dataUrl: PLATFORM_EMPLOYEE_QUERY,
+        countUrl: PLATFORM_EMPLOYEE_QUERY_COUNT,
         columns: [{ field: 'name', header: '姓名', sort: 'name', width: 100 },
-          { field: 'tel', header: '手机号', width: 180 },
-          { field: 'id_card', header: '身份证号', width: 250 },
-          { field: 'responsibilities', header: '职责', width: 100 },
-          { field: 'code', header: '状态', width: 100 },
-          { field: 'category', header: '所属工厂', width: 300 },
+          { field: 'cellphone', header: '手机号', width: 180 },
+          { field: 'idNumber', header: '身份证号', width: 250 },
+          { field: 'duty', header: '职责', width: 100 },
+          {
+            field: 'state',
+            header: '状态',
+            width: 100,
+            formatter: row => this.stateObj[row.state],
+          },
+          { field: 'factoryName', header: '所属工厂', width: 300 },
           {
             field: 'createTime',
             header: '创建时间',
             sort: 'create_time',
             width: 200,
             formatter(row, index, value) {
-              return new Date(value).toUTCString();
+              return value && formatDate(value);
             },
           },
           {
@@ -105,17 +118,18 @@
       search() {
         this.datagridParams = {
           name: this.name || null,
-          type: this.type || null,
-          areaCode: this.liveAddress || null,
+          cellphone: this.cellphone || null,
+          duty: this.duty || null,
+          factoryName: this.factoryName || null,
           page: 1,
           rows: 20,
         };
       },
       clear() {
-        this.areaCode = '';
-        setTimeout(() => { this.areaCode = null; }, 10);
         this.name = null;
-        this.type = '';
+        this.cellphone = null;
+        this.duty = null;
+        this.factoryName = null;
         this.datagridParams = {};
       },
       setLiveAddress(d) {

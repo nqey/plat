@@ -98,13 +98,6 @@
         liveAddress: '',
         dataUrl: PLATFORM_FACTORY_QUERY,
         countUrl: PLATFORM_FACTORY_QUERY_COUNT,
-        toolbar: [{
-          title: '工厂列表',
-          handler() {
-            window.console.log('工厂列表');
-          },
-        }],
-        checkable: true,
         columns: [{ field: 'id', header: '序号', sort: 'id', width: 100 },
           { field: 'name', header: '工厂名称', sort: 'name', width: 200 },
           {

@@ -11,36 +11,38 @@
                 <div class="form-inline row clearfix">
                     <div class="form-group col-md-4">
                         <label>姓名</label>
-                        <input type="text" class="form-control" name="name" placeholder="请输入经销商名称">
+                        <input type="text" class="form-control" v-model="name" placeholder="请输入经销商名称">
                     </div>
                     <div class="form-group col-md-4">
                         <label>手机号码</label>
-                        <input type="text" class="form-control" name="cellphone" placeholder="请输入手机号码">
+                        <input type="text" class="form-control" v-model="cellphone" placeholder="请输入手机号码">
                     </div>
                     <div class="form-group col-md-4">
                         <label>机构</label>
-                        <input type="text" class="form-control" name="organiz" placeholder="请输入隶属机构">
+                        <input type="text" class="form-control" v-model="organiz" placeholder="请输入隶属机构(服务中心)">
                     </div>
                     <div class="form-group col-md-4">
-                        <button type="button" class="search btn-primary btn datagrid-search">
+                        <button type="button" class="search btn-primary btn datagrid-search" @click="search">
                             <span class="glyphicon glyphicon-search"></span>搜索
                         </button>
-                        <button type="reset" class="search clear btn-primary btn datagrid-clear">清空</button>
+                        <button type="reset" class="search clear btn-primary btn datagrid-clear" @click="claer">清空</button>
                     </div>
                 </div>
                </div>
               <!--列表详情-->
               <div class="main_left_section_content">
                   <div id="authofficer-list-datagrid" class="Datagrid">
-
               <div class="datagrid-title">
               <p>认证官列表</p>
               </div>
 
               <div class="datagrid-title">
-              <v-datagrid :toolbar="toolbar" :columns="columns" :checkable="checkable"
-                  :data-url="dataUrl" :count-url="countUrl" :load-data="data"></v-datagrid>
-               </div>
+                <v-datagrid :columns="columns"
+                            :data-url="dataUrl"
+                            :count-url="countUrl"
+                            :params="datagridParams">
+                </v-datagrid>
+              </div>
         </div>
       </div>
     </div>
@@ -49,6 +51,8 @@
 
 <script>
   import datagrid from '@/components/datagrid';
+  import { formatDate } from '@/config/utils';
+  import { PLATFORM_AUTHOFFICER_QUERY, PLATFORM_AUTHOFFICER_QUERY_COUNT } from '@/config/env';
 
   export default {
     name: 'index',
@@ -59,72 +63,73 @@
     },
     data() {
       return {
-        data: [{
-          name: '王麻子',
-          tel: '13588888888',
-          center: '四川省服务中心',
-          code: '通过',
-          createTime: '2018-04-25',
-          editor: '',
+        datagridParams: {
+          name: null,
+          cellphone: null,
+          organiz: null,
+          page: 1,
+          rows: 20,
         },
-        {
-          name: '张三',
-          tel: '13588888888',
-          center: '四川省服务中心',
-          code: '不通过',
-          createTime: '2018-04-25',
-          editor: '',
-        }],
-        dataUrl: '',
-        countUrl: '',
-        toolbar: [{
-          title: '添加认证官',
-          handler() {
-            window.console.log('添加认证官');
-          },
-        }],
-        checkable: true,
+        stateObj: {
+          true: '通过',
+          false: '不通过',
+        },
+        name: null,
+        cellphone: null,
+        organiz: null,
+        dataUrl: PLATFORM_AUTHOFFICER_QUERY,
+        countUrl: PLATFORM_AUTHOFFICER_QUERY_COUNT,
         columns: [{ field: 'name', header: '姓名', sort: 'name', width: 260 },
-          { field: 'tel', header: '联系电话', width: 260 },
-          { field: 'center', header: '服务中心', width: 260 },
+          { field: 'organizTel', header: '联系电话', width: 260 },
+          { field: 'organiz', header: '服务中心', width: 260 },
           {
             field: 'createTime',
             header: '提交时间',
             sort: 'create_time',
             width: 260,
             formatter(row, index, value) {
-              return new Date(value).toUTCString();
+              return value && formatDate(value);
             },
           },
-          { field: 'code', header: '状态', width: 260 },
           {
-            field: 'editor',
+            field: 'state',
+            header: '状态',
+            width: 260,
+            formatter: row => this.stateObj[row.state],
+          },
+          {
+            field: 'action',
             header: '编辑',
             width: 150,
-          }],
+            actions: [{
+              text: '【编辑】',
+              show() {
+                return true;
+              },
+              handler: () => this.$router.push('/code/list/log'),
+            }],
+          },
+        ],
       };
     },
     components: {
       'v-datagrid': datagrid,
     },
-    mounted() {
-      this.getData();
-    },
     methods: {
-      async getData() {
-        // const param = {
-        //   param1: '',
-        //   param2: '',
-        //   param3: '',
-        // };
-        // const res = await this.$http.get(THE_TOTAL_ADDRESS, param);
-        // if (res.success) {
-        //   this.list = res.data;
-        // }
-        // 模拟请求的返回的数据
+      search() {
+        this.datagridParams = {
+          name: this.name || null,
+          cellphone: this.cellphone || null,
+          organiz: this.organiz || null,
+          page: 1,
+          rows: 20,
+        };
       },
-      handler() {
-
+      claer() {
+        this.name = null;
+        this.cellphone = null;
+        this.organiz = null;
+        this.datagridParams = {};
       },
     },
   };

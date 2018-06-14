@@ -11,28 +11,24 @@
 <div class="filters datagrid-filter">
     <div class="form-inline row clearfix">
         <div class="form-group col-md-4">
-            <label>授权码</label>
-            <input type="text" class="form-control" name="authCode" placeholder="请输入经销商授权码">
-        </div>
-        <div class="form-group col-md-4">
             <label>名称</label>
-            <input type="text" class="form-control" name="name" placeholder="请输入经销商名称">
+            <input type="text" class="form-control" v-model="name" placeholder="请输入经销商名称">
         </div>
         <div class="form-group col-md-4">
             <label>负责人</label>
-            <input type="text" class="form-control" name="charger" placeholder="请输入负责人姓名">
+            <input type="text" class="form-control" v-model="charger" placeholder="请输入负责人姓名">
         </div>
         <div class="form-group col-md-4">
             <label>电话号码</label>
-            <input type="text" class="form-control" name="cellphone" placeholder="请输入负责人手机号码">
+            <input type="text" class="form-control" v-model="cellphone" placeholder="请输入负责人手机号码">
         </div>
         <div class="form-group col-md-6">
             <label>按地区查找</label>
-
+            <v-area :areacode="areaCode" @acceptData="setLiveAddress"></v-area>
         </div>
-        <div class="form-group col-md-4">
+        <div class="form-group col-md-4 but">
             <button type="button" class="search btn-primary btn datagrid-search" @click="search">
-                <span class="glyphicon glyphicon-search"></span>搜索
+              <span class="glyphicon glyphicon-search"></span>搜索
             </button>
             <button type="reset" class="search clear btn-primary btn datagrid-clear" @click="clear">清空</button>
         </div>
@@ -49,7 +45,7 @@
               <v-datagrid :columns="columns"
                           :data-url="dataUrl"
                           :count-url="countUrl"
-                          >
+                          :params="datagridParams">
               </v-datagrid>
           </div>
         </div>
@@ -60,6 +56,7 @@
 
 <script>
   import datagrid from '@/components/datagrid';
+  import area from '@/components/area/area';
   import { PLATFORM_FRANCHISER_QUERY, PLATFORM_FRANCHISER_QUERY_COUNT } from '@/config/env';
 
   export default {
@@ -71,25 +68,51 @@
     },
     data() {
       return {
-        amountObj: {},
-        status: {
-          0: '',
-          pending: '待审核',
-          delayed: '延后',
-          rejected: '未通过',
-          passed: '通过',
+        datagridParams: {
+          name: null,
+          charger: null,
+          cellphone: null,
+          areaCode: '',
+          page: 1,
+          rows: 20,
         },
-        state: 0,
+        stateObj: {
+          unusering: '信息未完善',
+          wait: '待审核',
+          failed: '未通过',
+          usering: '可用',
+          lock: '锁定',
+        },
+        name: null,
+        charger: null,
+        cellphone: null,
+        areaCode: '',
+        liveAddress: '',
         dataUrl: PLATFORM_FRANCHISER_QUERY,
         countUrl: PLATFORM_FRANCHISER_QUERY_COUNT,
         columns: [{ field: 'id', header: '二维码编号', width: 200 },
           { field: 'name', header: '经销商名称', width: 260 },
-          { field: 'state', header: '状态', width: 180 },
+          {
+            field: 'state',
+            header: '状态',
+            width: 180,
+            formatter: row => this.stateObj[row.state],
+          },
           { field: 'charger', header: '负责人', width: 120 },
           { field: 'cellphone', header: '手机号码', width: 100 },
           { field: 'areaCode', header: '营业地址', width: 400 },
           { field: 'skuList', header: '授权商品', width: 180, height: 100 },
-          { field: 'authorized_account', header: '授权账号', width: 150 },
+          {
+            field: 'authorized_account',
+            header: '授权账号',
+            width: 150,
+            actions: [{
+              text: '【查看】',
+              show() {
+                return true;
+              },
+            }],
+          },
           {
             field: 'sweep_code',
             header: '扫码情况',
@@ -100,7 +123,7 @@
                 return true;
               },
               handler: (row) => {
-                this.$router.push(`/factory/pending/view/${row.id}`);
+                this.$router.push(`/franchiser/list/scan/${row.id}`);
               },
             }],
           },
@@ -114,7 +137,7 @@
                 return true;
               },
               handler: (row) => {
-                this.$router.push(`/factory/pending/view/${row.id}`);
+                this.$router.push(`/franchiser/list/view/${row.id}`);
               },
             }],
           },
@@ -123,22 +146,25 @@
     },
     components: {
       'v-datagrid': datagrid,
+      'v-area': area,
     },
     methods: {
       search() {
         this.datagridParams = {
           name: this.name || null,
-          type: this.type || null,
+          charger: this.charger || null,
+          cellphone: this.cellphone || null,
           areaCode: this.liveAddress || null,
           page: 1,
           rows: 20,
         };
       },
       clear() {
+        this.name = null;
+        this.charger = null;
+        this.cellphone = null;
         this.areaCode = '';
         setTimeout(() => { this.areaCode = null; }, 10);
-        this.name = null;
-        this.type = '';
         this.datagridParams = {};
       },
       setLiveAddress(d) {
@@ -156,6 +182,9 @@ img {
 }
 ul li {
   list-style-type: none;
+}
+.but{
+  width: 100%;
 }
 .filters {
   padding: 40px 0;

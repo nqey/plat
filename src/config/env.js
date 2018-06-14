@@ -217,4 +217,46 @@ export const PLATFORM_FACTORY_QUERY_COUNT = `${ENTERPRISE_BASE_URL}platform/fact
 export const PLATFORM_FRANCHISER_QUERY = `${ENTERPRISE_BASE_URL}platform/franchiser/query`;
 // 企业管理、经销商列表（分页） 总数
 export const PLATFORM_FRANCHISER_QUERY_COUNT = `${ENTERPRISE_BASE_URL}platform/franchiser/query/count`;
+// 企业管理、员工列表（分页）
+export const PLATFORM_EMPLOYEE_QUERY = `${ENTERPRISE_BASE_URL}platform/employee/query`;
+// 企业管理、员工列表（分页） 总数
+export const PLATFORM_EMPLOYEE_QUERY_COUNT = `${ENTERPRISE_BASE_URL}platform/employee/query/count`;
+// 二维码管理、二维码列表（分页）
+export const PLATFORM_STATISTICAL_CODE_QUERY = `${GOODS_BASE_URL}platform/statistical/code/query`;
+// 二维码管理、二维码列表（分页） 总数
+export const PLATFORM_STATISTICAL_CODE_QUERY_COUNT = `${GOODS_BASE_URL}platform/statistical/code/query/count`;
+// 二维码管理、获取赋码工厂名称
+export const PLATFORM_FACTORY_USABLE = `${ENTERPRISE_BASE_URL}platform/factory/usable`;
+// 认证官管理、认证官列表（分页）
+export const PLATFORM_AUTHOFFICER_QUERY = `${DECLARE_BASE_URL}platform/authofficer/query`;
+// 认证官管理、认证官列表（分页） 总数
+export const PLATFORM_AUTHOFFICER_QUERY_COUNT = `${DECLARE_BASE_URL}platform/authofficer/query/count`;
+// 系统消息、投诉列表（分页）
+export const PLATFORM_COMPLAINT_LISTING = `${FANS_BASE_URL}platform/complaint/listing`;
+// 系统消息、投诉列表（分页）总数
+export const PLATFORM_COMPLAINT_COUNT = `${FANS_BASE_URL}platform/complaint/count`;
+// 我的补贴金额
+export const ORGANIZ_SUBSIDY_AMOUNT = `${ENTERPRISE_BASE_URL}organiz/subsidy/amount`;
+// 申报官、申报机构补贴明细
+export const ORGANIZ_SUBSIDY_DETAIL_QUERY = `${ENTERPRISE_BASE_URL}organiz/subsidy/detail/query`;
+// 下拉获取银行列表
+export const PUBLICS_BANK_LIST = `${ENTERPRISE_BASE_URL}publics/bank/list`;
+// 点击申请提现
+export const PLATFORM_SUBSIDY_WITHDRAW = `${ENTERPRISE_BASE_URL}platform/subsidy/withdraw`;
+// 企业入库补贴申请提现信息确认
+export const PLATFORM_SUBSIDY_WITHDRAW_RUKU = `${ENTERPRISE_BASE_URL}platform/subsidy/withdraw/ruku`;
+// 我的申请记录列表、分页信息
+export const PLATFORM_SUBSIDY_RECORD_QUERY = `${ENTERPRISE_BASE_URL}platform/subsidy/record/query`;
+// 总后台补贴审核列表、分页
+export const PLATFORM_SUBSIDY_QUERY = `${ENTERPRISE_BASE_URL}platform/subsidy/query`;
+// 总后台补贴审核列表、分页
+export const PLATFORM_SUBSIDY_COUNT = `${ENTERPRISE_BASE_URL}platform/subsidy/count`;
+// 总后台补贴审核 审核接口(通过审核) + {subsidyId}
+export const PLATFORM_SUBSIDY_PASS = `${ENTERPRISE_BASE_URL}platform/subsidy/pass/`;
+// 总后台补贴审核 审核接口(不通过审核) + {subsidyId}
+export const SUBSIDY_REJECTED = `${ENTERPRISE_BASE_URL}platform/subsidy/rejected/`;
+// 总后台补贴审核 审核接口(延后审核) + {subsidyId}
+export const PLATFORM_SUBSIDY_DELAYED = `${ENTERPRISE_BASE_URL}platform/subsidy/delayed/`;
+// 补贴审核中的补贴金额统计数据
+export const PLATFORM_SUBSIDY_STATISTICAL_AMOUNT = `${ENTERPRISE_BASE_URL}platform/subsidy/statistical/amount`;
 
