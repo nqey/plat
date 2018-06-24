@@ -1,363 +1,154 @@
 <template>
-  <div class="content">
-    <div class="content_con">
-      <div class="index_table">
-        <div class="index_table_search">
-          <form class="form-inline">
-            <div class="form-group">
-              <label for="">姓名</label>
-              <div style="width: 170px;display: inline-block;"><el-input v-model="name" placeholder="请输入姓名"></el-input></div>
+  <div class="plat-content">
+    <div class="plat-content-con">
+      <h4>筛选条件</h4>
+      <hr/>
+      <div class="filters">
+        <div class="form-inline">
+          <div class="row clearfix sssrk">
+            <div class="form-group col-md-4">
+              <label>姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名</label>
+              <input type="text" class="form-control" v-model="filter.name" placeholder="输入负责人姓名">
             </div>
-            <div class="form-group">
-              <label for="">手机号码</label>
-              <div style="width: 170px;display: inline-block;"><el-input v-model="cellphone" placeholder="请输入手机号码"></el-input></div>
+            <div class="form-group col-md-4">
+              <label>手机号码</label>
+              <input type="text" class="form-control" v-model="filter.cellphone" placeholder="输入手机号码">
             </div>
-            <div class="form-group">
-              <label for="">时间段</label>
-              <el-date-picker
-                v-model="startTime"
-                type="date"
-                placeholder="起始时间">
-              </el-date-picker>
+            <div class="form-group col-md-4">
+              <label>机构名称</label>
+              <input type="text" class="form-control" v-model="filter.organizName" placeholder="输入机构名称">
+            </div>
+            <div class="form-group col-md-4">
+              <label>审核状态</label>
+              <select class="form-control" v-model="filter.state">
+                <option value="null">请选择</option>
+                <option v-for="(v,k) of ORGANIZ_STATE" :value="k">{{ v.name }}</option>
+              </select>
+            </div>
+            <div class="form-group col-md-6">
+              <label>时&nbsp;&nbsp;间&nbsp;&nbsp;段</label>
+              <el-date-picker v-model="filter.startTime" type="date" value-format="yyyy-MM-dd" placeholder="起始时间"/>
               <span class="text-center">至</span>
-              <el-date-picker
-                v-model="endTime"
-                type="date"
-                placeholder="结束时间">
-              </el-date-picker>
+              <el-date-picker v-model="filter.endTime" type="date" value-format="yyyy-MM-dd" placeholder="结束时间"/>
             </div>
-            <div class="form-group">
-              <label for="">状态</label>
-              <el-select v-model="state" placeholder="请选择">
-                <el-option
-                  v-for="(k, v) of status"
-                  :key="v"
-                  :label="k"
-                  :value="v">
-                </el-option>
-              </el-select>
+            <div class="form-group col-md-4">
+              <button type="button" class="btn btn-primary" @click="search">
+                <span class="glyphicon glyphicon-search"></span>搜索
+              </button>
+              <button type="button" class="btn btn-primary" @click="clear">清空</button>
             </div>
-            <div class="form-group">
-            <el-button class="width" type="primary" @click="search(1, 2)">搜索</el-button>
-            <el-button class="width" type="primary" @click="claer(1, 2)">清除</el-button>
           </div>
-          </form>
-        </div>
-        <div v-if="lists.length === 0" style="text-align: center;color: #999;font-size: 18px;">暂无相关数据！</div>
-        <div v-show="lists.length > 0">
-          <table class="table table-hover">
-            <thead>
-              <tr class="table_tit">
-                <th>序号</th>
-                <th>姓名</th>
-                <th>手机号码</th>
-                <th>推荐机构</th>
-                <th>企业名称</th>
-                <th>提交时间</th>
-                <th>审核状态</th>
-                <th>操作</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="(item, index) of lists">
-                <td><b>{{item.snId}}</b></td>
-                <td>{{item.name}}</td>
-                <td>{{item.cellphone}}</td>
-                <td>{{item.recommentName}}</td>
-                <td>{{item.organizName}}</td>
-                <td>{{item.createTime}}</td>
-                <td>
-                  <span :style="trafficLight[item.state]">{{item.stateNm}}</span>
-                </td>
-                <td class="gc_list">
-                  <router-link v-if="item.state !== 'baseWaitSubmit'" :to="'/agencymgt/detail/' + item.id">查看详情</router-link>
-                  <a v-if="item.state === '已删除'" @click="deleteAgency(item.id)">删除</a>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <v-pagination :page="pages" :total="count" @nextPage="search"></v-pagination>
         </div>
       </div>
-    </div> 
+      <h4>机构列表</h4>
+      <hr/>
+      <v-datagrid :columns="columns" :data-url="dataUrl" :count-url="countUrl" :params="params"></v-datagrid>
+    </div>
   </div>
 </template>
 
 <script>
-  import pagination from '@/components/pagination';
-  import { PLATFORM_GET_ORGANIZ_QUERY, PLATFORM_GET_ORGANIZ_COUNT, PLATFORM_DELETE_ORGANIZ } from '@/config/env';
-  import { TRAFFIC_LIGHT } from '@/config/mapping';
-  import { formatDate } from '@/config/utils';
-  import { DatePicker, Input, Select, Option, Button, MessageBox } from 'element-ui';
+  import { DECLARE_BASE_URL } from '@/config/env';
+  import { ORGANIZ_STATE } from '@/config/mapping';
+  import { formatDate, reomveBlank } from '@/config/utils';
+  import { DatePicker, MessageBox } from 'element-ui';
 
   export default {
     name: 'agency',
     data() {
       return {
-        lists: [],
-        page: 1,
-        rows: 10,
-        pages: 0,
-        name: null,
-        cellphone: null,
-        startTime: '',
-        endTime: '',
-        state: null,
-        count: 0,
-        status: {
-          '': '请选择',
-          baseWaitSubmit: '基本信息待填写',
-          baseWaitPending: '基本信息待初审',
-          baseWaitUnPending: '基本信息初审未通过',
-          baseWaitPended: '基本信息初审通过',
-          baseWaitAudit: '基本信息待审核',
-          baseUnPass: '基本信息未通过',
-          basePass: '基本信息通过',
-          registWaitSubmit: '登记信息待填写',
-          registWaitPending: '登记信息待初审',
-          registWaitUnPending: '登记信息初审未通过',
-          registWaitPended: '登记信息初审通过',
-          registWaitAudit: '登记信息待审核',
-          registUnPass: '登记信息未通过',
-          registPass: '登记信息审核通过',
-          delete: '已删除',
-          passed: '通过审核',
+        ORGANIZ_STATE,
+        filter: {
+          name: null,
+          cellphone: null,
+          startTime: null,
+          endTime: null,
+          state: null,
+          organizName: null,
         },
-        trafficLight: {
-          baseWaitSubmit: TRAFFIC_LIGHT.yellow,
-          baseWaitPending: TRAFFIC_LIGHT.yellow,
-          baseWaitUnPending: TRAFFIC_LIGHT.red,
-          baseWaitPended: TRAFFIC_LIGHT.green,
-          baseWaitAudit: TRAFFIC_LIGHT.yellow,
-          baseUnPass: TRAFFIC_LIGHT.red,
-          basePass: TRAFFIC_LIGHT.green,
-          registWaitSubmit: TRAFFIC_LIGHT.yellow,
-          registWaitPending: TRAFFIC_LIGHT.yellow,
-          registWaitUnPending: TRAFFIC_LIGHT.red,
-          registWaitPended: TRAFFIC_LIGHT.green,
-          registWaitAudit: TRAFFIC_LIGHT.yellow,
-          registUnPass: TRAFFIC_LIGHT.red,
-          registPass: TRAFFIC_LIGHT.green,
-          delete: TRAFFIC_LIGHT.red,
-          passed: TRAFFIC_LIGHT.green,
-        },
+        dataUrl: `${DECLARE_BASE_URL}platform/organiz/query`,
+        countUrl: `${DECLARE_BASE_URL}platform/organiz/count`,
+        params: {},
+        columns: [{ field: 'snId', header: '序号', sort: 'id', width: 200 },
+          { field: 'name', header: '姓名', sort: 'name', width: 120 },
+          { field: 'cellphone', header: '手机号码', sort: 'cellphone', width: 130 },
+          { field: 'recommentName', header: '推荐机构', sort: 'recomment_name', width: 230 },
+          { field: 'organizName', header: '企业名称', sort: 'organiz_name', width: 230 },
+          {
+            field: 'createTime',
+            header: '提交时间',
+            sort: 'create_time',
+            width: 230,
+            formatter(row, index, value) {
+              return formatDate(value);
+            },
+          },
+          {
+            field: 'state',
+            header: '审核状态',
+            sort: 'state',
+            width: 100,
+            html: true,
+            formatter(row, index, value) {
+              const s = ORGANIZ_STATE[value];
+              return s.name.fontcolor(s.color);
+            },
+          },
+          {
+            field: 'action',
+            header: '操作',
+            width: 200,
+            actions: [{
+              show(row) {
+                // 不等于基本资料待填写和已删除可以查看详情
+                return row.state !== 'baseWaitSubmit' && row.state !== 'deleted';
+              },
+              text: '【查看详情】',
+              handler: this.view,
+            }, {
+              show(row) {
+                return row.state !== 'deleted';
+              },
+              text: '【删除】',
+              handler: this.delete,
+            }],
+          }],
       };
     },
     methods: {
-      async deleteAgency(id) {
+      view(row) {
+        this.$router.push(`/declarer/agency/view/${row.id}`);
+      },
+      async delete(row) {
+        const { id } = row;
         MessageBox({
           title: '提示',
-          message: '此操作将永久删除该数据, 是否继续?',
+          message: '将永久删除该数据，是否继续？',
           showCancelButton: true,
           showConfirmButton: true,
           type: 'warning',
         }).then(async () => {
-          const param = {};
-          param.reason = '无';
-          const res = await this.$http.post(`${PLATFORM_DELETE_ORGANIZ}${id}`, param);
+          const res = await this.$http.post(`${DECLARE_BASE_URL}platform/organiz/delete/${id}`);
           if (res.success) {
-            this.search(this.page);
+            this.search();
           }
         }).catch(() => {
         });
       },
-      async search(page, type) {
-        const param = {};
-        param.name = this.name;
-        param.cellphone = this.cellphone;
-        if (this.startTime) {
-          param.startTime = new Date(this.startTime).getTime();
-        }
-        if (this.endTime) {
-          param.endTime = new Date(this.endTime).getTime();
-        }
-        param.state = this.state;
-        param.page = page;
-        param.rows = this.rows;
-        const res = await this.$http.get(PLATFORM_GET_ORGANIZ_QUERY, param);
-        if (res.success) {
-          this.lists = res.data;
-          this.lists.forEach((o) => {
-            o.state = o.state;
-            o.stateNm = this.status[o.state];
-            o.createTime = formatDate(o.createTime);
-          });
-        }
-        const param2 = {};
-        param2.name = this.name;
-        param2.cellphone = this.cellphone;
-        if (this.startTime) {
-          param2.startTime = new Date(this.startTime).getTime();
-        }
-        if (this.endTime) {
-          param2.endTime = new Date(this.endTime).getTime();
-        }
-        param2.state = this.state;
-        if (type === 2) {
-          this.pages = 0;
-        }
-        const res2 = await this.$http.get(PLATFORM_GET_ORGANIZ_COUNT, param2);
-        if (res2.success) {
-          this.pages = Math.ceil(res2.data / param.rows);
-          this.count = res2.data;
-        }
+      search() {
+        this.params = reomveBlank(this.filter);
       },
-      async claer(page, type) {
-        const param = {};
-        this.name = null;
-        this.cellphone = null;
-        this.startTime = null;
-        this.endTime = null;
-        this.state = null;
-        if (this.startTime) {
-          param.startTime = new Date(this.startTime).getTime();
-        }
-        if (this.endTime) {
-          param.endTime = new Date(this.endTime).getTime();
-        }
-        param.page = page;
-        param.rows = this.rows;
-        const res = await this.$http.get(PLATFORM_GET_ORGANIZ_QUERY, param);
-        if (res.success) {
-          this.lists = res.data;
-          this.lists.forEach((o) => {
-            o.state = o.state;
-            o.stateNm = this.status[o.state];
-            o.createTime = formatDate(o.createTime);
-          });
-        }
-        const param2 = {};
-        if (this.startTime) {
-          param2.startTime = new Date(this.startTime).getTime();
-        }
-        if (this.endTime) {
-          param2.endTime = new Date(this.endTime).getTime();
-        }
-        param2.state = this.state;
-        if (type === 2) {
-          this.pages = 0;
-        }
-        const res2 = await this.$http.get(PLATFORM_GET_ORGANIZ_COUNT, param2);
-        if (res2.success) {
-          this.pages = Math.ceil(res2.data / param.rows);
-          this.count = res2.data;
-        }
+      clear() {
+        this.params = {};
+        this.filter = {};
       },
     },
     components: {
-      'v-pagination': pagination,
+      'v-datagrid': () => import('@/components/datagrid'),
       'el-date-picker': DatePicker,
-      'el-input': Input,
-      'el-select': Select,
-      'el-option': Option,
-      'el-button': Button,
-    },
-    mounted() {
-      this.search(this.page);
     },
   };
 </script>
 
 <style lang="scss" scoped>
-@import '../../../assets/css/mixin.scss';
-
-.current a {
-  color: #000 !important;
-}
-.index_content {
-  margin-top: 50px;
-}
-.index_table {
-  background: #fff;
-  padding: 40px;
-  border-radius: 4px 4px 0 0;
-  min-height: 600px;
-}
-.index_table_search {
-  margin-bottom: 40px;
-}
-.btn_search {
-  padding: 6px 40px;
-  background: #4786ff;
-  border-radius: 20px;
-  color: #fff;
-  margin-bottom: 20px;
-}
-.index_table_search .form-group {
-  margin: 15px 10px;
-}
-.width {
-  width: 100px;
-}
-.index_table_search input, .index_table_search select {
-  padding: 5px 10px;
-  border: 1px solid #ddd;
-  max-width: 150px;
-  margin-bottom: 20px;
-}
-table {
-  border: 1px solid #ddd;
-}
-.index_table nav {
-  margin-top: 80px;
-}
-.index_table .table>thead>tr>th {
-  border-bottom: 0;
-  padding: 15px 8px;
-  min-width: 80px;
-}
-.index_table .table>tbody>tr>td {
-  padding: 12px 8px;
-}
-.gc_list a {
-  padding-right: 15px;
-  color: #4786ff !important;
-}
-.back_icon {
-  color: #ababab;
-  padding: 5px 30px;
-  border: 1px solid #d4d4d4;
-  border-radius: 20px;
-  letter-spacing: 5px;
-  float: left;
-  margin-top: 5px;
-}
-.back_icon img {
-  padding-right: 10px;
-}
-.index_table_con .form-group {
-  margin: 30px 0;
-}
-.index_table_con a:hover {
-  color: #fff;
-}
-.index_table_tit {
-  margin-bottom: 30px;
-}
-.index_table_tit .nav-tabs {
-  border-bottom: 0;
-  width: 280px;
-  margin: auto;
-}
-.index_table_tit .nav-tabs li {
-  width: 50%;
-  text-align: center;
-}
-.index_table_tit .nav-tabs>li>a {
-  margin-right: 0;
-  border: 1px solid #efefef;
-  border-radius: 0;
-  font-size: 14px;
-  font-weight: 600;
-  background: #f9f9f9;
-}
-.index_table_tit .nav-tabs>li>a:hover {
-  background: #fff;
-  border: 1px solid #efefef;
-}
-.index_table_tit .nav-tabs>li.active>a {
-  border: 1px solid #fff;
-  border-radius: 0;
-  background: #fff;
-}
 </style>

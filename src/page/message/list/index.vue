@@ -1,99 +1,207 @@
 <template>
-  <div class="content">
-    <div class="content_con">
-      <div style="width: 1250px;">
-          <div class="hos height">公告列表</div>
-        <div class="hos" style="text-align: right;">
-          <button class="export">导出</button>
-        </div>
+  <div class="plat-content">
+    <div class="plat-content-con">
+      <h4>筛选条件</h4>
+      <hr/>
+      <!--筛选条件-->
+      <div class="form-inline">
+          <div class="form-group">
+              <label>起始时间</label>
+              <el-date-picker v-model="createTimeGE" type="date" placeholder="选择日期">
+              </el-date-picker>
+          </div>
+          <div class="form-group">
+              <label>结束时间</label>
+              <el-date-picker v-model="createTimeLE" type="date" placeholder="选择日期">
+              </el-date-picker>
+          </div>
+          <div class="form-group">
+              <label>标题</label>
+              <input type="text" class="form-control" v-model="title" placeholder="请输入标题">
+          </div>
+          <div class="form-group">
+              <label>公告所属</label>
+              <select class="form-control" v-model="type">
+                <option v-for="(v, k) of typeObj" :value="k">{{v}}</option>
+              </select>
+          </div>
+          <div class="form-group">
+              <button type="button" class="btn btn-primary" @click="search">
+                  <span class="glyphicon glyphicon-search"></span>搜索
+              </button>
+              <button type="reset" class="btn btn-primary" @click="clear">清空</button>
+          </div>
       </div>
-      <v-datagrid :columns="columns"
-                  :data-url="dataUrl"
-                  :count-url="countUrl">
-      </v-datagrid>
+      <br/>
+      <br/>
+      <h4>公告列表</h4>
+      <hr>
+      <v-datagrid 
+        :columns="columns"
+        :data-url="dataUrl"
+        :count-url="countUrl"
+        :params="datagridParams"
+        >
+     </v-datagrid>
+<!--       <ul>
+        <li class="news" v-for="(item, index) of news">
+          <router-link :to="'/message/detail/'+item.id">{{item.title}}</router-link>
+          <span class="news_new text-uppercase" v-show="index < 3 && page === 1">new</span>
+          <span class="news_time">{{item.pushTime}}</span>
+        </li>
+      </ul>
+      <v-pagination :page="pages" @nextPage="search"></v-pagination> -->
     </div>
   </div>
 </template>
 
 <script>
-  import datagrid from '@/components/datagrid';
-  import pager from '@/components/pager';
+// import pagination from '@/components/pagination';
+import { PUBLICS_NOTICES_LISTING, PUBLICS_NOTICES_COUNTS } from '@/config/env';
+import { formatDate } from '@/config/utils';
+import datagrid from '@/components/datagrid';
+import { DatePicker } from 'element-ui';
 
-  export default {
-    name: 'user',
-    data() {
-      return {
-        dataUrl: '',
-        countUrl: '',
-        columns: [{ field: 'name', header: '标题', sort: 'name', width: 230 },
-          { field: 'enterprise', header: '企业', sort: 'name', width: 230 },
-          { field: 'code', header: '状态', sort: 'name', width: 230 },
-          {
-            field: 'createTime',
-            header: '发布时间',
-            sort: 'create_time',
-            width: 330,
-            formatter(row, index, value) {
-              return new Date(value).toUTCString();
+export default {
+  name: 'sysmsglist',
+  props: {
+    value: {
+      type: String,
+    },
+  },
+  components: {
+    'v-datagrid': datagrid,
+    'el-date-picker': DatePicker,
+  },
+  data() {
+    return {
+      typeObj: {
+        null: '请选择',
+        authOfficer: '认证官系统',
+        declare: '申报系统',
+        enterprise: '企业平台系统',
+      },
+      datagridParams: {
+        type: null,
+      },
+      createTimeGE: null,
+      createTimeLE: null,
+      title: null,
+      type: null,
+      page: 1,
+      rows: 10,
+      pages: 0,
+      news: [],
+      dataUrl: PUBLICS_NOTICES_LISTING,
+      countUrl: PUBLICS_NOTICES_COUNTS,
+      columns: [
+        {
+          field: 'title',
+          header: '标题',
+          sort: 'title',
+          // width: 200,
+          formatter(row, index, value) {
+            return value;
+          },
+        },
+        {
+          field: 'showDate',
+          header: '发布时间',
+          sort: 'modify_time',
+          // width: 120,
+          formatter(row, index, value) {
+            return value;
+          },
+        },
+        {
+          field: 'type',
+          header: '公告所属',
+          sort: 'type',
+          // width: 120,
+          formatter: row => this.typeObj[row.type],
+        },
+        {
+          field: 'action',
+          header: '操作',
+          // width: 120,
+          actions: [{
+            // 显示内容，可以写html代码
+            text: '【查看】',
+            // return true 表示这个按钮要显示，否则不显示
+            show() {
+              return true;
+            },
+            // 处理器，参数：row-当前行数据，index当前行所属数据的第几行
+            handler: (row) => {
+              this.$router.push(`/message/detail/${row.id}`);
             },
           },
           {
-            field: 'action',
-            header: '公告详情',
-            width: 230,
-            actions: [{
-              // 显示内容，可以写html代码
-              text: '【查看1】',
-              // return true 表示这个按钮要显示，否则不显示
-              show(row) {
-                window.console.log(row);
-                return true;
-              },
-              // 处理器，参数：row-当前行数据，index当前行所属数据的第几行
-              handler(row, index) {
-                window.console.log(row, index);
-              },
-            }, {
-              text: '【查看2】',
-              show(row) {
-                return row.id % 2 === 0;
-              },
-              handler(row, index) {
-                window.console.log(index, row);
-              },
-            }],
+            // 显示内容，可以写html代码
+            text: '【修改】',
+            // return true 表示这个按钮要显示，否则不显示
+            show() {
+              return true;
+            },
+            // 处理器，参数：row-当前行数据，index当前行所属数据的第几行
+            handler: (row) => {
+              this.$router.push(`/message/create/${row.id}`);
+            },
           }],
+        },
+      ],
+    };
+  },
+  methods: {
+    search() {
+      this.datagridParams = {
+        createTimeGE: this.createTimeGE ? formatDate(this.createTimeGE, 'yyyy-MM-dd') : null,
+        createTimeLE: this.createTimeLE ? formatDate(this.createTimeLE, 'yyyy-MM-dd') : null,
+        title: this.title,
+        type: this.type,
       };
     },
-    methods: {},
-    components: {
-      'v-pager': pager,
-      'v-datagrid': datagrid,
+    clear() {
+      this.title = null;
+      this.createTimeGE = null;
+      this.createTimeLE = null;
+      this.type = null;
+      this.datagridParams = {};
     },
-  };
+  },
+  mounted() {
+    this.search();
+  },
+};
 </script>
 
 <style lang="scss" scoped>
-@import '../../../assets/css/mixin.scss';
-
-.export{
-  width: 70px;
-  height: 34px;
-  line-height: 34px;
-  border-radius: 5px;
-  text-align: center;
-  color: #fff;
-  border: none;
-  margin: 15px 0;
-  background-color: #4786ff;
+.t_nav {
+  border-left: #4786ff solid 3px;
+  font-size: 18px;
 }
-.hos{
-  width: 50%;
-  height: 64px;
-  float: left;
+a {
+  text-decoration: none;
 }
-.height{
-  line-height: 64px;
-  font-size: 25px;
+.news {
+  height: 80px;
+  line-height: 80px;
+  position: relative;
+  list-style-type: disc;
+  margin-left: 15px;
+  a{
+    font-size: 16px;
+    color: #505050;
+  }
+}
+.news_new {
+  background-color: #fdc5d0;color: #fa607e;font-weight: bold;    font-size: 0.1em;
+    padding: 1px 3px;
+    border-radius: 2px;
+    margin-left: 15px;
+}
+.news_time {
+  position: absolute;right: 0;    color: #888888;
+    font-size: 12px;
 }
 </style>

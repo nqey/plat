@@ -1,13 +1,12 @@
 <template>
-  <div class="content">
-    <div class="content_con">
-      <v-datagrid :toolbar="toolbar" :columns="columns" :data-url="dataUrl" :count-url="countUrl" ></v-datagrid>
+  <div class="plat-content">
+    <div class="plat-content-con">
+      <v-datagrid :toolbar="toolbar" :columns="columns" :data-url="dataUrl" :count-url="countUrl"></v-datagrid>
     </div>
   </div>
 </template>
 
 <script>
-  import datagrid from '@/components/datagrid';
   import { BASE_URL } from '@/config/env';
   import { formatDate } from '@/config/utils';
 
@@ -45,7 +44,6 @@
           {
             field: 'action',
             header: '操作',
-            sort: 'id',
             width: 200,
             actions: [{
               text: '【编辑】',
@@ -63,7 +61,7 @@
       },
     },
     components: {
-      'v-datagrid': datagrid,
+      'v-datagrid': () => import('@/components/datagrid'),
     },
   };
 </script>

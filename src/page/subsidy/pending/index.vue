@@ -1,7 +1,6 @@
-
 <template>
-  <div class="content">
-      <div class="content_con">
+  <div class="plat-content">
+      <div class="plat-content-con">
         <ul>
             <li>
               <div class="the-total"><img :src="sumIcon">补贴总额（单位：元）</div>
@@ -36,7 +35,7 @@
           </li>
         </ul>
       </div>
-      <div class="content_con">
+      <div class="plat-content-con">
         <ul>
           <li>
             <div class="the-total"><img :src="headcountIcon">申请总人数</div>
@@ -71,7 +70,7 @@
           </li>
         </ul>
       </div>
-      <div class="content_con">
+      <div class="plat-content-con">
         <div class="row">
           <div class="col-md-12">
             <h4>待审核列表</h4>
@@ -281,17 +280,17 @@
 
 <style lang="scss" scoped>
 @import '../../../assets/css/mixin.scss';
-.content_con ul{
+.plat-content-con ul{
   height: 80px;
   display: block;
 }
-.content_con ul li{
+.plat-content-con ul li{
   width: 300px;
   height: 80px;
   float: left;
   border-right: 1px solid #e0e0e0;
 }
-.content_con ul li:last-child{border:none}
+.plat-content-con ul li:last-child{border:none}
 .total{
   font-size: 16px;
     color: #888;

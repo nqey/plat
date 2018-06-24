@@ -1,281 +1,275 @@
 <template>
-  <div class="content">
-      <div class="content_con">
-          <div class="title">提现申请</div>
-          <div class="box_left">
-              <div class="entry">
-                <span>提现金额</span>
-                <div class="tx">
-                  <input id="width" placeholder="请输入金额" />
-                  <button style="color: #337cfd">全部提现</button>
-                </div>
+  <div class="plat-content">
+    <div class="plat-content-con">
+      <h4>申请提现</h4>
+      <hr/>
+      <br>
+      <div class="row">
+        <div class="col-sm-7">
+          <form class="form-horizontal">
+            <div class="form-group">
+              <label class="col-sm-2 control-label">提现金额</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" placeholder="请输入金额" disabled v-model="money">
               </div>
-              <div class="entry">
-                <span>请选择银行</span>
-                <select>
-                  <option>请选择</option>
-                  <option v-for="item in data">{{item.bankName}}</option>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-2 control-label">开户名</label>
+              <div class="col-sm-10">
+                <input type="text" class="v-validator form-control" v-validator="validator.name" placeholder="请输入开户名"
+                       v-model="form.name">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-2 control-label">开户行</label>
+              <div class="col-sm-10">
+                <select class="form-control" v-model="form.bankId">
+                  <option v-for="v of bankList" :value="v.bankId">{{v.bankName}}</option>
                 </select>
               </div>
-              <div class="entry">
-                <span>开户名</span>
-                <input placeholder="请输入开户名"/>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-2 control-label">支行</label>
+              <div class="col-sm-10">
+                <input type="text" class="v-validator form-control" v-validator="validator.bankBranch"
+                       placeholder="请精确到支行名称，否则无法到账" v-model="form.bankBranch">
               </div>
-              <div class="entry">
-                <span>开户行</span>
-                <input placeholder="请精确到支行名称，否则无法到账" />
+            </div>
+            <div class="form-group">
+              <label class="col-sm-2 control-label">开户行账号</label>
+              <div class="col-sm-10">
+                <input type="text" class="v-validator form-control" v-validator="validator.bankCard"
+                       placeholder="请输入银行账号" v-model="form.bankCard">
               </div>
-              <div class="entry">
-                <span>开户行账号</span>
-                <input placeholder="请输入银行账号"/>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-2 control-label">手机号码</label>
+              <div class="col-sm-10">
+                <input type="text" class="v-validator form-control" v-validator="validator.cellphone"
+                       placeholder="请输入手机号" v-model="form.cellphone">
               </div>
-              <div class="entry">
-                <span>手机号码</span>
-                <input placeholder="请输入手机号"/>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-2 control-label">验证码</label>
+              <div class="col-sm-10">
+                <div class="row">
+                  <div class="col-sm-10">
+                    <input type="text" v-validator="validator.code" class="v-validator form-control"
+                           placeholder="请输入手机验证码" v-model="form.code">
+                  </div>
+                  <div class="col-sm-2">
+                    <button type="button" class="btn btn-primary" @click="sendMsg" :disabled="isDisabled">
+                      {{buttonName}}
+                    </button>
+                  </div>
+                </div>
               </div>
-              <div class="entry">
-                <span>验证码</span>
-                <input id="code" placeholder="请输入手机验证码" />
-                <button class="paly_code">获取验证码</button>
+            </div>
+            <div class="form-group">
+              <div class="col-sm-offset-2 col-sm-10">
+                <button type="button" class="btn btn-primary" v-validator-submit style="width: 100%">确认提现</button>
               </div>
-              <div class="entry">
-                <router-link to="/subsidy/successful"  style="display: block;width: width: 80%; margin: 0 auto;">
-                  <div class="but">确认提现</div>
-                </router-link>
-              </div>
+            </div>
+          </form>
+        </div>
+        <div class="col-sm-offset-1 col-sm-4">
+          <div class="row">
+            <div class="col-sm-12" style="margin-left: -15px;">
+              选择已添加银行卡
+            </div>
           </div>
-          <div class="box_right">
-            <div>选择已添加银行卡</div>
-              <div class="">
-                <div class="card">
-                  <div class="bank">
-                    <img :src="bankCard1">
-                  </div>
-                  <div>
-                    <div style="margin-top: 20px;">中国银行</div>
-                    <div>储蓄卡</div>
-                    <div style="font-size: 18px; margin-top: 20px;">**** **** **** 9876</div>
-                  </div>
-                </div>
-                <div class="card">
-                  <div class="bank">
-                    <img :src="bankCard2">
-                  </div>
-                  <div>
-                    <div style="margin-top: 20px;">农业银行</div>
-                    <div>储蓄卡</div>
-                    <div style="font-size: 18px; margin-top: 20px;">**** **** **** 6543</div>
-                  </div>
-                </div>
-              </div>
-            </div> 
-          <div style="clear: both;"></div>
+          <div class="card row" v-for="item of data" tabindex="-1" @click="setTi(item)">
+            <div class="col-sm-3" style="margin-right: -15px;">
+              <img :src="getPictureUrl(item.logo, { w: 40, h: 40, q: 40 })">
+            </div>
+            <div class="col-sm-9">
+              <div>{{item.bankName}}</div>
+              <div>储蓄卡</div>
+              <div style="margin-top: 20px;">{{item.bankCard}}</div>
+            </div>
+          </div>
+        </div>
       </div>
+    </div>
   </div>
 </template>
 
 <script>
-  import bankCard1 from '@/assets/img/bankcard1_2.png';
-  import bankCard2 from '@/assets/img/bankcard2_2.png';
-  // import { BANK_ADDRESS } from '@/config/env';
+  import { PLATFORM_SUBSIDY_PROVINCE_WITHDRAW, PLATFORM_SUBSIDY_PROVINCE_AMOUNT, DECLARE_GET_VALIDATECODE, PUBLICS_BANK_LIST } from '@/config/env';
+  import { getPictureUrl } from '@/config/utils';
 
   export default {
     name: 'apply_subsidy',
-    props: {
-      value: {
-        type: String,
-      },
-    },
     data() {
       return {
-        lists: [],
-        bankCard1,
-        bankCard2,
-        data: [{
-          bankId: 1,
-          bankName: '中国银行',
-          logo: 'http://pic.cpsdb61.com/7178a736b1af3fbd7836e74258510f7d',
+        bankList: [],
+        buttonName: '发送验证码',
+        isDisabled: false,
+        time: 60,
+        validator: {
+          cellphone: {
+            type: ['required', 'cellphone'],
+          },
+          code: {
+            type: ['required'],
+          },
+          bankBranch: {
+            type: ['required'],
+          },
+          name: {
+            type: ['required'],
+          },
+          bankCard: {
+            type: ['required'],
+          },
         },
-        {
-          bankId: 2,
-          bankName: '农业银行',
-          logo: 'http://pic.cpsdb61.com/7178a736b1af3fbd7836e74258510f7d',
-        }],
+        form: {
+          bankId: null,
+          bankBranch: null,
+          name: null,
+          bankCard: null,
+          cellphone: null,
+          code: null,
+        },
+        money: 0,
+        data: [],
+        getPictureUrl,
       };
     },
-    computed: {
-    },
     methods: {
-      async getData() {
-        // const param = {
-        //   param1: '',
-        //   param2: '',
-        //   param3: '',
-        // };
-        // const res = await this.$http.get(BANK_ADDRESS, param);
-        // if (res.sucess) {
-        //   this.list = res;
-        // }
-        // 模拟请求的返回的数据
-        // if (res.sucess) {
-        // }
+      setTi(d) {
+        this.form.bankId = d.bankId;
+        this.form.bankBranch = d.bankBranch;
+        this.form.name = d.name;
+        this.form.bankCard = d.bankCard;
+      },
+      async getBank() {
+        const res = await this.$http.get(PLATFORM_SUBSIDY_PROVINCE_WITHDRAW);
+        if (res.success) {
+          this.data = res.data;
+          const d = (res.data[0] || {});
+          this.form.bankId = d.bankId;
+          this.form.bankBranch = d.bankBranch;
+          this.form.name = d.name;
+          this.form.bankCard = d.bankCard;
+        }
+      },
+      async getBankList() {
+        const res = await this.$http.get(PUBLICS_BANK_LIST);
+        if (res.success) {
+          this.bankList = res.data;
+          this.form.bankId = res.data[0].bankId;
+        }
+      },
+      async getMoney() {
+        const res = await this.$http.get(PLATFORM_SUBSIDY_PROVINCE_AMOUNT);
+        if (res.success) {
+          this.money = res.data;
+        }
+      },
+      async sendMsg() {
+        const me = this;
+        me.isDisabled = true;
+        const interval = window.setInterval(() => {
+          me.buttonName = me.time;
+          me.time -= 1;
+          if (me.time < 0) {
+            me.buttonName = '重新发送';
+            me.time = 60;
+            me.isDisabled = false;
+            window.clearInterval(interval);
+          }
+        }, 1000);
+        await this.$http.get(`${DECLARE_GET_VALIDATECODE}withaw/${this.form.cellphone}`);
+      },
+      async commit() {
+        const res = await this.$http.post(PLATFORM_SUBSIDY_PROVINCE_WITHDRAW, this.form);
+        if (res.success) {
+          this.$router.push('/subsidy/successful');
+          window.console.log('访问成功！！！');
+        }
       },
     },
-    watch: {
-    },
-    components: {
-    },
-    beforeCreate() {
-    },
-    cteated() {
-    },
-    beforeMount() {
-    },
     mounted() {
-      this.getData();
-    },
-    beforeUpdate() {
-    },
-    updated() {
-    },
-    beforeDestroy() {
-    },
-    destroyed() {
+      this.getMoney();
+      this.getBank();
+      this.getBankList();
     },
   };
 </script>
 
 <style lang="scss" scoped>
-@import '../../../assets/css/mixin.scss';
-.title{
-  font-size: 20px;
-  font-weight: 600;
-  padding-left: 27px;
-}
-.box_left{
-  width: 60%;
-  line-height: 40px;
-  float: left;
-  display: inline-block;
-  font-size: 16px;
-}
-.entry{
-  width: 100%;
-  height: 40px;
-  line-height: 40px;
-  margin: 30px 0;
-}
-.entry span{
-  width: 100px;
-  height: 40px;
-  display: inline-block;
-  text-align: right;
-  margin-right: 20px;
-  font-family: "微软雅黑";
-}
-.tx{
-  width: 80%;
-  height: 40px;
-  padding-left: 10px;
-  display: inline-block;
-  border:1px solid #dbe8ee;
-}
-.tx button{
-  width: 19%;
-  height: 38px;
-  border: none;
-  background: #fff;
-}
-#width{
-  width: 80%;
-  height: 36px;
-  padding-left: 0px;
-  display: inline-block;
-  border:none;
-}
-.entry input{
-  width: 80%;
-  height: 40px;
-  padding-left: 10px;
-  border:1px solid #dbe8ee;
-}
-.entry select{
-  width: 80%;
-  height: 40px;
-  padding-left: 10px;
-  border:1px solid #dbe8ee;
-}
-#code{
-  width: 50%;
-  height: 40px;
-  padding-left: 10px;
-  border:1px solid #dbe8ee;
-}
-.paly_code{
-  width: 25%;
-  height: 40px;
-  display: inline-block;
-  margin-left: 3%;
-  text-align: center;
-  color: #327dfa;
-  background-color: #eaf4fe;
-  border:none;
-}
-.but{
-  width: 80%;
-  margin-top: 50px;
-  margin-left: 125px;
-  height: 40px;
-  text-align: center;
-  color: #fff;
-  border-radius: 3px;
-  background-color: #337cfd;
-}
-.box_right{
-  width: 38%;
-  font-size: 16px;
-  float: left;
-}
-.bank{
-  width: 60px;
-  height: 120px;
-}
-.card{
-  width: 250px;
-  height: 120px;
-  display: block;
-  border-radius: 5px;
-  margin-top: 25px;
-  background: green;
-}
-.card img{
-  margin: 20px 0 0 20px;
-}
-.card > div{
-  color: #fff;
-  font-size: 14px;
-  float: left;
-}
-.card > div > div{
-  margin-left: 8px;
-}
-input, select, button{
-  outline:none;
-}
-:-moz-placeholder {
-    color: #aab0c0; 
-}
+  @import '../../../assets/css/mixin.scss';
 
-::-moz-placeholder {
-    color: #aab0c0;
-}
+  .index_more {
+    background: #f6f7fb;
+    height: 100%;
+    padding-bottom: 200px;
+    width: 100%;
+  }
 
-input:-ms-input-placeholder{
-    color: #aab0c0;
-}
+  .index_chunk {
+    position: relative;
+    top: 120px;
+    left: 19%;
+    margin: 0;
+    width: 78%;
+    background: #fff;
+    padding: 40px 70px 55px;
+    border-radius: 4px;
+    box-shadow: 0px 20px 20px -20px #ddd;
+  }
 
-input::-webkit-input-placeholder{
-    color: #aab0c0;
-}
+  .btn {
+    display: inline-block;
+    padding: 6px 12px;
+    margin-bottom: 0;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.42857143;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-image: none;
+    border: 1px solid transparent;
+    border-radius: 4px;
+  }
+
+  .title {
+    font-size: 20px;
+    font-weight: 600;
+    padding-left: 27px;
+  }
+
+  .card {
+    width: 250px;
+    height: 120px;
+    display: block;
+    border-radius: 5px;
+    margin-top: 25px;
+    /*background: green;*/
+    padding-top: 20px;
+    background: linear-gradient(left, #f57373, #ffe484);
+  }
+
+  .card > div {
+    color: #fff;
+  }
+
+  .card:focus {
+    outline: dotted 3px #f70a0a
+  }
+
+  .t_nav {
+    border-left: #4786ff solid 3px;
+    font-size: 18px;
+  }
 
 </style>

@@ -1,50 +1,71 @@
 
 <template>
-  <div class="content">
-          <div class="content_con">
-              <div class="export">导出</div>
-              <v-datagrid :toolbar="toolbar" :columns="columns" :checkable="checkable"
-                  :data-url="dataUrl" :count-url="countUrl"></v-datagrid>
-          </div>
-      </div>
+  <div class="plat-content">
+    <div class="plat-content-con">
+      <h4>申请记录</h4> 
+      <hr/>
+      <v-datagrid :columns="columns" :checkable="false"
+          :data-url="dataUrl" :count-url="countUrl"></v-datagrid>
+    </div>
   </div>
 </template>
 
 <script>
   import datagrid from '@/components/datagrid';
-  import pager from '@/components/pager';
+  import { PLATFORM_SUBSIDY_PROVINCE_RECORD_QUERY, PLATFORM_SUBSIDY_PROVINCE_RECORD_COUNT } from '@/config/env';
+  import { formatDate } from '@/config/utils';
 
   export default {
     name: 'user',
     data() {
       return {
-        dataUrl: '',
-        countUrl: '',
-        toolbar: [{
-          title: '查询',
-          handler() {
-            window.console.log('查询');
-          },
-        }],
-        checkable: true,
-        columns: [{ field: 'id', header: '交易号', sort: 'id', width: 230 },
+        dataUrl: PLATFORM_SUBSIDY_PROVINCE_RECORD_QUERY,
+        countUrl: PLATFORM_SUBSIDY_PROVINCE_RECORD_COUNT,
+        status: {
+          pending: '待审核',
+          passed: '通过',
+          rejected: '未通过',
+          delayed: '延后',
+        },
+        typeObj: {
+          1: '企业入库',
+          2: '二维码',
+          3: '粉丝',
+          4: '推荐',
+        },
+        columns: [{ field: 'sn', header: '交易号', sort: 'sn', width: 230 },
           {
             field: 'createTime',
             header: '申请时间',
             sort: 'create_time',
             width: 230,
             formatter(row, index, value) {
-              return new Date(value).toUTCString();
+              return formatDate(value);
             },
           },
           { field: 'amount', header: '申请金额', width: 230 },
-          { field: 'cardNumber', header: '银行卡', width: 230 },
-          { field: 'code', header: '补贴状态', width: 230 }],
+          {
+            field: 'bankCard',
+            header: '银行卡',
+            width: 230,
+          },
+          {
+            field: 'state',
+            header: '补贴状态',
+            width: 230,
+            formatter: row => this.status[row.state],
+          },
+          {
+            field: 'type',
+            header: '申请提现类型',
+            width: 230,
+            formatter: row => this.typeObj[row.type],
+          },
+        ],
       };
     },
     methods: {},
     components: {
-      'v-pager': pager,
       'v-datagrid': datagrid,
     },
   };
@@ -52,17 +73,14 @@
 
 <style lang="scss" scoped>
 @import '../../../assets/css/mixin.scss';
-.export{
-  width: 70px;
-  height: 34px;
-  line-height: 34px;
-  display: inline-block;
-  position: absolute;
-  border-radius: 5px;
-  text-align: center;
-  left: 1225px;
-  color: #fff;
-  margin: 15px 0;
-  background-color: #4786ff;
-}
+.index_more{background: #f6f7fb;
+  height: 100%;
+  padding-bottom: 200px;
+    width: 100%;}
+.index_chunk{ 
+position: relative;
+top:120px;
+left: 19%;
+margin: 0;
+width: 78%;background:#fff; padding: 40px 70px 55px;border-radius: 4px; box-shadow: 0px 20px 20px -20px #ddd;}
 </style>

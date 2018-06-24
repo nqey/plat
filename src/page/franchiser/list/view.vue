@@ -1,242 +1,175 @@
 <template>
-  <div class="content">
-    <div class="content_con">
-      <div class="main_left_content clearfix">
-        <div class="content_con content_con_one">
-          <h4>经销商详情
-            <span style="color:red">（信息待审核）</span>
-          </h4>
-        <div class="form-group clearfix">
-            <div class="content_left"><strong>经销商名称：</strong></div>
-            <div class="content_right view"><strong>老咯</strong></div>
+  <div class="plat-content">
+    <div class="plat-content-con">
+      <div class="box">
+        <div class="title">经销商详情<span></span></div>
+        <div class="title_content">
+          <span>经销商名称:</span><p>{{list.base.name}}</p>
         </div>
-        <div class="form-group clearfix">
-            <div class="content_left"><strong>经销商地址：</strong></div>
-            <div class="content_right view"><strong>湖南省长沙市市辖区 海港广场</strong></div>
+        <div class="title_content">
+          <span>经销商地址:</span><p>{{list.address.area}}{{list.address.address}}</p>
         </div>
-        <div class="form-group clearfix">
-            <div class="content_left"><strong>头像：</strong></div>
-            <div class="content_right view">
-                <a class="1528169367541 cboxElement" href="http://pic.cpsdb61.com/5564039b495b1c1cc41591611de58db9" title=""><img class="img-viewer img-viewer-added" src=""></a>
-            </div>
+        <div class="title_content">
+          <div class="spanblack">头像:</div>
+          <div class="ffleft">
+            <v-img style="width: 200px;" :imgSrc="list.base.portrait"></v-img>
+          </div>
         </div>
-        <div class="form-group clearfix">
-            <div class="content_left"><strong>负责人：</strong></div>
-            <div class="content_right view"><strong>老龙旺</strong></div>
+        <div class="title_content">
+          <span>负责人:</span><p>{{list.base.charger}}</p>
         </div>
-        <div class="form-group clearfix">
-            <div class="content_left"><strong>手机号：</strong></div>
-            <div class="content_right view"><strong>18583673261</strong></div>
+        <div class="title_content">
+          <span>手机号:</span><p>{{list.base.cellphone}}</p>
         </div>
-        <div class="form-group clearfix">
-            <div class="content_left"><strong>身份证号：</strong></div>
-            <div class="content_right view"><strong>522321198606157319</strong></div>
+        <div class="title_content">
+          <span>身份证号:</span><p>{{list.base.idNumber}}</p>
         </div>
-        <div class="form-group clearfix">
-            <div class="content_left"><strong>经销商身份证：</strong></div>
-            <div class="content_right view">
-                <ul class="row clearfix">
-                    <li class="col-sm-3">
-                        <a class="1528169367541 cboxElement" href="http://pic.cpsdb61.com/dec6741fad0aa78b640144e4b4055cb7" title=""><img class="img-viewer img-viewer-added" src=""></a>
-                    </li>
-                    <li class="col-sm-3">
-                        <a class="1528169367541 cboxElement" href="http://pic.cpsdb61.com/0295b7d2d90696f73cc6a6ce94d02995" title=""><img class="img-viewer img-viewer-added" src=""></a>
-                    </li>
-                </ul>
-            </div>
+        <div class="title_content">
+          <div class="spanblack">经销商身份证:</div>
+          <div class="ffleft">
+            <v-img style="width: 200px; float: left;" :imgSrc="list.base.idFrontUrl"></v-img>
+            <v-img style="width: 200px; float: left; margin-left: 20px;" :imgSrc="list.base.idBackUrl"></v-img>
+          </div>
         </div>
-        <div class="form-group clearfix">
-            <div class="content_left"><strong>资质证书：</strong></div>
-            <div class="content_right view">
-                <ul class="row clearfix">
-                    <li class="col-sm-2">
-                        <a class="1528169367541 cboxElement" href="http://pic.cpsdb61.com/7da48a69db051dd1cf2137b1c2ee0f03" title=""><img class="img-viewer img-viewer-added" src="">
-                        </a>
-                    </li>
-                </ul>
-            </div>
+      </div>
+      <div class="box">
+        <div class="title two">四川中新华搜信息技术有限公司</div>
+        <div class="title_box">
+          <div class="title_content">
+            <span>商品授权书:</span>
+            <img :src="getImgSrc(list.enterprises.imageList)">
+          </div>
+          <div class="title_content">
+            <span>授权商品:</span>
+            <p>{{list.enterprises.skuList}}</p>
+          </div>
         </div>
-    </div>
-    <div class="content_con_one">
-        <h4>李银测试使用诸城市碧龙春茶业有限公司</h4>
-        <div class="form-group clearfix">
-            <div class="content_left"><strong>商品授权书：</strong></div>
-            <div class="content_right view">
-                <ul class="row clearfix">
-                    <li class="col-sm-2">
-                        <a class="1528169367541 cboxElement" href="http://pic.cpsdb61.com/4278f7a5dec1a0803588cacda2dbfcbb" title=""><img class="img-viewer img-viewer-added" src="">
-                        </a>
-                    </li>
-                </ul>
-            </div>
+        <div class="title_content in_the">
+          <button class="return" @click="back">返回上一页</button>
         </div>
-        <div class="form-group clearfix">
-            <div class="content_left"><strong>授权商品：</strong></div>
-            <div class="content_right view">
-                <strong style="color:red;">已授权商品：</strong>
-                <div class="franchiser-sku-container" style="margin: 0 0 20px 30px;">
-                    <strong>商品：</strong><span>━(*｀∀´*)ノ亻! </span>
-                    <div><strong>授权区域：</strong>
-                    天津市；
-                    吉林省四平市；
-                    福建省漳州市云霄县；
-                    </div>
-                </div>
-                <strong style="color:red;">未通过授权商品：</strong>
-                <div class="franchiser-sku-container" style="margin: 0 0 20px 30px;">
-                    <strong>商品：</strong><span>0327 </span>
-                    <div><strong>原因：</strong>商品授权书不对！~</div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!--proxy-->
-    <div class="text-center">
-        <a class="btn btn-primary" href="javascript:history.back(-1);">返回上一页<span class="glyphicon glyphicon-share-alt"></span></a>
-    </div>
-</div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+  import { PLATFORM_FRANCHISER_GET } from '@/config/env';
+  import { getPictureUrl } from '@/config/utils';
 
-export default {
-  name: '',
-  props: {
-    value: {
-      type: String,
+  export default {
+    name: '',
+    props: {
+      value: {
+        type: String,
+      },
     },
-  },
-  data() {
-    return {
-      lists: [],
-    };
-  },
-  computed: {
-  },
-  methods: {
-  },
-  watch: {
-  },
-  components: {
-  },
-  beforeCreate() {
-  },
-  cteated() {
-  },
-  beforeMount() {
-  },
-  mounted() {
-  },
-  beforeUpdate() {
-  },
-  updated() {
-  },
-  beforeDestroy() {
-  },
-  destroyed() {
-  },
-};
+    data() {
+      return {
+        list: {
+          base: {},
+          address: {},
+          enterprises: {},
+        },
+        portrait: '',
+        franchiserId: this.$route.params.id,
+      };
+    },
+    components: {
+      'v-img': () => import('@/components/img'),
+    },
+    mounted() {
+      this.getData();
+    },
+    methods: {
+      async getData() {
+        const param = {
+          franchiserId: this.franchiserId,
+        };
+        const res = await this.$http.get(PLATFORM_FRANCHISER_GET, param);
+        if (res.success) {
+          this.list = res.data;
+        }
+      },
+      getImgSrc(value) {
+        return value && getPictureUrl(value, { w: 40, h: 40, q: 40 });
+      },
+      back() {
+        history.back(-1);
+      },
+    },
+  };
 </script>
 
 <style lang="scss" scoped>
 @import '../../../assets/css/mixin.scss';
 
-img {
-	max-width: 100%;
+.box{
+  width: 100%;
+  margin-bottom: 100px;
 }
-ul li {
-	list-style-type: none;
+.title{
+  width: 100%;
+  margin-bottom: 20px;
+  font-size: 24px;
 }
-.form-group {
-	margin: 10px 0 !important;
-	border-radius: 4px;
+.two{
+  margin-bottom: 5px;
 }
-.form-group {
-	margin: 25px 0;
-	border-radius: 4px;
+.text{
+  height: 32px;
+  font-size: 20px;
+  border-bottom: 2px solid #e9e9e9;
+  margin-bottom: 15px;
 }
-.content_left, .content_right {
-	float: left;
+.text span{
+  height: 32px;
+  font-family: "黑体";
+  display: inline-block;
+  border-bottom: 2px solid #337CFD;
 }
-.content_left {
-	width: 16%;
-	margin-right: 2%;
+.title_content{
+  width: 100%;
+  line-height: 50px;
 }
-.content_left p {
-	margin: 0;
+.title_content span{
+  display: inline-block;
+  font-size: 18px;
+  width: 180px;
 }
-.content_right {
-	width: 82%;
+.spanblack {
+  font-size: 18px;
+  width: 180px;
+  float: left;
 }
-.content_right {
-	margin-bottom: 5px;
+.title_content p, .ffleft{
+  width: 80%;
+  display: inline-block;
+  font-weight: 600;
+  font-size: 16px;
 }
-.content_con_one {
-	padding: 10px 30px;
+.title_content p{
+  font-weight: 600;
+  font-size: 16px;
+  display: inline;
 }
-.content_con_one h4 {
-	padding-bottom: 30px;
+.title_content p button, .return{
+  width: 120px;
+  height: 40px;
+  line-height: 40px;
+  background: #337CFD;
+  border: none;
+  color: #fff;
+  margin: 5px 20px 0  0;
+  border-radius: 5px;
 }
-.content_con_one .btn {
-	margin-right: 30px;
-	/*width: 100px;*/
-	outline: none;
-	color: #fff;
+#color{
+  background: #ff6666,
 }
-.btn {
-	min-width: 180px;
-	background: #337CFD;
-	color: #fff;
+.title_box > .title_content:last-child{
+  margin-bottom: 20px;
 }
-select {
-	background-color: #fff;
-	height: 30px;
-	line-height: 30px;
-	padding: 4px 6px;
-	color: #666666;
-	border-radius: 3px;
-	outline: none;
-	-webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
-	-o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
-	transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+.in_the{
+  text-align: center;
+  margin-top:50px;
 }
-h1 a {
-	display: block;
-	height: 50px;
-	/* width: 398px; */
-	margin: auto;
-	overflow: hidden;
-	color: #fff;
-	font-size: 30px;
-	/* font-weight: normal; */
-	text-align: center;
-	text-decoration: none; /* line-height: 50px; */
-}
-.placeholder {
-	color: #999;
-}
-a:hover {
-	color: #33a8ff;
-}
-.btn-primary {
-	background: #327BFB;
-}
-.btn {
-	padding: 5px 25px;
-	margin: 0 3px;
-	outline: none;
-}
-.search, .clear {
-	padding: 7px 20px;
-}
-.search span {
-	margin-right: 10px;
-}
-.btn-primary:hover {
-	background: #3171e2;
-	border-color: #3171e2;
-}
-
 </style>

@@ -1,6 +1,6 @@
 <template>
-  <div class="content">
-    <div class="content_con">
+  <div class="plat-content">
+    <div class="plat-content-con">
     	<div class="index_table_tit clearfix">
       <div class="col-md-10 col-md-offset-1">
        <router-link :to="'/declarer/exam/edit/' + $route.params.id" class="btn back_icon"><img :src="backicon">返回</router-link>
@@ -26,7 +26,7 @@
             </div>
             <div class="div_table_radio_question" v-for="(q, index) of multipleQS">
               <div class="div_title_question_all">
-                <div class="div_title_question"><span class="number">{{singleQS.length+index+1}}、</span><span class="color_qf">[多选题]</span>{{q.title}}( <span class="red" v-for="k of q.answer">{{optionMap[k]}}&nbsp;</span> )<span class="req">&nbsp;*（分值：{{q.score}}分）</span></div>
+                <div class="div_title_question"><span class="number">{{singleQS.length+index+1}}、</span><span class="color_qf">[多选题]</span>{{q.title}}( <span class="red" v-for="(k, i) of q.options">{{(k.answer || '') && optionMap[i]}}&nbsp;</span> )<span class="req">&nbsp;*（分值：{{q.score}}分）</span></div>
               </div>
               <ul class="ulradiocheck">
                 <li v-for="(o, oi) of q.options">

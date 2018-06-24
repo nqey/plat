@@ -11,40 +11,44 @@
       <tr class="datagrid-toolbar" v-if="toolbar && toolbar.length > 0">
         <th :colspan="columns.length + checkable">
           <button type="button" v-for="(item, index) in toolbar" @click="item.handler()"
-                  class="datagrid-toolbar-button">
+                  class="btn btn-primary datagrid-toolbar-button ">
             {{ item.title }}
           </button>
         </th>
       </tr>
       <tr class="datagrid-header-row" v-if="columns != null  && columns.length > 0">
         <th class="datagrid-header-check" v-if="checkable">
-          <input type="checkbox" v-model="checkAll" class="datagrid-checkbox">
+          <input v-if="!singleCheck" type="checkbox" v-model="checkAll" class="datagrid-checkbox">
+          <span v-if="singleCheck">选项</span>
         </th>
         <th class="datagrid-header-cell" v-for="(column, index) in columns"
             :style="{ width: column.width > 0 ? (column.width + 'px') : 'auto'}"
             @click="onHeaderClicked(column)">
           {{ column.header }}
           <span
-            :class="{ 'datagrid-header-sort-asc' : sort === column.sort && (order ||'').toUpperCase() === 'ASC', 'datagrid-header-sort-desc': sort === column.sort && (order ||'').toUpperCase() === 'DESC' }"></span>
+            :class="{ 'glyphicon glyphicon-chevron-up' : sort === column.sort && (order ||'').toUpperCase() === 'ASC', 'glyphicon glyphicon-chevron-down': sort === column.sort && (order ||'').toUpperCase() === 'DESC' }"></span>
         </th>
       </tr>
       </thead>
       <tbody class="datagrid-body">
-      <tr class="datagrid-body-row" v-for="(row, rowIndex) in data" v-if="onBeforeRenderRow == null || onBeforeRenderRow(row, rowIndex) !== false">
+      <tr class="datagrid-body-row" v-for="(row, rowIndex) in data"
+          v-if="onBeforeRenderRow == null || onBeforeRenderRow(row, rowIndex) !== false">
         <td class="datagrid-row-check" v-if="checkable" style="width:20px">
-          <input type="checkbox" v-model="row.$checked" class="datagrid-checkbox">
+          <input type="checkbox" v-model="row.$checked"
+                 @click="setSingleCheck();onSelected && onSelected(row, rowIndex)" class="datagrid-checkbox">
         </td>
-
-        <td class="datagrid-body-cell" v-for="(col, colIndex) in columns"
+        <td class="datagrid-body-td" v-for="(col, colIndex) in columns"
             :style="{ width: col.width > 0 ? (col.width + 'px') : 'auto'}">
-          <div v-if="col.html" v-html="computeValue(col, row, rowIndex)"></div>
-          <div v-if="!col.html"> {{computeValue(col, row, rowIndex)}}</div>
-          <div v-if="col.actions != null && col.actions.length > 0">
-            <a class="datagrid-action" v-for="(action, index) in col.actions"
-               v-if="action.show != null ? action.show(row) === true: true"
-               @click="action.handler != null && action.handler(row, rowIndex)">
-              {{ action.text }}
-            </a>
+          <div class="datagrid-cell">
+            <span v-if="col.html" v-html="computeValue(col, row, rowIndex)"></span>
+            <span v-if="!col.html"> {{computeValue(col, row, rowIndex)}}</span>
+            <span v-if="col.actions != null && col.actions.length > 0">
+              <a class="datagrid-action" v-for="(action, index) in col.actions"
+                 v-if="action.show != null ? action.show(row) === true: true"
+                 @click="action.handler != null && action.handler(row, rowIndex)">
+                {{ action.text || action.textFun(row) }}
+              </a>
+            </span>
           </div>
         </td>
       </tr>
@@ -79,6 +83,7 @@
 *                     -  field: '表示接口返回的字段标识, 支持a.b.c格式，如：返回数据为{a : {b : {c : 1}}}, 那么field写为 a.b.c即可',
 *                     -  header: '显示头的名称',
 *                     -  width: '宽度，整数',
+*                     -  html : 是否是html代码，默认不是。
 *                     -  formatter(row, index, value) { 如果返回值需要格式化，可以使用此方法。比如时间戳转时间字符串等等，可以返回html
 *                     -   return value;
 *                     -  },
@@ -98,6 +103,7 @@
 * onBeforeLoad(params)          - 在即将请求远程数据数据之前触发此事件，params是参数，return false将取消加载数据
 * onLoadSuccess(data)           - 在请求远程数据完毕时触发此事件，data是请求回来的数据，return false将取消渲染列表
 * onBeforeRenderRow(row, index) - 在渲染某一行数据之前触发此事件，row是该行数据，index是数据第几行，return false将需要渲染该行数据
+* onSelected(row, index)        - 选中行数据时触发此时间，row是该行数据，index是数据第几行
 **/
 <script>
   import pager from '@/components/pager';
@@ -164,6 +170,10 @@
         type: Array,
         default: null,
       },
+      onSelected: {
+        type: Function,
+        default: null,
+      },
       onBeforeLoad: {
         type: Function,
         default: null,
@@ -223,7 +233,7 @@
           this.getPagerParams());
         // 这里需要pager初始化；
         this.total = 0;
-        this.page = 1;
+        // this.page = 1;
       },
       loadData() {
         this.data = this.loadData;
@@ -238,6 +248,10 @@
     methods: {
       getCheckedData() {
         return (this.data || []).filter(s => s.$checked);
+      },
+      setSingleCheck() {
+        if (!this.singleCheck) return;
+        this.data.forEach(s => this.$set(s, '$checked', false));
       },
       reload() {
         this.paramsChanged = true;
@@ -367,10 +381,7 @@
   }
 
   .datagrid-toolbar-button {
-    color: #fff;
-    background-color: #337ab7;
     display: inline-block;
-    padding: 6px 12px;
     margin: 0 10px;
     font-size: 14px;
     font-weight: 400;
@@ -385,8 +396,6 @@
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-    border: 1px solid #2e6da4;
-    border-radius: 4px;
   }
 
   .datagrid-checkbox {
@@ -429,8 +438,32 @@
     border: 1px solid #ddd;
   }
 
-  .datagrid-body-cell {
+  .datagrid-body-row:hover {
+    background: rgba(230, 230, 230, 0.31) !important;
+  }
+
+  .datagrid-body-td {
     padding: 15px;
+  }
+
+  .datagrid-cell {
+    font-size: 14px;
+    line-height: 25px;
+    max-height: 80px;
+    overflow-y: auto;
+  }
+
+  .datagrid-cell::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .datagrid-cell::-webkit-scrollbar-thumb {
+    background: rgba(68, 54, 54, 0.1);
+  }
+
+  .datagrid-cell::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.11);
   }
 
   .datagrid-action {

@@ -1,338 +1,126 @@
 <template>
-  <div class="content">
-    <div class="content_con">
-      <div class="index_table">
-        <div class="index_table_search">
-          <form class="form-inline">
-            <div class="form-group">
-              <label for="">企业名称</label>           
-              <div style="width: 170px;display: inline-block;"><el-input v-model="name" placeholder="请输入企业名称"></el-input></div>
+  <div class="plat-content">
+    <div class="plat-content-con">
+      <h4>筛选条件</h4>
+      <hr/>
+      <div class="filters">
+        <div class="form-inline">
+          <div class="row clearfix sssrk">
+            <div class="form-group col-md-4">
+              <label>企业名称</label>
+              <input type="text" class="form-control" v-model="filter.name" placeholder="输入负责人姓名">
             </div>
-            <div class="form-group">
-              <label for="">机构名称</label>
-              <div style="width: 170px;display: inline-block;"><el-input v-model="organizName" placeholder="请输入机构名称"></el-input></div>
+            <div class="form-group col-md-4">
+              <label>机构名称</label>
+              <input type="text" class="form-control" v-model="filter.organizName" placeholder="输入机构名称">
             </div>
-            <div class="form-group">
-              <label for="">时间段</label>
-              <el-date-picker
-                v-model="startTime"
-                type="date"
-                placeholder="起始时间">
-              </el-date-picker>
+            <div class="form-group col-md-4">
+              <label>状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态</label>
+              <select class="form-control" v-model="filter.state">
+                <option value="null">请选择</option>
+                <option v-for="(v,k) of ORGANIZ_ENTERPRISE_STATE" :value="k">{{ v.name }}</option>
+              </select>
+            </div>
+            <div class="form-group col-md-6">
+              <label>时&nbsp;&nbsp;间&nbsp;&nbsp;段</label>
+              <el-date-picker v-model="filter.startTime" type="date" value-format="yyyy-MM-dd" placeholder="起始时间"/>
               <span class="text-center">至</span>
-              <el-date-picker
-                v-model="endTime"
-                type="date"
-                placeholder="结束时间">
-              </el-date-picker>
+              <el-date-picker v-model="filter.endTime" type="date" value-format="yyyy-MM-dd" placeholder="结束时间"/>
             </div>
-            <div class="form-group">
-              <label for="">状态</label>
-              <el-select v-model="state" placeholder="请选择">
-                <el-option
-                  v-for="(k, v) of status"
-                  :key="v"
-                  :label="k"
-                  :value="v">
-                </el-option>
-              </el-select>
+            <div class="form-group col-md-4">
+              <button type="button" class="btn btn-primary" @click="search">
+                <span class="glyphicon glyphicon-search"></span>搜索
+              </button>
+              <button type="button" class="btn btn-primary" @click="clear">清空</button>
             </div>
-            <div class="form-group">
-            <el-button class="width" type="primary" @click="search(1, 2)">搜索</el-button>
-            <el-button class="width" type="primary" @click="claer(1, 2)">清除</el-button>
-            </div>
-          </form>
-        </div>
-        <div v-if="lists.length === 0" style="text-align: center;color: #999;font-size: 18px;">暂无相关数据！</div>
-        <div v-show="lists.length > 0">
-          <table class="table table-hover">
-            <thead>
-              <tr class="table_tit">
-                <th>序号</th>
-                <th>企业名称</th>
-                <th>申报机构</th>
-                <th>申报官</th>
-                <th>状态</th>
-                <th>申报时间</th>
-                <th>操作</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="(item, index) of lists">
-                <td><b>{{item.id}}</b></td>
-                <td>{{item.name}}</td>
-                <td>{{item.organizName}}</td>
-                <td>{{item.declarerName}}</td>
-                <td>
-                  <span :style="trafficLight[item.state]">{{status[item.state]}}</span>
-                </td>
-                <td>{{item.createTime}}</td>
-                <td class="gc_list">
-                  <router-link :to="'/entmgt/detail/' + item.id">查看详情</router-link>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <v-pagination :page="pages" :total="count" @nextPage="search"></v-pagination>
+          </div>
         </div>
       </div>
+      <h4>企业列表</h4>
+      <hr/>
+      <v-datagrid :columns="columns" :data-url="dataUrl" :count-url="countUrl" :params="params"></v-datagrid>
     </div>
   </div>
 </template>
 
 <script>
-import pagination from '@/components/pagination';
-import { PLATFORM_GET_DECLARER_ENTERPRISE_QUERY, PLATFORM_GET_DECLARER_ENTERPRISE_COUNT } from '@/config/env';
-import { TRAFFIC_LIGHT } from '@/config/mapping';
-import { formatDate } from '@/config/utils';
-import { DatePicker, Input, Select, Option, Button } from 'element-ui';
+  import { DECLARE_BASE_URL } from '@/config/env';
+  import { ORGANIZ_ENTERPRISE_STATE } from '@/config/mapping';
+  import { formatDate, reomveBlank } from '@/config/utils';
+  import { DatePicker } from 'element-ui';
 
-export default {
-  name: 'enterprise',
-  data() {
-    return {
-      lists: [],
-      page: 1,
-      rows: 10,
-      pages: 0,
-      name: null,
-      organizName: null,
-      startTime: '',
-      endTime: '',
-      state: null,
-      count: 0,
-      status: {
-        '': '请选择',
-        waitPending: '申报材料待初审',
-        waitUnPending: '申报材料初审未通过',
-        waitPended: '申报材料初审通过',
-        waitAudit: '申报材料待复审',
-        unPass: '申报材料复审未通过',
-        pass: '申报材料复审已通过',
-        wait: '系统服务费待支付',
-        pending: '入库材料待初审',
-        collectting: '待认证官上门采集',
-        confirmFailed: '入库材料初审未通过',
-        reject2: '认证官采集未完成',
-        pending2: '认证材料待复审',
-        confirm2Failed: '认证材料复审未通过',
-        passed: '认证材料复审已通过',
-      },
-      trafficLight: {
-        waitPending: TRAFFIC_LIGHT.yellow,
-        waitUnPending: TRAFFIC_LIGHT.red,
-        waitPended: TRAFFIC_LIGHT.green,
-        waitAudit: TRAFFIC_LIGHT.yellow,
-        unPass: TRAFFIC_LIGHT.red,
-        pass: TRAFFIC_LIGHT.green,
-        wait: TRAFFIC_LIGHT.yellow,
-        pending: TRAFFIC_LIGHT.yellow,
-        collectting: TRAFFIC_LIGHT.yellow,
-        confirmFailed: TRAFFIC_LIGHT.red,
-        reject2: TRAFFIC_LIGHT.red,
-        pending2: TRAFFIC_LIGHT.yellow,
-        confirm2Failed: TRAFFIC_LIGHT.red,
-        passed: TRAFFIC_LIGHT.green,
-      },
-    };
-  },
-  methods: {
-    async search(page, type) {
-      const param = {};
-      param.name = this.name;
-      param.organizName = this.organizName;
-      param.state = this.state;
-      if (this.startTime) {
-        param.startTime = new Date(this.startTime).getTime();
-      }
-      if (this.endTime) {
-        param.endTime = new Date(this.endTime).getTime();
-      }
-      param.page = page;
-      param.rows = this.rows;
-      const res = await this.$http.get(PLATFORM_GET_DECLARER_ENTERPRISE_QUERY, param);
-      if (res.success) {
-        this.lists = res.data;
-        this.lists.forEach((o) => {
-          // o.state = this.status[o.state];
-          o.createTime = formatDate(new Date(o.createTime), 'yyyy-MM-dd hh:mm:ss');
-        });
-      }
-      const param2 = {};
-      param2.name = this.name;
-      param2.organizName = this.organizName;
-      if (this.startTime) {
-        param2.startTime = new Date(this.startTime).getTime();
-      }
-      if (this.endTime) {
-        param2.endTime = new Date(this.endTime).getTime();
-      }
-      param2.state = this.state;
-      if (type === 2) {
-        this.pages = 0;
-      }
-      const res2 = await this.$http.get(PLATFORM_GET_DECLARER_ENTERPRISE_COUNT, param2);
-      if (res2.success) {
-        this.pages = Math.ceil(res2.data / param.rows);
-        this.count = res2.data;
-      }
+  export default {
+    name: 'enterprise',
+    data() {
+      return {
+        ORGANIZ_ENTERPRISE_STATE,
+        filter: {
+          name: null,
+          startTime: null,
+          endTime: null,
+          state: null,
+          organizName: null,
+        },
+        dataUrl: `${DECLARE_BASE_URL}platform/declare/enterprise/query`,
+        countUrl: `${DECLARE_BASE_URL}platform/declare/enterprise/count`,
+        params: {},
+        columns: [{ field: 'id', header: '序号', sort: 'id', width: 200 },
+          { field: 'name', header: '企业名称', sort: 'name', width: 120 },
+          { field: 'organizName', header: '申报机构', sort: 'organiz_name', width: 230 },
+          { field: 'declarerName', header: '申报官', sort: 'declarer_name', width: 230 },
+          {
+            field: 'state',
+            header: '状态',
+            sort: 'state',
+            width: 100,
+            html: true,
+            formatter(row, index, value) {
+              const s = ORGANIZ_ENTERPRISE_STATE[value];
+              return s.name.fontcolor(s.color);
+            },
+          },
+          {
+            field: 'createTime',
+            header: '提交时间',
+            sort: 'create_time',
+            width: 230,
+            formatter(row, index, value) {
+              return formatDate(value);
+            },
+          },
+          {
+            field: 'action',
+            header: '操作',
+            width: 200,
+            actions: [{
+              show(row) {
+                // 不等于基本资料待填写和已删除可以查看详情
+                return row.state !== 'baseWaitSubmit' && row.state !== 'deleted';
+              },
+              text: '【查看详情】',
+              handler: this.view,
+            }],
+          }],
+      };
     },
-    // 清除筛选条件
-    async claer(page, type) {
-      const param = {};
-      this.name = null;
-      this.organizName = null;
-      this.state = null;
-      if (this.startTime) {
-        param.startTime = new Date(this.startTime).getTime();
-      }
-      if (this.endTime) {
-        param.endTime = new Date(this.endTime).getTime();
-      }
-      param.page = page;
-      param.rows = this.rows;
-      const res = await this.$http.get(PLATFORM_GET_DECLARER_ENTERPRISE_QUERY, param);
-      if (res.success) {
-        this.lists = res.data;
-        this.lists.forEach((o) => {
-          // o.state = this.status[o.state];
-          o.createTime = formatDate(new Date(o.createTime), 'yyyy-MM-dd hh:mm:ss');
-        });
-      }
-      const param2 = {};
-      param2.name = this.name;
-      param2.organizName = this.organizName;
-      if (this.startTime) {
-        param2.startTime = new Date(this.startTime).getTime();
-      }
-      if (this.endTime) {
-        param2.endTime = new Date(this.endTime).getTime();
-      }
-      param2.state = this.state;
-      if (type === 2) {
-        this.pages = 0;
-      }
-      const res2 = await this.$http.get(PLATFORM_GET_DECLARER_ENTERPRISE_COUNT, param2);
-      if (res2.success) {
-        this.pages = Math.ceil(res2.data / param.rows);
-        this.count = res2.data;
-      }
+    methods: {
+      view(row) {
+        this.$router.push(`/declarer/enterprise/view/${row.id}`);
+      },
+      search() {
+        this.params = reomveBlank(this.filter);
+      },
+      clear() {
+        this.filter = {};
+        this.params = {};
+      },
     },
-  },
-  components: {
-    'v-pagination': pagination,
-    'el-date-picker': DatePicker,
-    'el-input': Input,
-    'el-select': Select,
-    'el-option': Option,
-    'el-button': Button,
-  },
-  mounted() {
-    this.search(this.page);
-  },
-};
+    components: {
+      'v-datagrid': () => import('@/components/datagrid'),
+      'el-date-picker': DatePicker,
+    },
+  };
 </script>
 
 <style lang="scss" scoped>
-@import '../../../assets/css/mixin.scss';
-
-.width{
-  width: 100px;
-}
-.current a {
-  color: #000 !important;
-}
-.index_content {
-  margin-top: 50px;
-}
-.index_table {
-  background: #fff;
-  padding: 40px;
-  border-radius: 4px 4px 0 0;
-  min-height: 600px;
-}
-.index_table_search {
-  margin-bottom: 40px;
-}
-.btn_search {
-  padding: 6px 40px;
-  background: #4786ff;
-  border-radius: 20px;
-  color: #fff;
-  margin-bottom: 20px;
-}
-.index_table_search .form-group {
-  margin: 15px 10px;
-}
-.index_table_search input, .index_table_search select {
-  padding: 5px 10px;
-  border: 1px solid #ddd;
-  max-width: 150px;
-  margin-bottom: 20px;
-}
-table {
-  border: 1px solid #ddd;
-}
-.index_table nav {
-  margin-top: 80px;
-}
-.index_table .table>thead>tr>th {
-  border-bottom: 0;
-  padding: 15px 8px;
-  min-width: 80px;
-}
-.index_table .table>tbody>tr>td {
-  padding: 12px 8px;
-}
-.gc_list a {
-  padding-right: 15px;
-  color: #4786ff !important;
-}
-.back_icon {
-  color: #ababab;
-  padding: 5px 30px;
-  border: 1px solid #d4d4d4;
-  border-radius: 20px;
-  letter-spacing: 5px;
-  float: left;
-  margin-top: 5px;
-}
-.back_icon img {
-  padding-right: 10px;
-}
-.index_table_con .form-group {
-  margin: 30px 0;
-}
-.index_table_con a:hover {
-  color: #fff;
-}
-.index_table_tit {
-  margin-bottom: 30px;
-}
-.index_table_tit .nav-tabs {
-  border-bottom: 0;
-  width: 280px;
-  margin: auto;
-}
-.index_table_tit .nav-tabs li {
-  width: 50%;
-  text-align: center;
-}
-.index_table_tit .nav-tabs>li>a {
-  margin-right: 0;
-  border: 1px solid #efefef;
-  border-radius: 0;
-  font-size: 14px;
-  font-weight: 600;
-  background: #f9f9f9;
-}
-.index_table_tit .nav-tabs>li>a:hover {
-  background: #fff;
-  border: 1px solid #efefef;
-}
-.index_table_tit .nav-tabs>li.active>a {
-  border: 1px solid #fff;
-  border-radius: 0;
-  background: #fff;
-}
 </style>

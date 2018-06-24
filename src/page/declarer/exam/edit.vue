@@ -1,6 +1,6 @@
 <template>
-  <div class="content">
-    <div class="content_con">
+  <div class="plat-content">
+    <div class="plat-content-con">
     <div class="index_table_tit clearfix">
       <div class="col-md-10 col-md-offset-1">
        <router-link to="/declarer/exam/the_test" class="btn back_icon"><img :src="backicon">返回</router-link>
@@ -9,15 +9,14 @@
     <div class="index_table index_table_con clearfix">
      <div class="col-md-8 col-md-offset-2">
       <h3 class="tit_bjks text-center">{{name}}</h3>
-      <!-- <textarea title="" class="inputtext inputtext_1" placeholder="请输入考试说明"></textarea> -->
       <span class="inputtext_1">{{illustrate}}</span>
       <div class="cjst_btn">
        <ul>
-        <li class="text-center btn_search" @click="insertToHtml('single')">插入单选题</li>
-        <li class="text-center btn_search" @click="insertToHtml('multiple')">插入多选题</li>
-        <li class="text-center btn_search" @click="insertToHtml('judge')">插入判断题</li>
-        <li class="text-center btn_search" @click="insertToHtml('fill')">插入填空题</li>
-        <li class="text-center btn_search" @click="insertToHtml('essay')">插入简答题</li>
+        <li class="text-center btn_search" @click="type='insert';item={};$refs.single.$refs.modal.toggle()">插入单选题</li>
+        <li class="text-center btn_search" @click="type='insert';item={};$refs.multiple.$refs.modal.toggle();">插入多选题</li>
+        <li class="text-center btn_search" @click="type='insert';item={};$refs.judge.$refs.modal.toggle();">插入判断题</li>
+        <li class="text-center btn_search" @click="type='insert';item={};$refs.fill.$refs.modal.toggle();">插入填空题</li>
+        <li class="text-center btn_search" @click="type='insert';item={};$refs.essay.$refs.modal.toggle();">插入简答题</li>
        </ul>
        <div style="clear:both;"></div>
       </div>
@@ -44,7 +43,7 @@
                 </ul>
                 <div class="cjks_txxg clearfix"> 
                   <ul class="pull-right txxg_xx"> 
-                    <li class="text-center" @click="editToHtml(index, 'single')"><a data-toggle="modal" data-target="#myModal"><img :src="bj" />编辑</a></li> 
+                    <li class="text-center" @click="singleQI=index;type='edit';item=q;$refs.single.$refs.modal.toggle();"><a data-toggle="modal" data-target="#myModal"><img :src="bj" />编辑</a></li> 
                     <li class="text-center" @click="copy(index, 'single')"><img :src="cz" />复制</li> 
                     <li class="text-center" @click="del(index, 'single')"><img :src="sc" />删除</li> 
                   </ul> 
@@ -74,7 +73,7 @@
                 </ul>
                 <div class="cjks_txxg clearfix"> 
                   <ul class="pull-right txxg_xx"> 
-                    <li class="text-center" @click="editToHtml(index, 'multiple')"><a data-toggle="modal" data-target="#myModal"><img :src="bj" />编辑</a></li> 
+                    <li class="text-center" @click="multipleQI=index;type='edit';item=q;$refs.multiple.$refs.modal.toggle();"><a><img :src="bj" />编辑</a></li> 
                     <li class="text-center" @click="copy(index, 'multiple')"><img :src="cz" />复制</li> 
                     <li class="text-center" @click="del(index, 'multiple')"><img :src="sc" />删除</li> 
                   </ul> 
@@ -102,7 +101,7 @@
                 </ul>
                 <div class="cjks_txxg clearfix"> 
                   <ul class="pull-right txxg_xx"> 
-                    <li class="text-center" @click="editToHtml(index, 'judge')"><a data-toggle="modal" data-target="#myModal"><img :src="bj" />编辑</a></li> 
+                    <li class="text-center" @click="judgeQI=index;type='edit';item=q;$refs.judge.$refs.modal.toggle();"><a><img :src="bj" />编辑</a></li> 
                     <li class="text-center" @click="copy(index, 'judge')"><img :src="cz" />复制</li> 
                     <li class="text-center" @click="del(index, 'judge')"><img :src="sc" />删除</li> 
                   </ul> 
@@ -125,7 +124,7 @@
                 </div>
                 <div class="cjks_txxg clearfix"> 
                   <ul class="pull-right txxg_xx"> 
-                    <li class="text-center" @click="editToHtml(index, 'fill')"><a data-toggle="modal" data-target="#myModal"><img :src="bj" />编辑</a></li> 
+                    <li class="text-center" @click="fillQI=index;type='edit';item=q;$refs.fill.$refs.modal.toggle();"><a data-toggle="modal" data-target="#myModal"><img :src="bj" />编辑</a></li> 
                     <li class="text-center" @click="copy(index, 'fill')"><img :src="cz" />复制</li> 
                     <li class="text-center" @click="del(index, 'fill')"><img :src="sc" />删除</li> 
                   </ul> 
@@ -149,7 +148,7 @@
             </div>
             <div class="cjks_txxg clearfix"> 
               <ul class="pull-right txxg_xx"> 
-                <li class="text-center" @click="editToHtml(index, 'essay')"><a data-toggle="modal" data-target="#myModal"><img :src="bj" />编辑</a></li> 
+                <li class="text-center" @click="essayQI=index;type='edit';item=q;$refs.essay.$refs.modal.toggle();"><a><img :src="bj" />编辑</a></li> 
                 <li class="text-center" @click="copy(index, 'essay')"><img :src="cz" />复制</li> 
                 <li class="text-center" @click="del(index, 'essay')"><img :src="sc" />删除</li> 
               </ul> 
@@ -164,100 +163,11 @@
      </div>
     </div>
    </div>
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"> 
-      <div class="modal-dialog" role="document"> 
-        <div class="modal-content"> 
-          <div class="modal-header clearfix"> 
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="closed(type)"><span aria-hidden="true">&times;</span></button> 
-          </div> 
-          <div class="modal-body wzys"> 
-            <div class="clearfix txxz"> 
-              <div class="col-md-4">
-                当前题型： 
-                <span class="size_color">{{subjectType[type]}}</span>
-              </div> 
-              <div class="col-md-4">
-              <!--   转换题型： 
-                <select v-model="type">
-                  <option v-for="(v, k) of subjectType" :value="k">{{v}}</option>
-                </select> --> 
-              </div> 
-            </div> 
-            <div class="row clearfix"> 
-              <div class="col-md-12"> 
-                <div class="bjst"> 
-                  <div class="bjst_tit clearfix"> 
-                    <h5 class="pull-left">标题</h5> 
-                    <!-- <a class="pull-right">插入图片或视频</a>  -->
-                  </div> 
-                  <textarea title="" class="inputtext" v-model="title" placeholder="请设置标题"></textarea> 
-                  <div class="bjst_tit clearfix" v-show="type === 'fill'"> 
-                    <h5 class="pull-left">答案</h5> 
-                    <!-- <a class="pull-right">插入图片或视频</a>  -->
-                  </div> 
-                  <input v-show="type === 'fill'" title="" class="inputtext" v-model="answer" placeholder="请设置答案"></input>
-                </div> 
-              </div> 
-            </div> 
-            <div class="stnr"> 
-              <div class="row clearfix"> 
-                <table class="table"  v-show="options.length > 0"> 
-                  <thead> 
-                    <tr class="table_tit"> 
-                      <th>选项文字</th> 
-                      <!-- <th>图片</th>  -->
-                      <th>正确答案</th> 
-                      <th v-show="type !== 'judge'">操作</th> 
-                    </tr> 
-                  </thead> 
-                  <tbody> 
-                    <tr v-for="(o, index) of options"> 
-                      <td v-show="type !== 'judge'"><input type="text" v-model="o.option"/></td> 
-                      <td v-show="type === 'judge'"><input type="text" v-model="o.option" disabled="disabled" /></td> 
-                      <!-- <td><img :src="tp" /></td>  -->
-                      <td>
-                        <label class="checkbox-inline">
-                          <input v-if="type === 'single' || type === 'judge'" :value="index" type="radio" name="radio1" v-model="answer" />
-                          <input v-if="type === 'multiple'" type="checkbox" v-model="o.answer" />
-                        </label>
-                      </td> 
-                      <td class="gc_list" v-show="type !== 'judge'">
-                        <span>
-                          <img :src="tj" @click="addOption"/>
-                        </span>
-                        <span>
-                          <img :src="jy" @click="delOption(index)"/>
-                        </span>
-                        <span>
-                          <img :src="sy" @click="upMove(index)" />
-                        </span>
-                        <span>
-                          <img :src="xy" @click="downMove(index)"/>
-                        </span>
-                      </td>
-                    </tr> 
-                  </tbody> 
-                </table> 
-                <div class="clearfix dajx"> 
-                  <div class="col-md-6"> 
-                    <label for="">题目分数</label> 
-                    <select v-model="score">
-                      <option v-for="v of scores">{{v}}</option>
-                    </select> 
-                  </div> 
-                </div> 
-              </div> 
-            </div> 
-            <div style="position: absolute;top: -35px;width: 95%;" class="alert alert-danger" role="alert" v-if="errMsg.length > 0">
-              <div v-for="e of errMsg">
-                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-                <span class="sr-only">Error:</span>{{e}}
-              </div>
-            </div>
-            <button class="btn wcbj" data-event="reject"  @click="finish">完成编辑</button> 
-          </div> 
-        </div> 
-      </div> 
+     <v-single-modal ref="single" :item="item" :handler="editHandler" :type="type"></v-single-modal>
+     <v-multiple-modal ref="multiple" :item="item" :handler="multipleHandler" :type="type"></v-multiple-modal>
+     <v-judge-modal ref="judge" :item="item" :handler="judgeHandler" :type="type"></v-judge-modal>
+     <v-essay-modal ref="essay" :item="item" :handler="essayHandler" :type="type"></v-essay-modal>
+     <v-fill-modal ref="fill" :item="item" :handler="fillHandler" :type="type"></v-fill-modal>
     </div>
   </div>
 </template>
@@ -266,34 +176,79 @@
 import bj from '@/assets/img/bj.png';
 import cz from '@/assets/img/cz.png';
 import sc from '@/assets/img/sc.png';
-import sy from '@/assets/img/sy.png';
-import xy from '@/assets/img/xy.png';
-import zq from '@/assets/img/zq.png';
-import sm from '@/assets/img/sm.png';
-import tp from '@/assets/img/tp.png';
-import tj from '@/assets/img/tj.png';
-import jy from '@/assets/img/jy.png';
-import zh from '@/assets/img/zh.png';
 import backicon from '@/assets/img/back_icon.png';
 import { PLATFORM_POST_EXAMS_ADDITIONORUPDATING, PLATFORM_POST_EXAMS_EDITION } from '@/config/env';
+import singleModal from '@/page/declarer/exam/singleModal';
+import multipleModal from '@/page/declarer/exam/multipleModal';
+import judgeModal from '@/page/declarer/exam/judgeModal';
+import essayModal from '@/page/declarer/exam/essayModal';
+import fillModal from '@/page/declarer/exam/fillModal';
 
 export default {
   data() {
     return {
+      editHandler: (o) => {
+        if (this.type === 'insert') {
+          o.type = 'single';
+          this.singleQS.push(o);
+          return;
+        }
+        const o2 = this.singleQS[this.singleQI];
+        o2.title = o.title;
+        o2.answer = o.answer;
+        o2.options = o.options;
+        o2.score = o.score;
+      },
+      multipleHandler: (o) => {
+        if (this.type === 'insert') {
+          o.type = 'multiple';
+          this.multipleQS.push(o);
+          return;
+        }
+        const o2 = this.multipleQS[this.multipleQI];
+        o2.title = o.title;
+        o2.options = o.options;
+        o2.score = o.score;
+      },
+      judgeHandler: (o) => {
+        if (this.type === 'insert') {
+          o.type = 'judge';
+          this.judgeQS.push(o);
+          return;
+        }
+        const o2 = this.judgeQS[this.judgeQI];
+        o2.title = o.title;
+        o2.answer = o.answer;
+        o2.options = o.options;
+        o2.score = o.score;
+      },
+      essayHandler: (o) => {
+        if (this.type === 'insert') {
+          o.type = 'essay';
+          this.essayQS.push(o);
+          return;
+        }
+        const o2 = this.essayQS[this.essayQI];
+        o2.title = o.title;
+        o2.score = o.score;
+      },
+      fillHandler: (o) => {
+        if (this.type === 'insert') {
+          o.type = 'fill';
+          this.fillQS.push(o);
+          return;
+        }
+        const o2 = this.fillQS[this.fillQI];
+        o2.title = o.title;
+        o2.score = o.score;
+        o2.answer = o.answer;
+      },
       backicon,
       bj,
       cz,
       sc,
-      sy,
-      xy,
-      zq,
-      sm,
-      tp,
-      tj,
-      jy,
-      zh,
       insOrEdi: '',
-      type: '',
+      type: null,
       typeNm: '',
       subjectType: {
         single: '单选题',
@@ -302,6 +257,7 @@ export default {
         fill: '填空题',
         judge: '判断题',
       },
+      item: {},
       list: [],
       singleQI: '',
       singleQS: [
@@ -384,260 +340,14 @@ export default {
       illustrate: null,
     };
   },
+  components: {
+    'v-single-modal': singleModal,
+    'v-multiple-modal': multipleModal,
+    'v-judge-modal': judgeModal,
+    'v-essay-modal': essayModal,
+    'v-fill-modal': fillModal,
+  },
   methods: {
-    addOption() {
-      const option = {
-        option: '',
-        answer: '',
-        image: '',
-      };
-      this.answer = '';
-      this.options.push(option);
-    },
-    delOption(index) {
-      if (this.options.length === 1) return;
-      this.answer = '';
-      this.options.splice(index, 1);
-    },
-    downMove(index) {
-      if (index === this.options.length - 1) return;
-      const a = this.options[index + 1];
-      const b = this.options[index];
-      this.options.splice(index, 2, ...[a, b]);
-      if (index === this.answer - 0) {
-        this.answer = index + 1;
-      } else if (index === this.answer - 1) {
-        this.answer = index;
-      }
-    },
-    upMove(index) {
-      if (index === 0) return;
-      const a = this.options[index];
-      const b = this.options[index - 1];
-      this.options.splice(index - 1, 2, ...[a, b]);
-      if (index === (this.answer - 0)) {
-        this.answer = index - 1;
-      } else if (index === (this.answer - 0 + 1)) {
-        this.answer = index;
-      }
-    },
-    edit(type) {
-      if (type === 'single') {
-        const q = this.singleQS[this.singleQI];
-        q.title = this.title;
-        q.score = this.score;
-        q.answer = this.answer;
-        if (!q.title) {
-          this.errMsg.push('请设置标题');
-        }
-        q.options.forEach((d, index) => {
-          if (!d.option) {
-            this.errMsg.push(`请设置第${index + 1}行选项文字`);
-          }
-        });
-        if (q.answer === '') {
-          this.errMsg.push('请设置正确答案');
-        }
-      } else if (type === 'judge') {
-        const q = this.judgeQS[this.judgeQI];
-        q.title = this.title;
-        q.score = this.score;
-        q.answer = this.answer;
-        if (!q.title) {
-          this.errMsg.push('请设置标题');
-        }
-        if (q.answer === '') {
-          this.errMsg.push('请设置正确答案');
-        }
-      } else if (type === 'fill') {
-        const q = this.fillQS[this.fillQI];
-        q.title = this.title;
-        q.score = this.score;
-        q.answer = this.answer;
-        if (!q.title) {
-          this.errMsg.push('请设置标题');
-        }
-        if (q.answer === '') {
-          this.errMsg.push('请设置正确答案');
-        }
-      } else if (type === 'multiple') {
-        const q = this.multipleQS[this.multipleQI];
-        q.title = this.title;
-        q.score = this.score;
-        q.answer = [];
-        if (!q.title) {
-          this.errMsg.push('请设置标题');
-        }
-        this.options.forEach((d, index) => {
-          if (d.answer) {
-            q.answer.push(index);
-          }
-          if (!d.option) {
-            this.errMsg.push(`请设置第${index + 1}行选项文字`);
-          }
-        });
-        if (q.answer.length === 0) {
-          this.errMsg.push('请设置正确答案');
-        }
-      } else if (type === 'essay') {
-        const q = this.essayQS[this.essayQI];
-        q.title = this.title;
-        q.score = this.score;
-        if (!q.title) {
-          this.errMsg.push('请设置标题');
-        }
-      }
-      if (this.errMsg.length > 0) return;
-      this.jQuery('#myModal').modal('hide');
-    },
-    insert(type) {
-      const question = {};
-      question.title = this.title;
-      question.score = this.score;
-      question.type = this.type;
-      if (!question.title) {
-        this.errMsg.push('请设置标题');
-      }
-      if (type === 'single') {
-        question.answer = this.answer;
-        question.options = this.options;
-        question.options.forEach((d, index) => {
-          if (!d.option) {
-            this.errMsg.push(`请设置第${index + 1}行选项文字`);
-          }
-        });
-        if (question.answer === '') {
-          this.errMsg.push('请设置正确答案');
-        }
-        if (this.errMsg.length === 0) {
-          this.singleQS.push(question);
-        }
-      } else if (type === 'multiple') {
-        question.answer = [];
-        this.options.forEach((d, index) => {
-          if (d.answer) {
-            question.answer.push(index);
-          }
-          if (!d.option) {
-            this.errMsg.push(`请设置第${index + 1}行选项文字`);
-          }
-        });
-        question.options = this.options;
-        if (question.answer.length === 0) {
-          this.errMsg.push('请设置正确答案');
-        }
-        if (this.errMsg.length === 0) {
-          this.multipleQS.push(question);
-        }
-      } else if (type === 'judge') {
-        question.answer = this.answer;
-        question.options = this.options;
-        if (question.answer === '') {
-          this.errMsg.push('请设置正确答案');
-        }
-        if (this.errMsg.length === 0) {
-          this.judgeQS.push(question);
-        }
-      } else if (type === 'fill') {
-        question.answer = this.answer;
-        if (question.answer === '') {
-          this.errMsg.push('请设置正确答案');
-        }
-        if (this.errMsg.length === 0) {
-          this.fillQS.push(question);
-        }
-      } else if (type === 'essay') {
-        if (this.errMsg.length === 0) {
-          this.essayQS.push(question);
-        }
-      }
-      if (this.errMsg.length > 0) return;
-      this.jQuery('#myModal').modal('hide');
-    },
-    finish() {
-      this.errMsg = [];
-      if (this.insOrEdi === 'edit') {
-        this.edit(this.type);
-      } else if (this.insOrEdi === 'insert') {
-        this.insert(this.type);
-      }
-      clearTimeout(this.timer);
-      this.timer = setTimeout(() => { this.errMsg = []; }, 2000);
-    },
-    insertToHtml(type) {
-      this.options = [];
-      if (type === 'single' || type === 'multiple') {
-        const o = {
-          option: '',
-          answer: '',
-          image: '',
-        };
-        this.options.push(o);
-      }
-      if (type === 'judge') {
-        this.options.push({
-          option: '对',
-          answer: '',
-          image: '',
-        });
-        this.options.push({
-          option: '错',
-          answer: '',
-          image: '',
-        });
-      }
-      if (type === 'fill') {
-        this.answer = '';
-      }
-      this.title = '';
-      this.type = type;
-      this.score = 5;
-      this.insOrEdi = 'insert';
-    },
-    editToHtml(index, type) {
-      let q;
-      if (type === 'single') {
-        this.singleQI = index;
-        q = this.singleQS[index];
-        this.answer = q.answer;
-        this.options = q.options;
-      } if (type === 'judge') {
-        this.judgeQI = index;
-        q = this.judgeQS[index];
-        this.answer = q.answer;
-        this.options = q.options;
-      } else if (type === 'multiple') {
-        this.multipleQI = index;
-        q = this.multipleQS[index];
-        this.options = q.options;
-      } else if (type === 'essay') {
-        this.essayQI = index;
-        q = this.essayQS[index];
-        this.options = [];
-      } else if (type === 'fill') {
-        this.fillQI = index;
-        q = this.fillQS[index];
-        this.options = [];
-      }
-      this.title = q.title;
-      this.type = type;
-      this.score = q.score;
-      this.insOrEdi = 'edit';
-      if (q.options) {
-        this.cancelOp = JSON.parse(JSON.stringify(q.options)) || [];
-      }
-    },
-    closed(type) {
-      if (!this.cancelOp) return;
-      if (type === 'single') {
-        this.singleQS[this.singleQI].options = this.cancelOp;
-      } else if (type === 'multiple') {
-        this.multipleQS[this.multipleQI].options = this.cancelOp;
-      } else if (type === 'judge') {
-        this.judgeQS[this.judgeQI].options = this.cancelOp;
-      }
-      this.options = this.cancelOp;
-    },
     copy(index, type) {
       if (type === 'single') {
         const o = JSON.parse(JSON.stringify(this.singleQS[index]));
@@ -695,13 +405,13 @@ export default {
     async init() {
       const res = await this.$http.get(`${PLATFORM_POST_EXAMS_EDITION}${this.$route.params.id}`);
       if (res.success) {
-        this.singleQS = res.questionMap.single || [];
-        this.multipleQS = res.questionMap.multiple || [];
-        this.essayQS = res.questionMap.essay || [];
-        this.judgeQS = res.questionMap.judge || [];
-        this.fillQS = res.questionMap.fill || [];
-        this.name = res.name;
-        this.illustrate = res.illustrate;
+        this.singleQS = res.data.questionMap.single || [];
+        this.multipleQS = res.data.questionMap.multiple || [];
+        this.essayQS = res.data.questionMap.essay || [];
+        this.judgeQS = res.data.questionMap.judge || [];
+        this.fillQS = res.data.questionMap.fill || [];
+        this.name = res.data.name;
+        this.illustrate = res.data.illustrate;
         if (this.singleQS) {
           this.singleQS.forEach((o) => {
             o.options = JSON.parse(o.content);
@@ -803,7 +513,7 @@ export default {
       param.questionList.forEach((d) => {
         if (d.options) {
           d.content = JSON.stringify(d.options);
-          d.answer = d.answer.join ? d.answer.join(',') : d.answer;
+          d.answer = typeof d.answer === 'object' ? d.answer.join(',') : d.answer;
           delete d.options;
         }
       });

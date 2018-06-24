@@ -1,59 +1,71 @@
 <template>
-  <div class="content">
-    <div class="content_con">
-    	<div style="width: 800px; position: relative;">
-    	<h4>发布公告</h4>
-    	<div class="platform">
-        <span>发布至</span>
-        <select>
-          <option v-for="(v, k) of status" :value="k">{{v}}</option>
-        </select>
-      </div>
-    	<div class="platform">
-    		<div class="obj"><span>发布对象</span><input placeholder="请输入企业名称" /></div>
-    	    <div class="type"><span>企业类型</span>
-    	    	<select>
-    	    		<option value="0" selected = "selected">请选择企业类型</option>
-    	    	</select>
-    	    </div>
-    	</div>
-    	<div class="platform"><span>标题</span><input class="title" placeholder="请输入内容" /></div>
-    	<div class="platform_1">
-    		<div style="width: 80px; height: 260px; margin-right: 20px; text-align: right; float: left;">公告内容</div>
-    		<div style="width: 700px; float: left;"> 
-          <!-- 双向数据绑定 -->
-          <quill-editor ref="myTextEditor"
-                        v-model="content"
-                        :options="editorOption"
-                        @blur="onEditorBlur($event)"
-                        @focus="onEditorFocus($event)"
-                        @ready="onEditorReady($event)">
-          </quill-editor>
+  <div class="plat-content">
+    <div class="plat-content-con">
+    	<h4>筛选条件</h4>
+      <hr/>
+      <form class="form-horizontal">
+        <div class="form-group">
+          <label class="col-sm-1 control-label">发布至</label>
+          <div class="col-sm-11">
+            <select class="form-control" v-model="type">
+              <option v-for="(v, k) of status" :value="k">{{v}}</option>
+            </select>
+          </div>
         </div>
-    	</div>
-    	<div class="but">发布</div>
-    	</div>
+        <div class="form-group">
+          <label class="col-sm-1 control-label">标题</label>
+          <div class="col-sm-11">
+            <input placeholder="请输入标题" class="form-control" v-model="title"/>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-1 control-label">公告内容</label>
+          <div class="col-sm-11">
+            <quill-editor ref="myTextEditor"
+                          v-model="content"
+                          :options="editorOption"
+                          @blur="onEditorBlur($event)"
+                          @focus="onEditorFocus($event)"
+                          @ready="onEditorReady($event)">
+            </quill-editor>
+          </div>
+        </div>
+        <br/>
+        <br/>
+        <div class="form-group">
+          <div class="col-sm-offset-1 col-sm-11">
+            <button type="button" class="btn btn-default" @click="submit">发布</button>
+            <button v-if="$route.params.id" type="button" class="btn btn-default" @click="$router.push('/message/list')">返回</button>
+          </div>
+        </div>
+      </form>
+      <v-modal ref="modal"></v-modal>
     </div>
   </div>
 </template>
 <script>
 import { quillEditor } from 'vue-quill-editor';
+import { PLATFORM_NOTICES, PUBLICS_NOTICES_DETAILS } from '@/config/env';
+import modal from '@/page/message/create/modal';
 
 export default {
   name: 'system',
   components: {
     quillEditor,
+    'v-modal': modal,
   },
   data() {
     return {
+      title: '',
       content: '',
+      type: 'authOfficer',
       editorOption: {
        // something config
       },
       status: {
-        0: '请选择申报系统',
-        1: '企业自主管理后台',
-        2: '认证官方APP',
+        authOfficer: '认证官系统',
+        declare: '申报系统',
+        enterprise: '企业平台系统',
       },
     };
   },
@@ -71,11 +83,44 @@ export default {
       // console.log('editor change!', editor, html, text);
       // this.content = html;
     },
+    async init() {
+      if (!this.$route.params.id) return;
+      const res = await this.$http.get(`${PUBLICS_NOTICES_DETAILS}${this.$route.params.id}`);
+      if (res.success) {
+        this.title = res.data.title;
+        this.content = res.data.content;
+        this.type = res.data.type;
+      }
+    },
+    async submit() {
+      const param = {};
+      param.title = this.title;
+      param.content = this.content;
+      param.type = this.type;
+      let res = null;
+      if (!this.$route.params.id) {
+        res = await this.$http.post(PLATFORM_NOTICES, param);
+        if (res.success) {
+          this.title = '';
+          this.content = '';
+          this.type = 'authOfficer';
+          this.$refs.modal.$refs.modal.toggle();
+        }
+      } else {
+        res = await this.$http.put(`${PLATFORM_NOTICES}/${this.$route.params.id}`, param);
+        if (res.success) {
+          this.$refs.modal.$refs.modal.toggle();
+        }
+      }
+    },
   },
   computed: {
     editor() {
       return this.$refs.myTextEditor.quillEditor;
     },
+  },
+  mounted() {
+    this.init();
   },
 };
 </script>
@@ -85,94 +130,6 @@ export default {
 
 .quill-editor {
   height: 192px;
-  .ql-container {
-  }
-}
-.platform{
-	width: 100%;
-	height: 40px;
-	margin-top: 40px;
-}
-.platform_1{
-  width: 100%;
-  height: 260px;
-  margin-top: 40px;
-}
-.platform span{
-	width: 80px;
-	height: 40px;
-	line-height: 40px;
-	margin-right: 20px;
-	text-align: right;
-  float: left;
-}
-.platform select{
-	width: 700px;
-	height: 40px;
-	padding-left: 10px;
-	border:1px solid #dde8ee;
-  float: left;
-}
-.platform input{
-	width: 700px;
-	height: 40px;
-	padding-left: 10px;
-	border:1px solid #dde8ee;
-}
-.obj{
-	width: 400px;
-	height: 40px;
-	position: absolute;
-	display: inline-block;
-}
-.obj input{
-	width: 280px;
-	height: 40px;
-	padding-left: 10px;
-	display: inline-block;
-}
-.type select{
-	position: absolute;
-	right: 0;
-	padding-left: 10px;
-	width: 280px;
-	height: 40px;
-}
-.type{
-	width: 400px;
-	height: 40px;
-	position: absolute;
-	left: 400px;
-	display: inline-block;
-}
-.but{
-	width: 300px;
-	height: 40px;
-	line-height: 40px;
-	background-color: #327bfb;
-	text-align: center;
-	border-radius: 5px;
-	color: #fff;
-  margin-top: 30px;
-	margin-left: 100px;
-}
-input, select{
-  outline:none;
-}
-:-moz-placeholder {
-    color: #aab0c0; 
-}
-
-::-moz-placeholder {
-    color: #aab0c0;
-}
-
-input:-ms-input-placeholder{
-    color: #aab0c0;
-}
-
-input::-webkit-input-placeholder{
-    color: #aab0c0;
 }
 
 </style>

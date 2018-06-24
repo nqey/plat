@@ -1,39 +1,34 @@
 <template>
-  <div class="content">
-    <div class="content_con">
-      <div class="clearfix">
-        <div class="pull-left">
-          <p class="header">筛选条件</p>
-        </div>
-      </div>
-      <!--筛选条件-->
-      <div class="filters datagrid-filter">
-        <div class="form-inline row clearfix">
-          <div class="form-group col-md-4">
-            <label >投诉人</label>
-            <input type="text" class="form-control" v-model="name" placeholder="请输入投诉人姓名">
-          </div>
-          <div class="form-group col-md-4">
-            <button type="button" class="search btn-primary btn datagrid-search" @click="search">
-               <span class="glyphicon glyphicon-search"></span>搜索
-            </button>
-            <button type="reset" class="search clear btn-primary btn datagrid-clear" @click="clear">清空</button>
+  <div class="plat-content">
+    <div class="plat-content-con">
+      <h4>筛选条件</h4>
+      <hr/>
+      <div class="filters">
+        <div class="form-inline">
+          <div class="row clearfix sssrk">
+            <div class="form-group col-md-4">
+              <label >投诉人</label>
+              <input type="text" class="form-control" v-model="name" placeholder="请输入投诉人姓名">
+            </div>
+            <div class="form-group col-md-4">
+              <button type="button" class="btn btn-primary" @click="search">
+                 <span class="glyphicon glyphicon-search"></span>搜索
+              </button>
+              <button type="reset" class="btn btn-primary" @click="clear">清空</button>
+            </div>
           </div>
         </div>
       </div>
+      <br/>
+      <br/>
+      <h4>投诉列表</h4>
+      <hr/>
       <!--列表详情-->
-      <div class="main_left_section_content">
-        <div id="authofficer-list-datagrid" class="Datagrid">
-          <div class="datagrid-title">
-            <p class="font">投诉列表</p>
-          </div>
-          <v-datagrid :columns="columns"
-                      :data-url="dataUrl"
-                      :count-url="countUrl"
-                      :params="datagridParams">
-          </v-datagrid>
-        </div>
-      </div>
+      <v-datagrid :columns="columns"
+                  :data-url="dataUrl"
+                  :count-url="countUrl"
+                  :params="datagridParams">
+      </v-datagrid>
     </div>
   </div>
 </template>
@@ -86,13 +81,13 @@
             header: '编辑',
             width: 250,
             actions: [{
-              text: '【工厂详情】',
+              text: '【查看】',
               show() {
                 return true;
               },
-              handler: (row) => {
-                this.$router.push(`/factory/list/view/${row.id}`);
-              },
+              // handler: (row) => {
+              //   // this.$router.push(`/factory/list/view/${row.id}`);
+              // },
             }],
           },
         ],
@@ -119,17 +114,5 @@
 
 <style lang="scss" scoped>
 @import '../../../assets/css/mixin.scss';
-
-.header{
-  font-size: 26px;
-  margin: 30px 0;
-}
-.font{
-  font-size: 18px;
-  margin: 30px 0 10px 0;
-}
-.btn{
-  width: 150px;
-}
 
 </style>

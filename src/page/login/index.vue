@@ -8,15 +8,15 @@
             <div class="login">
               <ul>
                 <li>
-                  <input class="input valid" name="username" type="text"  placeholder="用户名" title="用户名" v-model="username" @keypress="loginBefor($event)">
+                  <input class="input valid" name="username" type="text"  placeholder="用户名" title="用户名" v-model="username" @keypress.enter="login">
                 </li>
                 <li>
-                  <input class="input valid" name="password" type="password" placeholder="密码" title="密码" v-model="password" @keypress="loginBefor($event)">
+                  <input class="input valid" name="password" type="password" placeholder="密码" title="密码" v-model="password" @keypress.enter="login">
                 </li>
                 <li>
                   <ul class="logo_yzm">
                     <li>
-                      <input class="input" type="text" v-model="checknumber" name="checknumber" placeholder="请输入验证码" @keypress="loginBefor($event)">
+                      <input class="input" type="text" v-model="checknumber" name="checknumber" placeholder="请输入验证码" @keypress.enter="login">
                     </li>
                     <li class="verifycode-wrapper txr"><img :src="yzx" alt="点击更换验证码" width="112" height="45" @click="yzm"> </li>
                   </ul>
@@ -26,7 +26,7 @@
                 <button class="btn js-ajax-submit" @click="login">{{lo}}</button>
               </div>
             </div>
-          </div>  
+          </div>
         </div>
       </div>
   </div>
@@ -58,11 +58,6 @@ export default {
     'v-error-info': errInfo,
   },
   methods: {
-    loginBefor(e) {
-      if (e.keyCode === 13) {
-        this.login();
-      }
-    },
     validate() {
       this.errMsg = [];
       if (!this.username) {

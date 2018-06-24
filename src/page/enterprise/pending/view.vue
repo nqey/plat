@@ -1,198 +1,312 @@
 <template>
-  <div class="content">
-    <div class="content_con">
+  <div class="plat-content">
+    <div class="plat-content-con">
+      <div class="box">
+        <div class="title">审核信息</div>
+        <div class="title_content">
+          <span>订单编号:</span><p>{{list.order.id}}</p>
+        </div>
+        <div class="title_content">
+          <span>支付方式:</span><p>{{payway[list.order.payMethod]}}</p>
+        </div>
+        <div class="title_content">
+          <span>支付状态:</span><p>{{stateOjb[list.order.state]}}</p>
+        </div>
+        <div class="title_content">
+          <span>支付金额:</span><p>{{list.order.amount}}</p>
+        </div>
+        <div class="title_content">
+          <span>创建时间:</span><p>{{list.order.createTime && formatDate(list.order.createTime)}}</p>
+        </div>
+        <div class="title_content"> 
+          <span>支付时间:</span><p>{{list.order.modifyTime && formatDate(list.order.modifyTime)}}</p>
+        </div>
+        <div class="title_content">
+          <span>审核操作:</span><p><button @click="pass">通过</button><button @click="nopass" id="color">不通过</button></p>
+        </div>
+      </div>
+      <div class="box">
+        <div class="title two">审核信息</div>
+        <div class="text"><span>初审资料</span></div>
+        <div class="title_box">
+          <div class="title_content">
+            <span>企业名称:</span><p>{{list.base.name}}</p>
+          </div>
+          <div class="title_content">
+            <span>企业logo:</span>
+            <img style="width: 150px;" :src="getImgSrc(list.base.logo)">
+          </div>
+          <div class="title_content">
+            <span>座机号码:</span><p>{{list.base.phone}}</p>
+          </div>
+          <div class="title_content">
+            <span>企业地址:</span><p>{{list.base.address}}785275272857</p>
+          </div>
+          <div class="title_content">
+            <span>企业介绍:</span><p>{{list.base.introduction}}</p>
+          </div>
+        </div>
+<!--    ............................................................................................     -->
+        <div class="text"><span>营业执照</span></div>
+        <div class="title_box">
+          <div class="title_content">
+            <span>营业执照号:</span><p>{{list.base.license}}</p>
+          </div>
+          <div class="title_content">
+            <span>注册地址:</span><p>{{list.base.licenseAddress}}</p>
+          </div>
+          <div class="title_content">
+            <span>营业期限:</span><p>{{list.base.businessValidStart}}</p>
+          </div>
+          <div class="title_content">
+            <span>营业执照影印件:</span>
+            <img style="width: 200px;" :src="getImgSrc(list.base.licenseImageUrl)">
+          </div>
+          <div class="title_content">
+            <span>经营范围:</span>
+            <p>{{list.base.businessScope}}</p>
+          </div>
+        </div>
+<!--    ............................................................................................     -->
+        <div class="text"><span>法人信息</span></div>
+        <div class="title_box">
+          <div class="title_content">
+            <span>法人姓名:</span><p>{{list.legalPerson.name}}</p>
+          </div>
+          <div class="title_content">
+            <span>证件类型:</span><p>{{idtype[list.legalPerson.idType]}}</p>
+          </div>
+          <div class="title_content">
+            <span>身份证号码:</span><p>{{list.legalPerson.idNumber}}</p>
+          </div>
+          <div class="title_content">
+            <span>证件有效期:</span><p>{{list.legalPerson.idValidStart}}</p>
+          </div>
+          <div class="title_content">
+            <span class="">身份证正/反面:</span>
+            <img style="width: 300px" :src="getImgSrc(list.legalPerson.idFrontUrl)">
+            <img style="width: 300px" :src="getImgSrc(list.legalPerson.idBackUrl)">
+          </div>
+        </div>
+<!--    ............................................................................................     -->
+        <div class="text"><span>负责人信息</span></div>
+        <div class="title_box">
+          <div class="title_content">
+            <span>负责人姓名:</span><p>{{list.charger.name}}</p>
+          </div>
+          <div class="title_content">
+            <span>手机号码:</span><p>{{list.charger.cellphone}}</p>
+          </div>
+          <div class="title_content">
+            <span>邮箱地址:</span><p>{{list.charger.email}}</p>
+          </div>
+          <div class="title_content">
+            <span>证件类型:</span><p>{{idtype[list.charger.idType]}}</p>
+          </div>
+          <div class="title_content">
+            <span>身份证号码:</span><p>{{list.charger.idNumber}}</p>
+          </div>
+          <div class="title_content">
+            <span>证件有效期:</span><p>{{list.charger.idValidStart}}</p>
+          </div>
+          <div class="title_content">
+            <span>身份证正/反面:</span>
+            <img style="width: 300px;" :src="getImgSrc(list.legalPerson.idFrontUrl)">
+            <img style="width: 300px;" :src="getImgSrc(list.legalPerson.idBackUrl)"> 
+          </div>
+          <div class="title_content">
+            <span>手持身份证照:</span>
+            <img style="width: 200px;" :src="getImgSrc(list.charger.idHoldFrontUrl)">
+          </div>
+        </div>
+<!--    ............................................................................................     -->
+        <div class="text"><span>申请公函</span></div>
+        <div class="title_box">
+          <div class="title_content">
+            <span>申请公函编号:</span><p>{{list.base.letterNumber}}</p>
+          </div>
+          <div class="title_content">
+            <span>公函有效期限:</span><p>{{list.base.letterValidStart}}  ——  {{list.base.letterValidEnd}}</p>
+          </div>
+          <div class="title_content">
+            <span class="">申请公函影印件:</span>
+            <img style="width: 200px;" :src="getImgSrc(list.base.letterImageUrl)">
+          </div>
+          <div class="title_content">
+            <div class="spanblack">操作记录:</div>
+            <div class="ffleft">
+              <div v-for="item in list.logs">
+                {{item.createTime && formatDate(item.createTime)}}[{{item.owner}}][{{eventObj[item.event]}}]:
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <v-passmodal ref="passmodal"></v-passmodal>
+      <v-nopassmodal ref="nopassmodal"></v-nopassmodal>
     </div>
   </div>
 </template>
 
 <script>
+  import { PLATFORM_EP_GET, PLATFORM_EP_CONFIRM, PLATFORM_EP_REJECT } from '@/config/env';
+  import { getPictureUrl, formatDate } from '@/config/utils';
+  import passmodal from '@/page/enterprise/pending/passmodal';
+  import nopassmodal from '@/page/enterprise/pending/nopassmodal';
 
-export default {
-  name: '',
-  props: {
-    value: {
-      type: String,
+  export default {
+    name: 'pendingView',
+    props: {
+      value: {
+        type: String,
+      },
     },
-  },
-  data() {
-    return {
-      lists: [],
-    };
-  },
-  computed: {
-  },
-  methods: {
-  },
-  watch: {
-  },
-  components: {
-  },
-  beforeCreate() {
-  },
-  cteated() {
-  },
-  beforeMount() {
-  },
-  mounted() {
-  },
-  beforeUpdate() {
-  },
-  updated() {
-  },
-  beforeDestroy() {
-  },
-  destroyed() {
-  },
-};
+    data() {
+      return {
+        formatDate,
+        list: {
+          base: {},
+          order: {},
+          legalPerson: {},
+          charger: {},
+          address: {},
+          authentication: {},
+          logs: {},
+        },
+        enterpriseId: this.$route.params.id,
+        eventObj: {
+          create: '创建',
+          pay: '支付',
+          confirm: '通过',
+          reject: '不通过',
+          authSubmit: '认证官采集完成',
+          reject2: '认证官采集未通过',
+          pendingModify: '初审修改',
+          pending2Modify: '复审修改',
+        },
+        payway: {
+          alipayWeb: '支付宝',
+          wachatpayQrcode: '微信支付',
+          offline: '线下支付',
+          free: '全额补贴',
+        },
+        stateOjb: {
+          wait: '待支付',
+          success: '支付成',
+          failed: '支付失败',
+        },
+        idtype: {
+          1: '身份证',
+          2: '驾驶证',
+          3: '军官证',
+        },
+      };
+    },
+    components: {
+      'v-passmodal': passmodal,
+      'v-nopassmodal': nopassmodal,
+    },
+    mounted() {
+      this.getData();
+    },
+    methods: {
+      async getData() {
+        const param = {
+          enterpriseId: this.enterpriseId,
+        };
+        const res = await this.$http.get(PLATFORM_EP_GET, param);
+        if (res.success) {
+          this.list = res.data;
+        }
+      },
+      getImgSrc(value) {
+        return value && getPictureUrl(value, { w: 0, h: 0, q: 0 });
+      },
+      pass() {
+        const param = {
+          enterpriseId: this.enterpriseId,
+        };
+        const res = this.$http.post(PLATFORM_EP_CONFIRM, param);
+        if (res.success) {
+          this.success = res.data;
+        }
+        this.$refs.passmodal.$refs.passmodal.toggle();
+      },
+      nopass() {
+        const param = {
+          enterpriseId: this.enterpriseId,
+        };
+        const res = this.$http.post(PLATFORM_EP_REJECT, param);
+        if (res.success) {
+          this.failure = res.data;
+        }
+        this.$refs.nopassmodal.$refs.nopassmodal.toggle();
+      },
+    },
+  };
 </script>
 
 <style lang="scss" scoped>
 @import '../../../assets/css/mixin.scss';
 
-img {
-	max-width: 100%;
+.box{
+  width: 100%;
+  margin-bottom: 100px;
 }
-ul li {
-	list-style-type: none;
+.title{
+  width: 100%;
+  margin-bottom: 20px;
+  font-size: 24px; 
 }
-.header_con {
-	position: relative;
-	margin-left: 500px;
+.two{
+  margin-bottom: 5px;
 }
-.logo {
-	width: 240px;
-	min-width: 240px;
-	height: 250px;
-	padding-top: 40px;
-	text-align: center;
-	display: list-item;
-	background: #4063FF;
-	position: fixed;
-	z-index: 102;
+.text{
+  height: 32px;
+  font-size: 20px;
+  border-bottom: 2px solid #e9e9e9;
+  margin-bottom: 15px;
 }
-.logo h3 {
-	color: #fff;
-	line-height: 35px;
-	font-size: 20px;
-	font-weight: bold;
+.text span{
+  height: 32px;
+  font-family: "黑体";
+  display: inline-block;
+  border-bottom: 2px solid #337CFD;
 }
-.form-group {
-	margin: 10px 0 !important;
-	border-radius: 4px;
+.title_content{
+  width: 100%;
+  line-height: 50px;
 }
-.form-group {
-	margin: 25px 0;
-	border-radius: 4px;
+.title_content span{
+  display: inline-block;
+  font-size: 18px;
+  width: 200px;
 }
-.content_left, .content_right {
-	float: left;
+.spanblack {
+  font-size: 18px;
+  width: 200px;
+  float: left;
 }
-.content_left {
-	width: 16%;
-	margin-right: 2%;
+.title_content p, .ffleft{
+  width: 80%;
+  display: inline-block;
+  font-weight: 600;
+  font-size: 16px;
 }
-.content_left p {
-	margin: 0;
+.title_content p button{
+  width: 120px;
+  height: 40px;
+  line-height: 40px;
+  background: #337CFD;
+  border: none;
+  color: #fff;
+  margin: 5px 20px 0  0;
+  border-radius: 5px;
 }
-.content_right {
-	width: 82%;
+#color{
+  background: #ff6666,
 }
-.content_right .form-control {
-	margin-bottom: 5px;
+.title_box > .title_content:last-child{
+  margin-bottom: 20px;
 }
-.content_con_one, .content_con_cen {
-	padding: 10px 30px;
-}
-.content_nav {
-	padding: 0 30px;
-}
-.content_nav h4 {
-	margin: 0;
-	padding: 20px 0;
-}
-.bianj {
-	border: 1px solid #015FE5;
-	border-radius: 15px;
-	padding: 6px 28px;
-	font-size: 12px;
-	color: #015FE5;
-}
-.content_con_one h4 {
-	padding-bottom: 30px;
-}
-.content_con_one .btn {
-	margin-right: 30px;
-	/*width: 100px;*/
-	outline: none;
-	color: #fff;
-}
-.btn_pass {
-	background: #337CFD;
-}
-.btn_nopass {
-	background: #FC5765;
-}
-.content_con_tit {
-	border-bottom: 2px solid #EDF2F5;
-	margin: 0;
-}
-.content_con_tit span {
-	display: block;
-	width: 120px;
-	text-align: center;
-	border-bottom: 2px solid #015FE5;
-	padding: 28px 0 15px 0;
-}
-.image30 {
-	display: block;
-	max-width: 30%;
-	margin-right: 3.3%;
-	float: left;
-	min-width: 100px;
-	cursor: pointer;
-}
-.wzxg {
-	padding: 3px 10px;
-	border-radius: 4px;
-	border: 1px solid #dddddd;
-	background: #fdfdfd;
-	min-width: 300px;
-}
-select {
-	background-color: #fff;
-	height: 30px;
-	line-height: 30px;
-	padding: 4px 6px;
-	color: #666666;
-	border-radius: 3px;
-	outline: none;
-	-webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
-	-o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
-	transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
-}
-h1 a {
-	display: block;
-	height: 50px;
-	/* width: 398px; */
-	margin: auto;
-	overflow: hidden;
-	color: #fff;
-	font-size: 30px;
-	/* font-weight: normal; */
-	text-align: center;
-	text-decoration: none; /* line-height: 50px; */
-}
-.placeholder {
-	color: #999;
-}
-a:hover {
-	color: #33a8ff;
-}
-.btn {
-	padding: 5px 25px;
-	margin: 0 3px;
-	outline: none;
-}
-
-
 </style>

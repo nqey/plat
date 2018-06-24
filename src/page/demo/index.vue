@@ -1,6 +1,6 @@
 <template>
-  <div class="content">
-    <div class="content_con">
+  <div class="plat-content">
+    <div class="plat-content-con">
       <demo>
         <h1 slot="header">Here might be a page title</h1>
         <p>A paragraph for the main content.</p>

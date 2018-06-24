@@ -38,6 +38,12 @@ export const IMAGE_SERVER_URL = {
   local: location.hostname,
 }[env];
 
+export const VIDEO_SERVER_URL = {
+  test: '//video.cpsdb61.com/',
+  online: '//video.cpsdb.com/',
+  local: '//video.cpsdb61.com/',
+}[env];
+
 export const DOMAIN = {
   test: 'cpsdb61.com',
   online: 'cpsdb.com',
@@ -105,22 +111,12 @@ export const THE_TOTAL_ADDRESS = `${ENTERPRISE_BASE_URL}platform/subsidy/statist
 export const APPLY_WITHDRAWALS_ADDRESS = `${ENTERPRISE_BASE_URL}organiz/subsidy/withdraw`;
 // 下拉获取银行列表
 export const BANK_ADDRESS = `${ENTERPRISE_BASE_URL}publics/bank/list`;
-// 申报官列表
-export const PLATFORM_GET_DECLARER_QUERY = `${DECLARE_BASE_URL}platform/declarer/query`;
-// 申报官列表总数
-export const PLATFORM_GET_DECLARER_COUNT = `${DECLARE_BASE_URL}platform/declarer/count`;
-// 申报官删除 + {id}
-export const PLATFORM_DELETE_DECLARER = `${DECLARE_BASE_URL}platform/declarer/delete/`;
-// 申报机构删除 + {id}
-export const PLATFORM_DELETE_ORGANIZ = `${DECLARE_BASE_URL}platform/organiz/delete/`;
-// 申报机构查询
-export const PLATFORM_GET_ORGANIZ_QUERY = `${DECLARE_BASE_URL}platform/organiz/query`;
-// 申报机构分页总条数
-export const PLATFORM_GET_ORGANIZ_COUNT = `${DECLARE_BASE_URL}platform/organiz/count`;
-// 申报官企业列表
-export const PLATFORM_GET_DECLARER_ENTERPRISE_QUERY = `${DECLARE_BASE_URL}platform/declare/enterprise/query`;
-// 申报官企业列表总数
-export const PLATFORM_GET_DECLARER_ENTERPRISE_COUNT = `${DECLARE_BASE_URL}platform/declare/enterprise/count`;
+// 申报机构详细
+export const PLATFORM_ORGANIZ = `${DECLARE_BASE_URL}platform/organiz`;
+// 申报官详细
+export const PLATFORM_DECLARER = `${DECLARE_BASE_URL}platform/declarer`;
+// 申报企业详细
+export const PLATFORM_DECLARE_ENTERPRISE = `${DECLARE_BASE_URL}platform/declare/enterprise`;
 // 动态条件查询下的考试对象的分页显示列表
 export const PLATFORM_GET_EXAMS_LISTING = `${EXAM_BASE_URL}platform/declareexamination/exams/listing`;
 // 动态条件查询下的考试对象总数
@@ -205,18 +201,42 @@ export const DECLARE_GET_AREA_TREE = `${BASE_URL}publics/area/tree`;
 export const PLATFORM_EP_QUERY = `${ENTERPRISE_BASE_URL}platform/ep/query`;
 // 企业管理_初审列表、待采集列表、复审列表（分页） 总数
 export const PLATFORM_EP_QUERY_COUNT = `${ENTERPRISE_BASE_URL}platform/ep/query/count`;
+// 企业管理_初审列表详情（分页）
+export const PLATFORM_EP_GET = `${ENTERPRISE_BASE_URL}platform/ep/get`;
+// 企业管理_初审列表详情（通过）
+export const PLATFORM_EP_CONFIRM = `${ENTERPRISE_BASE_URL}platform/ep/confirm`;
+// 企业管理_初审列表详情（不通过）
+export const PLATFORM_EP_REJECT = `${ENTERPRISE_BASE_URL}platform/ep/reject`;
+// 企业管理_待采集列表详情（分页）
+export const PLATFORM_EP_GET2 = `${ENTERPRISE_BASE_URL}platform/ep/get2`;
+// 企业管理_待采集列表详情（指派认证官）
+export const PLATFORM_EP_AUTHOFFICER = `${ENTERPRISE_BASE_URL}platform/ep/authofficer`;
+// 企业管理_待采集列表详情（不通过）
+export const PLATFORM_EP_REJECT2 = `${ENTERPRISE_BASE_URL}platform/ep/reject2`;
 // 企业管理、已入库企业列表（分页）
 export const PLATFORM_EP_QUERY_PASSED = `${ENTERPRISE_BASE_URL}platform/ep/query/passed`;
 // 企业管理、已入库企业列表（分页） 总数
 export const PLATFORM_EP_QUERY_PASSED_COUNT = `${ENTERPRISE_BASE_URL}platform/ep/query/passed/count`;
+// 企业管理、已入库企业列表获取二维码
+export const PLATFORM_FREECODE_GET = `${GOODS_BASE_URL}platform/freecode/get`;
+// 企业管理、已入库企业列表获修改二维码
+export const PLATFORM_FREECODE_SET = `${GOODS_BASE_URL}platform/freecode/set`;
 // 企业管理、工厂中心列表（分页）
 export const PLATFORM_FACTORY_QUERY = `${ENTERPRISE_BASE_URL}platform/factory/query`;
 // 企业管理、工厂中心列表（分页） 总数
 export const PLATFORM_FACTORY_QUERY_COUNT = `${ENTERPRISE_BASE_URL}platform/factory/query/count`;
+// 企业管理、工厂详情
+export const PLATFORM_FACTORY_GET = `${ENTERPRISE_BASE_URL}platform/factory/get`;
 // 企业管理、经销商列表（分页）
 export const PLATFORM_FRANCHISER_QUERY = `${ENTERPRISE_BASE_URL}platform/franchiser/query`;
 // 企业管理、经销商列表（分页） 总数
 export const PLATFORM_FRANCHISER_QUERY_COUNT = `${ENTERPRISE_BASE_URL}platform/franchiser/query/count`;
+// 企业管理、经销商列表扫码情况（分页）
+export const PLATFORM_CODE_FRANCHISER_SCAN_QUERY = `${GOODS_BASE_URL}platform/code/franchiser/scan/query`;
+// 企业管理、经销商列表扫码情况（分页） 总数
+export const PLATFORM_CODE_FRANCHISER_SCAN_QUERY_COUNT = `${GOODS_BASE_URL}platform/code/franchiser/scan/query/count`;
+// 企业管理、经销详情
+export const PLATFORM_FRANCHISER_GET = `${ENTERPRISE_BASE_URL}platform/franchiser/get`;
 // 企业管理、员工列表（分页）
 export const PLATFORM_EMPLOYEE_QUERY = `${ENTERPRISE_BASE_URL}platform/employee/query`;
 // 企业管理、员工列表（分页） 总数
@@ -225,12 +245,20 @@ export const PLATFORM_EMPLOYEE_QUERY_COUNT = `${ENTERPRISE_BASE_URL}platform/emp
 export const PLATFORM_STATISTICAL_CODE_QUERY = `${GOODS_BASE_URL}platform/statistical/code/query`;
 // 二维码管理、二维码列表（分页） 总数
 export const PLATFORM_STATISTICAL_CODE_QUERY_COUNT = `${GOODS_BASE_URL}platform/statistical/code/query/count`;
+// 二维码管理、二维码扫描明细
+export const PLATFORM_CODE_GET_LOGS = `${GOODS_BASE_URL}platform/code/get/logs`;
+// 二维码管理、二维码扫描异常
+export const PLATFORM_CODE_GET_LOG = `${GOODS_BASE_URL}platform/code/get/log`;
 // 二维码管理、获取赋码工厂名称
 export const PLATFORM_FACTORY_USABLE = `${ENTERPRISE_BASE_URL}platform/factory/usable`;
 // 认证官管理、认证官列表（分页）
 export const PLATFORM_AUTHOFFICER_QUERY = `${DECLARE_BASE_URL}platform/authofficer/query`;
 // 认证官管理、认证官列表（分页） 总数
 export const PLATFORM_AUTHOFFICER_QUERY_COUNT = `${DECLARE_BASE_URL}platform/authofficer/query/count`;
+// 认证官管理、认证官详情
+export const PLATFORM_AUTHOFFICER_GET = `${DECLARE_BASE_URL}platform/authofficer/get`;
+// 认证官管理、认证官详情编辑上传接口
+export const PLATFORM_AUTHOFFICER_UPDATE = `${DECLARE_BASE_URL}platform/authofficer/update`;
 // 系统消息、投诉列表（分页）
 export const PLATFORM_COMPLAINT_LISTING = `${FANS_BASE_URL}platform/complaint/listing`;
 // 系统消息、投诉列表（分页）总数
@@ -259,4 +287,51 @@ export const SUBSIDY_REJECTED = `${ENTERPRISE_BASE_URL}platform/subsidy/rejected
 export const PLATFORM_SUBSIDY_DELAYED = `${ENTERPRISE_BASE_URL}platform/subsidy/delayed/`;
 // 补贴审核中的补贴金额统计数据
 export const PLATFORM_SUBSIDY_STATISTICAL_AMOUNT = `${ENTERPRISE_BASE_URL}platform/subsidy/statistical/amount`;
-
+// 省级、市级我的补贴金额
+export const PLATFORM_SUBSIDY_PROVINCE_AMOUNT = `${ENTERPRISE_BASE_URL}platform/subsidy/province/amount`;
+// 省级、市级补贴明细
+export const PLATFORM_SUBSIDY_PROVINCE_DETAIL_QUERY = `${ENTERPRISE_BASE_URL}platform/subsidy/province/detail/query`;
+// 省级、市级补贴明细总数
+export const PLATFORM_SUBSIDY_PROVINCE_DETAIL_COUNT = `${ENTERPRISE_BASE_URL}platform/subsidy/province/detail/count`;
+// 点击申请提现
+export const PLATFORM_SUBSIDY_PROVINCE_WITHDRAW = `${ENTERPRISE_BASE_URL}platform/subsidy/province/withdraw`;
+// 我的申请记录列表、分页信息
+export const PLATFORM_SUBSIDY_PROVINCE_RECORD_QUERY = `${ENTERPRISE_BASE_URL}platform/subsidy/province/record/query`;
+// 我的申请记录列表、分页信息总数
+export const PLATFORM_SUBSIDY_PROVINCE_RECORD_COUNT = `${ENTERPRISE_BASE_URL}platform/subsidy/province/record/count`;
+// 获取注册验证码 + {type}/{cellphone}
+export const DECLARE_GET_VALIDATECODE = `${DECLARE_BASE_URL}publics/validatecode/`;
+// 添加公告
+export const PLATFORM_NOTICES = `${BASE_URL}platform/notices`;
+// 删除公告 + {id:公告id}
+export const PLATFORM_DELETE_NOTICES = `${BASE_URL}platform/notices/`;
+// 在线修改公告 + {id:公告id}
+export const PLATFORM_PUT_NOTICES = `${BASE_URL}platform/notices/`;
+// 公告列表
+export const PUBLICS_NOTICES_LISTING = `${BASE_URL}publics/notices/listing`;
+// 公告列表总数
+export const PUBLICS_NOTICES_COUNTS = `${BASE_URL}publics/notices/counts`;
+// 系统公告详情 + {id}
+export const PUBLICS_NOTICES_DETAILS = `${BASE_URL}publics/notices/details/`;
+// 添加系统通告
+export const PUBLICS_GET_NOTICES_ADDITIONS = `${DECLARE_BASE_URL}platform/notices/additions`;
+// 申报机构基本信息初审
+export const PLATFORM_POST_ORGANIZ_BASEWAITAUDIT = `${DECLARE_BASE_URL}platform/organiz/baseWaitAudit/`;
+// 申报机构基本信息审核 + {id}
+export const PLATFORM_PUT_ORGANIZ_BASEAUDIT = `${DECLARE_BASE_URL}platform/organiz/baseAudit/`;
+// 申报机构登记信息初审
+export const PLATFORM_POST_ORGANIZ_REGISTWAITAUDIT = `${DECLARE_BASE_URL}platform/organiz/registWaitAudit/`;
+// 申报机构登记信息审核 + {id}
+export const PLATFORM_PUT_ORGANIZ_REGISTAUDIT = `${DECLARE_BASE_URL}platform/organiz/registAudit/`;
+// 申报官审核 + {id}
+export const PLATFORM_PUT_DECLARER_AUDIT = `${DECLARE_BASE_URL}platform/declarer/audit/`;
+// 申报官审核 + {id}
+export const PLATFORM_PUT_DECLARER_WAITAUDIT = `${DECLARE_BASE_URL}platform/declarer/waitAudit/`;
+// 申报企业审核
+export const PLATFORM_PUT_DECLARER_ENTERPRISE_AUDIT = `${DECLARE_BASE_URL}platform/declare/enterprise/audit/`;
+// 申报企业审核
+export const PLATFORM_PUT_DECLARER_ENTERPRISE_WAITAUDIT = `${DECLARE_BASE_URL}platform/declare/enterprise/waitAudit/`;
+// 查看考生试卷详情
+export const PLATFORM_POST_EXAMS_EXAMINEE_DETAILS = `${EXAM_BASE_URL}/platform/declareexamination/details/`;
+// 简答题打分
+export const PLATFORM_POST_EXAMS_EXAMINEE_SCORES = `${EXAM_BASE_URL}/platform/declareexamination/scores`;

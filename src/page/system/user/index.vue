@@ -1,13 +1,12 @@
 <template>
-  <div class="content">
-    <div class="content_con">
+  <div class="plat-content">
+    <div class="plat-content-con">
       <v-datagrid :toolbar="toolbar" :columns="columns" :data-url="dataUrl" :count-url="countUrl"></v-datagrid>
     </div>
   </div>
 </template>
 
 <script>
-  import datagrid from '@/components/datagrid';
   import { BASE_URL } from '@/config/env';
   import { formatDate, getPictureUrl } from '@/config/utils';
   import { PLATFORM_USER_TYPE } from '@/config/mapping';
@@ -86,7 +85,7 @@
       },
     },
     components: {
-      'v-datagrid': datagrid,
+      'v-datagrid': () => import('@/components/datagrid'),
     },
   };
 </script>

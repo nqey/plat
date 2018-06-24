@@ -1,6 +1,6 @@
 <template>
-<div class="content">
-  <div class="content_con">
+<div class="plat-content">
+  <div class="plat-content-con">
     <div class="clearfix">
       <div class="col-md-10 col-md-offset-1 index_table_tit">
        <router-link to="/declarer/exam" class="btn back_icon"><img :src="backicon">返回</router-link>

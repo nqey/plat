@@ -10,10 +10,14 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     // isValidator: true,
+    toLink: '',
   },
   mutations: {
     // setValidator: (state, bool) => {
     //   state.isValidator = bool;
     // },
+    setToLink: (state, link) => {
+      state.toLink = link;
+    },
   },
 });

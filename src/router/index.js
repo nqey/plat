@@ -21,6 +21,17 @@ const router = new Router({
       name: 'login',
       component: r => require.ensure([], require => r(require('@/page/login')), 'login'),
     },
+    // 中转
+    {
+      path: '/transfer/:data',
+      name: 'transferData',
+      component: r => require.ensure([], require => r(require('@/page/transfer')), 'transfer'),
+    },
+    {
+      path: '/transfer',
+      name: 'transfer',
+      component: r => require.ensure([], require => r(require('@/page/transfer')), 'transfer'),
+    },
     // 首页
     {
       path: '/index',
@@ -35,6 +46,11 @@ const router = new Router({
       component: r => require.ensure([], require => r(require('@/page/system/role/index')), 'roleList'),
     },
     {
+      path: '/system/role/edit/:id',
+      name: 'roleEditId',
+      component: r => require.ensure([], require => r(require('@/page/system/role/edit')), 'roleEdit'),
+    },
+    {
       path: '/system/role/edit',
       name: 'roleEdit',
       component: r => require.ensure([], require => r(require('@/page/system/role/edit')), 'roleEdit'),
@@ -45,19 +61,39 @@ const router = new Router({
       component: r => require.ensure([], require => r(require('@/page/system/menu/index')), 'menuList'),
     },
     {
-      path: '/system/menu/edit/:id',
-      name: 'menuEdit',
-      component: r => require.ensure([], require => r(require('@/page/system/menu/edit')), 'menuEdit'),
-    },
-    {
       path: '/system/user',
       name: 'sysuser',
       component: r => require.ensure([], require => r(require('@/page/system/user/index')), 'userList'),
     },
     {
       path: '/system/user/edit/:id',
+      name: 'userEditId',
+      component: r => require.ensure([], require => r(require('@/page/system/user/edit')), 'userEdit'),
+    },
+    {
+      path: '/system/user/edit',
       name: 'userEdit',
       component: r => require.ensure([], require => r(require('@/page/system/user/edit')), 'userEdit'),
+    },
+    {
+      path: '/system/paymethod',
+      name: 'paymethod',
+      component: r => require.ensure([], require => r(require('@/page/system/paymethod/index')), 'paymethod'),
+    },
+    {
+      path: '/system/version',
+      name: 'version',
+      component: r => require.ensure([], require => r(require('@/page/system/version/index')), 'version'),
+    },
+    {
+      path: '/system/version/edit/:id',
+      name: 'versionEdit',
+      component: r => require.ensure([], require => r(require('@/page/system/version/edit')), 'versionEdit'),
+    },
+    {
+      path: '/system/version/edit',
+      name: 'versionInsert',
+      component: r => require.ensure([], require => r(require('@/page/system/version/edit')), 'versionEdit'),
     },
     // 补贴路由路径
     {
@@ -96,6 +132,12 @@ const router = new Router({
       name: 'messageCreate',
       component: r => require.ensure([], require => r(require('@/page/message/create')), 'messageCreate'),
     },
+    // 系统消息路由路径
+    {
+      path: '/message/create/:id',
+      name: 'messageCreateId',
+      component: r => require.ensure([], require => r(require('@/page/message/create')), 'messageCreateId'),
+    },
     {
       path: '/message/list',
       name: 'messageList',
@@ -108,14 +150,29 @@ const router = new Router({
       component: r => require.ensure([], require => r(require('@/page/declarer/officer')), 'declarerOfficer'),
     },
     {
+      path: '/declarer/officer/view/:id',
+      name: 'declarerOfficerView',
+      component: r => require.ensure([], require => r(require('@/page/declarer/officer/view')), 'declarerOfficerView'),
+    },
+    {
       path: '/declarer/agency',
       name: 'declarerAgency',
       component: r => require.ensure([], require => r(require('@/page/declarer/agency')), 'declarerAgency'),
     },
     {
+      path: '/declarer/agency/view/:id',
+      name: 'declarerAgencyView',
+      component: r => require.ensure([], require => r(require('@/page/declarer/agency/view')), 'declarerAgencyView'),
+    },
+    {
       path: '/declarer/enterprise',
       name: 'declarerEnterprise',
       component: r => require.ensure([], require => r(require('@/page/declarer/enterprise')), 'declarerEnterprise'),
+    },
+    {
+      path: '/declarer/enterprise/view/:id',
+      name: 'declarerEnterpriseView',
+      component: r => require.ensure([], require => r(require('@/page/declarer/enterprise/view')), 'declarerEnterpriseView'),
     },
     {
       path: '/declarer/exam',
@@ -144,7 +201,7 @@ const router = new Router({
       component: r => require.ensure([], require => r(require('@/page/factory/list')), 'factoryList'),
     },
     {
-      path: '/factory/list/view',
+      path: '/factory/list/view/:id',
       name: 'factoryView',
       component: r => require.ensure([], require => r(require('@/page/factory/list/view')), 'factoryView'),
     },
@@ -154,7 +211,7 @@ const router = new Router({
       component: r => require.ensure([], require => r(require('@/page/factory/pending')), 'factoryPending'),
     },
     {
-      path: '/factory/pending/view',
+      path: '/factory/pending/view/:id',
       name: 'factoryPendingView',
       component: r => require.ensure([], require => r(require('@/page/factory/pending/view')), 'factoryPendingView'),
     },
@@ -170,7 +227,7 @@ const router = new Router({
       component: r => require.ensure([], require => r(require('@/page/code/list')), 'codeList'),
     },
     {
-      path: '/code/list/log',
+      path: '/code/list/log/:type:id',
       name: 'codeLog',
       component: r => require.ensure([], require => r(require('@/page/code/list/log')), 'codeLog'),
     },
@@ -186,7 +243,7 @@ const router = new Router({
       component: r => require.ensure([], require => r(require('@/page/authofficer/list/entry')), 'authofficerEntry'),
     },
     {
-      path: '/authofficer/view',
+      path: '/authofficer/list/view/:id',
       name: 'authofficerView',
       component: r => require.ensure([], require => r(require('@/page/authofficer/list/view')), 'authofficerView'),
     },
@@ -240,11 +297,6 @@ const router = new Router({
       name: 'enterprisePassed',
       component: r => require.ensure([], require => r(require('@/page/enterprise/passed')), 'enterprisePassed'),
     },
-    {
-      path: '/enterprise/passed/view/:id',
-      name: 'enterprisePassedView',
-      component: r => require.ensure([], require => r(require('@/page/enterprise/passed/view')), 'enterprisePassedView'),
-    },
     // 条码管理
     {
       path: '/goods/barcode',
@@ -286,13 +338,38 @@ const router = new Router({
       name: 'complaintList',
       component: r => require.ensure([], require => r(require('@/page/complaint/list')), 'complaintList'),
     },
+    {
+      path: '/message/detail/:id',
+      name: 'messageDetail',
+      component: r => require.ensure([], (require) => {
+        r(require('@/page/message/list/detail'));
+      }, 'messageDetail'),
+    },
+    {
+      path: '/exam/edit/:id',
+      name: 'examEdit',
+      component: r => require.ensure([], require => r(require('@/page/declarer/exam/edit')), 'examEdit'),
+    },
+    {
+      path: '/exam/view/:id',
+      name: 'examView',
+      component: r => require.ensure([], require => r(require('@/page/declarer/exam/view')), 'examView'),
+    },
+    {
+      path: '/exam/detail/:id',
+      name: 'examDetail',
+      component: r => require.ensure([], require => r(require('@/page/declarer/exam/detail')), 'examDetail'),
+    },
   ],
 });
 router.beforeEach((to, from, next) => {
   const isLogin = !!getCookie('platform_user');
   // 不是去登录页，而且没登录，那就去登录页；
-  if (to.name !== 'login' && !isLogin) {
+  if (to.path !== '/login' && !isLogin) {
     next({ path: '/login' });
+  } else if (to.path === '/') {
+    // 空链接，去首页
+    next({ path: '/index' });
   } else {
     // 如果去登录页，随便你； 或者只要登录了，随便你去哪；
     next();

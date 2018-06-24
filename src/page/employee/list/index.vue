@@ -1,52 +1,47 @@
 <template>
-  <div class="content">
-    <div class="content_con">
-      <div class="main_left_content">
-    <div class="main_left_content_section_tit clearfix">
-        <div class="pull-left">
-            <p>筛选条件</p>
-        </div>
-    </div>
-    <!--筛选条件-->
-    <div class="filters datagrid-filter">
-        <div class="form-inline row clearfix">
+  <div class="plat-content">
+    <div class="plat-content-con">
+      <h4>筛选条件</h4>
+      <hr/>
+      <div class="filters">
+        <div class="form-inline">
+          <div class="row clearfix sssrk">
             <div class="form-group col-md-4">
-                <label>姓名：</label>
-                <input type="text" class="form-control" v-model="name" placeholder="请输入员工姓名">
+              <label>姓名：</label>
+              <input type="text" class="form-control" v-model="name" placeholder="请输入员工姓名">
             </div>
             <div class="form-group col-md-4">
-                <label>手机号：</label>
-                <input type="text" class="form-control" v-model="cellphone" placeholder="请输入员工手机号码">
+              <label>手机号：</label>
+              <input type="text" class="form-control" v-model="cellphone" placeholder="请输入员工手机号码">
             </div>
             <div class="form-group col-md-4">
-                <label>职责：</label>
-                <input type="text" class="form-control" v-model="duty" placeholder="请输入员工职责">
+              <label>职责：</label>
+              <input type="text" class="form-control" v-model="duty" placeholder="请输入员工职责">
             </div>
             <div class="form-group col-md-4">
-                <label>工厂：</label>
-                <input type="text" class="form-control" v-model="factoryName" placeholder="请输员工所属工厂">
+              <label>工厂：</label>
+              <input type="text" class="form-control" v-model="factoryName" placeholder="请输员工所属工厂">
             </div>
-            <div class="form-group col-md-4">
-                <button type="button" class="search btn-primary btn datagrid-search" @click="search">
-                    <span class="glyphicon glyphicon-search"></span>搜索
-                </button>
-                <button type="button" class="clear btn-primary btn datagrid-clear" @click="clear">
-                    <span class="glyphicon glyphicon-clear"></span>清空
-                </button>
+            <div class="form-group col-md-8">
+              <button type="button" class="btn btn-primary" @click="search">
+                  <span class="glyphicon glyphicon-search"></span>搜索
+              </button>
+              <button type="button" class="btn btn-primary" @click="clear">
+                  <span class="glyphicon glyphicon-clear"></span>清空
+              </button>
             </div>
           </div>
         </div>
-        <div class="list">
-          <p>员工列表</p>
-        </div>
-        <div class="datagrid-title">
-          <v-datagrid :columns="columns"
-                      :data-url="dataUrl"
-                      :count-url="countUrl"
-                      :params="datagridParams">
-          </v-datagrid>
-        </div>
       </div>
+      <br/>
+      <br/>
+      <h4>员工列表</h4>
+      <hr/>
+      <v-datagrid :columns="columns"
+                  :data-url="dataUrl"
+                  :count-url="countUrl"
+                  :params="datagridParams">
+      </v-datagrid>
     </div>
   </div>
 </template>
@@ -108,7 +103,9 @@
             field: 'number',
             header: '扫码总数',
             width: 120,
-          }],
+            formatter: row => (!row.number ? '——' : row.number),
+          },
+        ],
       };
     },
     components: {
@@ -142,22 +139,4 @@
 <style lang="scss" scoped>
 @import '../../../assets/css/mixin.scss';
 
-.list{
-  margin: 30px 0;
-}
-.list p{
-  font-size: 18px;
-}
-.datagrid-title{
-  margin-top:20px;
-}
-.form-group{
-  margin: 15px 0;
-}
-.btn{
-  width: 118px; 
-}
-.datagrid-title{
-  margin-top: 50px;
-}
 </style>

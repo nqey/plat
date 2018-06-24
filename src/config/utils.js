@@ -1,8 +1,9 @@
+/* eslint-disable */
 import { IMAGE_SERVER_URL } from '@/config/env';
 
 /**
  * @param data
- * @returns {array|object|null|undefined|function|error|regexp|number|string}
+ * @returns {array|object|null|undefined|function|error|regexp|number|string|boolean}
  */
 export const type = (data) => {
   const t = typeof data;
@@ -69,6 +70,7 @@ export const toQueryString = (data, prefix) => {
         });
       break;
     case 'string':
+    case 'boolean':
     case 'number':
       if (prefix === '') {
         return '';
@@ -88,22 +90,54 @@ export const toQueryString = (data, prefix) => {
  * @param params {array|object|string}
  * @returns {Array|Object|String} 返回一个新的和params类型一致的数据
  */
-export const removeIllegalParams = (params) => {
-  const illegalType = ['null', 'undefined', 'function', 'error', 'regexp'];
+export const removeIllegalParams = (params, removeType) => {
+  return remove(params, ['null', 'undefined', 'function', 'error', 'regexp']);
+};
+
+/**
+ * 删除对象-属性值是 指定 toRemoveType 的数据
+ * @param params {array|object|string}
+ * @param toRemoveType {null|undefined|function|error|regexp}
+ * @returns {Array|Object|String} 返回一个新的和params类型一致的数据
+ */
+export const remove = (params, toRemoveType) => {
   const t = type(params);
   if (t === 'object') {
     const localParams = {};
     Object.keys(params || ({})).forEach((v) => {
-      if (illegalType.indexOf(type(params[v])) === -1) {
+      if (toRemoveType.indexOf(type(params[v])) === -1) {
         localParams[v] = params[v];
       }
     });
     return localParams;
   } else if (t === 'array') {
-    return params.filter(s => illegalType.indexOf(type(s)) === -1);
+    return params.filter(s => toRemoveType.indexOf(type(s)) === -1);
   }
   return params;
 };
+
+/**
+ * 移除params里面的 空，null，undefined的数据
+ * @param params
+ * @param toRemoveType
+ * @returns {*}
+ */
+export const reomveBlank = (params) => {
+  const toRemoveType = ['null', 'undefined', 'function', 'error', 'regexp'];
+  const t = type(params);
+  if (t === 'object') {
+    const localParams = {};
+    Object.keys(params || ({})).forEach((v) => {
+      if (toRemoveType.indexOf(type(params[v])) === -1 && `${params[v]}`.trim() !== '') {
+        localParams[v] = params[v];
+      }
+    });
+    return localParams;
+  } else if (t === 'array') {
+    return params.filter(s => toRemoveType.indexOf(type(s)) === -1 && `${s}`.trim() !== '');
+  }
+  return params;
+}
 
 export const padLeftZero = str => `00${str}`.substr(str.length);
 
@@ -148,10 +182,28 @@ export const formatDate = (date, fmt = 'yyyy-MM-dd hh:mm:ss') => {
 export const getPictureUrl = (url, params = {}) => {
   const p = Object.entries(params)
     .map(s => `${s[0]}=${s[1]}`)
-    .reduce((a, b) => `${a}&${b}`);
+    .join('&');
 
   if (typeof url === 'string') {
     return IMAGE_SERVER_URL + url + (url.indexOf('?') >= 0 ? '&' : '?') + p;
   }
   return url.map(v => IMAGE_SERVER_URL + v + (v.indexOf('?') >= 0 ? '&' : '?') + p);
 };
+
+
+/**
+ * 跳转至成功页面
+ * @param opts ：{
+          message: '操作成功！', // 提示语句，可以为空
+          buttons: [{ //操作按钮
+            text: '返回',
+            link: '/role/list', // 要去的页面
+          }],
+        }
+ */
+export const transfer = function(opts = {}) {
+  opts = opts || {};
+  // 跳转到操作成功页面
+  this.$router.push(`/transfer/${encodeURIComponent(JSON.stringify(opts))}`);
+};
+

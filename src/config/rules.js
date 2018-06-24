@@ -1,90 +1,84 @@
 /* eslint-disable */
+// 邮箱验证
+const emailReg = /^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?$/i;
+// url验证
+const urlReg = /^(https?|ftp):\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(\#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i;
+// 手机验证
+const cellphoneReg = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1})|(17[0-9]{1}))+\d{8})$/;
+// 密码验证
+const passwordReg = new RegExp('(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9]).{6,20}');
+// 省份证验证
+const idCardReg = /^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/;
+// 推送时间验证
+const timeReg = /^(([\u4E00-\u9FA5]{4})|(\d{4}-\d{2}-\d{2}[T]\d{2}[:]\d{2}))$/;
+
+
 export default {
-  // 用户名正则
-  uPattern: {
-  	pattern: /^[a-zA-Z0-9_-]{4,16}$/,
-    message: '用户名错误',
+  'val-required': {
+    validator(el, value) {
+      return (value || '').trim().length > 0;
+    },
+    message: (el) => '此项必填',
   },
-  // 密码强度正则
-  pPattern: {
-  	pattern: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,10}$/,
-  	message: '密码必须包含大小写字母和数字的组合，不能使用特殊字符，长度在8-10之间',
+  'val-max-length': {
+    validator(el, value) {
+      const len = (value || '').trim().length;
+      const maxLength = +el.getAttribute('val-max-length');
+      if (maxLength < 0 || isNaN(maxLength)) {
+        throw new Error('val-max-length应该为正整数');
+        return true;
+      }
+
+      return len <= maxLength;
+    },
+    message: (el, attr) => `长度不能超过${el.getAttribute('val-max-length')}个字符`,
   },
-  // // 正整数正则
-  // posPattern: /^\d+$/,
-  // // 负整数正则
-  // negPattern: /^-\d+$/,
-  // // 整数正则
-  // intPattern: /^-?\d+$/,
-  // // 正数正则
-  // posPattern: /^\d*\.?\d+$/,
-  // // 负数正则
-  // negPattern: /^-\d*\.?\d+$/,
-  // // 数字正则
-  // numPattern: /^-?\d*\.?\d+$/,
-  // // Email正则
-  // ePattern: /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/,
-  // 手机号正则
-  mPattern: { 
-  	pattern: /^1[34578]\d{9}$/,
-  	message: '请输入正确的手机号码',
+  'val-min-length': {
+    validator(el, b) {
+      const len = (value || '').trim().length;
+      const maxLength = +el.getAttribute('val-min-length');
+      if (maxLength < 0 || isNaN(maxLength)) {
+        throw new Error('val-min-length应该为正整数');
+        return true;
+      }
+      return len >= valid;
+    },
+    message: el => `长度不能少于${el.getAttribute('val-min-length')}个字符`,
   },
-  // 身份证号（18位）正则
-  cP: { 
-  	pattern: /^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/,
-  	message: '请输入正确的身份证号码',
+  'val-email': {
+    validator(el) {
+      return emailReg.test(el.value);
+    },
+    message: () => '请输入正确的邮箱',
   },
-  iPwMsg: '确认密码不一致',
-  agreeMsg: '请同意并遵守《CPS申报机构公共业务平台服务协议》',
-  nonEmpty: '请输入',
-  phone: '手机号码',
-  password: '密码',
-  confirmpw: '确认密码',
-  validatecode: '验证码',
-  idNumber: '身份证号码',
-  name: '姓名',
-  upload: '请上传',
-  idFrontUrl: '身份证照片正面',
-  idBackUrl: '身份证照片背面',
-  select: '请选择',
-  liveAddress: '常住地址区域',
-  applyAddress: '申请区域',
-  address: '详细地址',
-  ecommendOrgniz: '推荐机构',
-  enterpriseName: '企业全称',
-  surveyImageUrl: '申报机构尽职调查表',
-  letterImageUrl: '申报机构承诺公函',
-  chargerSurveyImageUrl: '负责人尽职调查表',
-  chargerImageUrl: '负责人承诺公函',
-  commerceImageUrl: '企业工商营业执照',
-  otherImageUrl: '其他补充材料',
-  portrait: '寸照',
-  surveyImageUrl: '尽职调查表',
-  letterImageUrl: '承诺公函',
-  charger: '企业负责人',
-  licenseImageUrl: '营业执照',
-  productionImageUrl: '生产许可证',
-  capitalImageUrl: '资金补贴申报表',
-  enterpriseSurveyImageUrl: '企业尽职调查表',
-  enterpriseChargerSurveyImageUrl: '企业负责人尽职调查表',
-  enterpriseShindImageUrl: '企业入库申请函',
-  authorizationImageUrl: '授权委托书',
-  // URL正则
-  // urlP: /^((https?|ftp|file):\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/,
-  // IPv4地址正则
-  // ipP: /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/,
-  // RGB Hex颜色正则
-  // cPattern: /^#?([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$/,
-  // 日期正则，简单判定,未做月份及日期的判定
-  // dP1: /^\d{4}(\-)\d{1,2}\1\d{1,2}$/,
-  // 日期正则，复杂判定
-  // dP2: /^(?:(?!0000)[0-9]{4}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1[0-9]|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[0-9]{2}(?:0[48]|[2468][048]|[13579][26])|(?:0[48]|[2468][048]|[13579][26])00)-02-29)$/,
-  // QQ号正则，5至11位
-  // qqPattern: /^[1-9][0-9]{4,10}$/,
-  // // 微信号正则，6至20位，以字母开头，字母，数字，减号，下划线
-  // wxPattern: /^[a-zA-Z]([-_a-zA-Z0-9]{5,19})+$/,
-  // // 车牌号正则
-  // cPattern: /^[京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领A-Z]{1}[A-Z]{1}[A-Z0-9]{4}[A-Z0-9挂学警港澳]{1}$/,
-  // // 包含中文正则
-  // cnPattern: /[\u4E00-\u9FA5]/,
+  'val-url': {
+    validator(el) {
+      return urlReg.test(el.value);
+    },
+    message: () => '请输入正确的路径',
+  },
+  'val-cellphone': {
+    validator(el) {
+      return cellphoneReg.test(el.value);
+    },
+    message: () => '请输入正确的手机号码',
+  },
+  'val-password': {
+    validator(el) {
+      return passwordReg.test(el.value);
+    },
+    message: () => '密码过于简单，必须包含字母、数字、长度在6-20位',
+  },
+  'val-id-card': {
+    validator(el) {
+      return idCardReg.test(el.value);
+    },
+    message: () => '身份证输入不正确',
+  },
+  'val-time': {
+    validator(el) {
+      return timeReg.test(el.value);
+    },
+    message: () => '不是一个正常的时间',
+  },
 };

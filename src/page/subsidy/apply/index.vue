@@ -1,27 +1,25 @@
 <template>
-  <div class="content">
-    <div class="content_con">
-      <div style="width: 100%;height: 300px;text-align: center;">
-        <img :src="subsidies" style="width: 124px;height: 124px;margin: 125px auto 0;">
-      </div>
-      <div class="money center"><span v-for="money in moneys">{{money}}</span>元</div>
-      <div class="mx center">
-        <router-link to="/subsidy/list">
-          查看补贴明细
+  <div class="plat-content">
+    <div class="plat-content-con" style="text-align: center;">
+        <img :src="subsidies" style="width: 124px;height: 124px;">
+        <br/>
+        <div class="money"><span>{{money}}</span>元</div>
+        <br/>
+        <router-link to="/subsidy/list">查看补贴明细</router-link>
+        <br/>
+        <br/>
+        <router-link to="/subsidy/apply_subsidy">
+          <button class="btn btn-primary" style="width: 350px;height: 35px;">
+          申请补贴
+          </button>
         </router-link>
-      </div>
-      <router-link to="/subsidy/apply_subsidy" style="display: block;width: 300px; margin: 0 auto;">
-        <button class="but center">
-        申请提现
-        </button>
-      </router-link>
     </div>
   </div>
 </template>
 
 <script>
   import subsidies from '@/assets/img/subsidies.png';
-  import { ORGANIZ_SUBSIDY_AMOUNT } from '@/config/env';
+  import { PLATFORM_SUBSIDY_PROVINCE_AMOUNT } from '@/config/env';
 
   export default {
     name: 'apply',
@@ -34,7 +32,7 @@
       return {
         lists: [],
         subsidies,
-        moneys: '',
+        money: 0,
       };
     },
     mounted() {
@@ -42,9 +40,9 @@
     },
     methods: {
       async getData() {
-        const res = await this.$http.get(ORGANIZ_SUBSIDY_AMOUNT);
-        if (res.sucess) {
-          this.money = res.data.amount;
+        const res = await this.$http.get(PLATFORM_SUBSIDY_PROVINCE_AMOUNT);
+        if (res.success) {
+          this.money = res.data;
         }
       },
     },
@@ -53,9 +51,16 @@
 
 <style lang="scss" scoped>
 @import '../../../assets/css/mixin.scss';
-.center{
-  text-align: center;
-}
+.index_more{background: #f6f7fb;
+  height: 100%;
+  padding-bottom: 200px;
+    width: 100%;}
+.index_chunk{ 
+position: relative;
+top:120px;
+left: 19%;
+margin: 0;
+width: 78%;background:#fff; padding: 40px 70px 55px;border-radius: 4px; box-shadow: 0px 20px 20px -20px #ddd;}
 .money{
   font-size: 16px;
 }
@@ -63,21 +68,4 @@
   font-size:22px;
   font-weight: 600;
 }
-.mx{
-  color: #337cfd;
-  font-size: 16px;
-  margin: 25px 0 50px 0;
-}
-.but{
-  width: 300px;
-  height: 40px;
-  line-height: 40px;
-  color: #fff;
-  font-size: 16px;
-  border-radius: 3px;
-  letter-spacing: 2px;
-  background-color: #337cfd;
-  border:none;
-}
-
 </style>

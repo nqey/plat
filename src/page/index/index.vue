@@ -1,6 +1,6 @@
 <template>
-  <div class="content">
-    <div class="content_con">
+  <div class="plat-content">
+    <div class="plat-content-con">
       <div class="index-main-left-content"> 
         <!-- 粉丝开始 -->
         <p class="jrsj_bj">粉丝</p>

@@ -1,6 +1,6 @@
 <template>
-  <div class="content">
-    <div class="content_con">
+  <div class="plat-content">
+    <div class="plat-content-con">
         	<div style="font-size: 42px; text-align: center;margin-bottom: 50px;font-family: '宋体';">认证官认证</div>
     	<div class="row">
         <div class="col-md-6 col-md-offset-3 inlet">
@@ -276,14 +276,17 @@ ul li {
 }
 .btn {
 	margin-right: 30px;
-	/*width: 100px;*/
 	outline: none;
 	color: #fff;
-}
-.btn {
-	min-width: 180px;
+	min-width: 135px;
 	background: #337CFD;
 	color: #fff;
+    padding: 5px 25px;
+    margin: 0 3px;
+    outline: none;
+}
+.tj{
+    width: 180px;
 }
 select {
 	background-color: #fff;
@@ -314,11 +317,6 @@ h1 a {
 }
 a:hover {
 	color: #33a8ff;
-}
-.btn {
-	padding: 5px 25px;
-	margin: 0 3px;
-	outline: none;
 }
 .form-control {
 	min-width: 200px;

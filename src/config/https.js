@@ -42,11 +42,11 @@ axios.interceptors.response.use((response) => {
   // Do something with response data
   const data = resultHandler(response);
   // 如果设置了缓存就把数据存入缓存
-  const opt = response.config.opt;
+  const opt = response.config.opt || ({});
   if (opt.cache) {
     set(opt.key, data, opt.cacheTimeout > 0 ? opt.cacheTimeout : 3600);
   }
-  return response;
+  return response.data;
 }, error => Promise.reject(error));
 
 const Method = ['put', 'post', 'get', 'delete', 'patch', 'upload'];
@@ -57,7 +57,8 @@ const Method = ['put', 'post', 'get', 'delete', 'patch', 'upload'];
  * @param url
  * @param data
  * @param opt :
-  * - cache: 是否将请求的数据缓存,默认不缓存;
+  * - timeout : 最长等待时间
+ * - cache: 是否将请求的数据缓存,默认不缓存;
  * - cacheTimeout: 缓存数据失效时间(单位秒), 默认1小时;
  *
  * @returns {*}
@@ -73,6 +74,10 @@ const xhr = (method, url, data = {}, opt = { cache: false, cacheTimeout: 3600 })
   }
 
   const config = { method, url, opt };
+  const { timeout } = opt;
+  if (timeout) {
+    config.timeout = timeout;
+  }
 
   if (method === 'get') {
     config.params = data;
@@ -96,26 +101,26 @@ const xhr = (method, url, data = {}, opt = { cache: false, cacheTimeout: 3600 })
 export default {
   async get(url, data = {}, opt) {
     const res = await xhr('get', url, data, opt);
-    return res.data;
+    return res;
   },
   async post(url, data = {}, opt) {
     const res = await xhr('post', url, data, opt);
-    return res.data;
+    return res;
   },
   async put(url, data = {}, opt) {
     const res = await xhr('put', url, data, opt);
-    return res.data;
+    return res;
   },
   async patch(url, data = {}, opt) {
     const res = await xhr('patch', url, data, opt);
-    return res.data;
+    return res;
   },
   async delete(url, data = {}, opt) {
     const res = await xhr('delete', url, data, opt);
-    return res.data;
+    return res;
   },
   async upload(url, data = {}, opt) {
     const res = await xhr('upload', url, data, opt);
-    return res.data;
+    return res;
   },
 };

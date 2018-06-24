@@ -84,6 +84,9 @@ export default {
       })();
     },
   },
+  mounted() {
+    this.createP();
+  },
 };
 </script>
 

@@ -143,8 +143,143 @@ export const CODE_STATE = {
   abnormal: '异常',
 };
 
-export const TRAFFIC_LIGHT = {
-  red: 'color: red',
-  yellow: 'color: #ec971f',
-  green: 'color: #5cb85c',
+const TRAFFIC_LIGHT = {
+  red: 'red',
+  yellow: '#ec971f',
+  green: '#5cb85c',
+};
+
+export const ORGANIZ_STATE = {
+  baseWaitSubmit: {
+    name: '基本信息待填写',
+    color: TRAFFIC_LIGHT.yellow,
+  },
+  baseWaitPending: {
+    name: '基本信息待初审',
+    color: TRAFFIC_LIGHT.yellow,
+  },
+  baseWaitAudit: {
+    name: '基本信息待审核',
+    color: TRAFFIC_LIGHT.yellow,
+  },
+  baseUnPass: {
+    name: '基本信息未通过',
+    color: TRAFFIC_LIGHT.red,
+  },
+
+  registWaitSubmit: {
+    name: '登记信息待填写',
+    color: TRAFFIC_LIGHT.yellow,
+  },
+  registWaitPending: {
+    name: '登记信息待初审',
+    color: TRAFFIC_LIGHT.yellow,
+  },
+  registWaitAudit: {
+    name: '登记信息待审核',
+    color: TRAFFIC_LIGHT.yellow,
+  },
+  registUnPass: {
+    name: '登记信息未通过',
+    color: TRAFFIC_LIGHT.red,
+  },
+  delete: {
+    name: '已删除',
+    color: TRAFFIC_LIGHT.red,
+  },
+  passed: {
+    name: '通过审核',
+    color: TRAFFIC_LIGHT.green,
+  },
+};
+
+export const DECLARE_STATE = {
+  waitPending: {
+    name: '待初审',
+    color: TRAFFIC_LIGHT.yellow,
+  },
+  waitAudit: {
+    name: '待审核',
+    color: TRAFFIC_LIGHT.yellow,
+  },
+  unpass: {
+    name: '未通过',
+    color: TRAFFIC_LIGHT.red,
+  },
+  passed: {
+    name: '已通过',
+    color: TRAFFIC_LIGHT.green,
+  },
+  delete: {
+    name: '删除中',
+    color: TRAFFIC_LIGHT.red,
+  },
+  deleted: {
+    name: '已删除',
+    color: TRAFFIC_LIGHT.red,
+  },
+};
+
+export const DECLARE_PRODUCT = {
+  create: '创建',
+  delete: '删除',
+};
+
+export const ORGANIZ_ENTERPRISE_STATE = {
+  waitPending: {
+    name: '申报材料待初审',
+    color: TRAFFIC_LIGHT.yellow,
+  },
+  waitUnPending: {
+    name: '申报材料初审未通过',
+    color: TRAFFIC_LIGHT.red,
+  },
+  waitPended: {
+    name: '申报材料初审通过',
+    color: TRAFFIC_LIGHT.green,
+  },
+  waitAudit: {
+    name: '申报材料待复审',
+    color: TRAFFIC_LIGHT.yellow,
+  },
+  unPass: {
+    name: '申报材料复审未通过',
+    color: TRAFFIC_LIGHT.red,
+  },
+  pass: {
+    name: '申报材料复审已通过',
+    color: TRAFFIC_LIGHT.green,
+  },
+  wait: {
+    name: '系统服务费待支付',
+    color: TRAFFIC_LIGHT.yellow,
+  },
+  pending: {
+    name: '入库材料待初审',
+    color: TRAFFIC_LIGHT.yellow,
+  },
+  collectting: {
+    name: '待认证官上门采集',
+    color: TRAFFIC_LIGHT.yellow,
+  },
+  confirmFailed: {
+    name: '入库材料初审未通过',
+    color: TRAFFIC_LIGHT.red,
+  },
+  reject2: {
+    name: '认证官采集未完成',
+    color: TRAFFIC_LIGHT.red,
+  },
+  pending2: {
+    name: '认证材料待复审',
+    color: TRAFFIC_LIGHT.yellow,
+  },
+  confirm2Failed: {
+    name: '认证材料复审未通过',
+    color: TRAFFIC_LIGHT.red,
+  },
+  passed: {
+    name: '认证材料复审已通过',
+    color: TRAFFIC_LIGHT.green,
+  },
 };
