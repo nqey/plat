@@ -1,125 +1,119 @@
 <template>
   <div class="plat-content">
-      <div class="plat-content-con">
-        <ul>
-            <li>
-              <div class="the-total"><img :src="sumIcon">补贴总额（单位：元）</div>
-              <div class="the-total-amount">{{ amountObj.amountTtl }}</div>
-            </li>
-            <li>
-            <div class="subsidies">
-              <div class="total">审核通过</div>
-              <div class="number">{{ amountObj.passed.amount }}</div>
-              <div class="block gt">
-                <div class="block_1 gt" :style="{width:block_1 + 'px'}"></div>
-              </div>
+    <div class="plat-content-con">
+      <ul>
+        <li>
+          <div class="the-total"><img :src="sumIcon">补贴总额（单位：元）</div>
+          <div class="the-total-amount">{{ amountObj.amountTtl.toFixed(2) }}</div>
+        </li>
+        <li>
+          <div class="subsidies">
+            <div class="total">审核通过</div>
+            <div class="number">{{ amountObj.passed.amount }}</div>
+            <div class="block gt">
+              <div class="block_1 gt" :style="{width:block_1 + 'px'}"></div>
             </div>
-          </li>
-          <li>
-            <div class="subsidies">
-              <div class="total">拒绝申请</div>
-              <div class="number">{{ amountObj.rejected.amount }}</div>
-              <div class="block gt">
-                <div class="block_2 gt" :style="{width:block_2 + 'px'}"></div>
-              </div>
-            </div>
-          </li>
-          <li>
-            <div class="subsidies">
-              <div class="total">延后处理</div>
-              <div class="number">{{ amountObj.delayed.amount }}</div>
-              <div class="block gt">
-                <div class="block_3 gt" :style="{width:block_3 + 'px'}"></div>
-              </div>
-            </div>
-          </li>
-        </ul>
-      </div>
-      <div class="plat-content-con">
-        <ul>
-          <li>
-            <div class="the-total"><img :src="headcountIcon">申请总人数</div>
-            <div class="the-total-amount">{{ amountObj.countTtl }}</div>
-          </li>
-          <li>
-            <div class="subsidies">
-              <div class="total">审核通过</div>
-              <div class="number">{{ amountObj.passed.count }}</div>
-              <div class="block gt">
-                <div class="block_4 gt" :style="{width:block_4 + 'px'}"></div>
-              </div>
-            </div>
-          </li>
-          <li>
-            <div class="subsidies">
-              <div class="total">拒绝申请</div>
-              <div class="number">{{ amountObj.rejected.count }}</div>
-              <div class="block gt">
-                <div class="block_5 gt" :style="{width:block_5 + 'px'}"></div>
-              </div>
-            </div>
-          </li>
-          <li>
-            <div class="subsidies">
-              <div class="total">延后处理</div>
-              <div class="number">{{ amountObj.delayed.count }}</div>
-              <div class="block gt">
-                <div class="block_6 gt" :style="{width:block_6 + 'px'}"></div>
-              </div>
-            </div>
-          </li>
-        </ul>
-      </div>
-      <div class="plat-content-con">
-        <div class="row">
-          <div class="col-md-12">
-            <h4>待审核列表</h4>
           </div>
+        </li>
+        <li>
+          <div class="subsidies">
+            <div class="total">拒绝申请</div>
+            <div class="number">{{ amountObj.rejected.amount }}</div>
+            <div class="block gt">
+              <div class="block_2 gt" :style="{width:block_2 + 'px'}"></div>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="subsidies">
+            <div class="total">延后处理</div>
+            <div class="number">{{ amountObj.delayed.amount }}</div>
+            <div class="block gt">
+              <div class="block_3 gt" :style="{width:block_3 + 'px'}"></div>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <div class="plat-content-con">
+      <ul>
+        <li>
+          <div class="the-total"><img :src="headcountIcon">申请总人数</div>
+          <div class="the-total-amount">{{ amountObj.countTtl }}</div>
+        </li>
+        <li>
+          <div class="subsidies">
+            <div class="total">审核通过</div>
+            <div class="number">{{ amountObj.passed.count }}</div>
+            <div class="block gt">
+              <div class="block_4 gt" :style="{width:block_4 + 'px'}"></div>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="subsidies">
+            <div class="total">拒绝申请</div>
+            <div class="number">{{ amountObj.rejected.count }}</div>
+            <div class="block gt">
+              <div class="block_5 gt" :style="{width:block_5 + 'px'}"></div>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="subsidies">
+            <div class="total">延后处理</div>
+            <div class="number">{{ amountObj.delayed.count }}</div>
+            <div class="block gt">
+              <div class="block_6 gt" :style="{width:block_6 + 'px'}"></div>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <div class="plat-content-con">
+      <div class="row">
+        <div class="col-md-12">
+          <h4>待审核列表</h4>
         </div>
-        <div class="row" style="padding-top: 50px;">
-          <div class="col-md-12 form-inline">
-            <div class="form-group">
+      </div>
+      <div class="filters">
+        <div class="form-inline">
+          <div class="row clearfix sssrk">
+            <div class="form-group col-md-4">
               <label>机构名称</label>
-              <input type="text" placeholder="申报机构/省级/市级" class="form-control" v-model="organizName">
+              <input type="text" placeholder="请输入机构名称" class="form-control" v-model="filter.organizName">
             </div>
-            <div class="form-group">
+            <div class="form-group col-md-4">
               <label>提现卡号</label>
-              <input type="text" placeholder="请输入卡号" class="form-control" v-model="bankCard">
+              <input type="text" placeholder="请输入提现卡号" class="form-control" v-model="filter.bankCard">
             </div>
-            <div class="form-group">
-              <label>交易号</label>
-              <input type="text" placeholder="请输入交易号" class="form-control" v-model="sn">
+            <div class="form-group col-md-4">
+              <label>交&#8194;易&#8194;号</label>
+              <input type="text" placeholder="请输入交易号" class="form-control" v-model="filter.sn">
             </div>
-            <div class="form-group">
-              <label>选择状态</label>
-              <select class="form-control" v-model="state">
+            <div class="form-group col-md-4">
+              <label>状&#12288;&#12288;态</label>
+              <select class="form-control" v-model="filter.state">
                 <option value="">请选择</option>
-                <option v-for="(v, k) of status" :value="k">{{v}}</option>
+                <option v-for="(v, k) of SUBSIDY_STATE" :value="k">{{v}}</option>
               </select>
             </div>
-            <div class="form-group">
-              <button type="button" class="btn btn-primary" @click="search">查询</button>
-            </div>
-            <div class="form-group">
-              <button type="button" class="btn btn-primary" @click="clear">清除</button>
+            <div class="form-group col-md-4">
+              <button type="button" class="btn btn-primary" @click="search">
+                <span class="glyphicon glyphicon-search"></span>搜索
+              </button>
+              <button type="button" class="btn btn-primary" @click="clear">清空</button>
             </div>
           </div>
         </div>
-        <div class="row" style="padding-top: 50px;">
-          <div class="col-md-12">
-             <v-datagrid 
-                :columns="columns"
-                :checkable="false"
-                :data-url="dataUrl"
-                :count-url="countUrl"
-                :params="datagridParams"
-                >
-             </v-datagrid>
-           </div>
+      </div>
+      <div class="row" style="padding-top: 50px;">
+        <div class="col-md-12">
+          <v-datagrid :columns="columns" :data-url="dataUrl" :count-url="countUrl" :params="datagridParams"/>
         </div>
-        <v-modal ref="modal" :param="modalParams" :handler="modalHandler"></v-modal>
       </div>
-      </div>
+      <v-modal ref="modal" :param="modalParams" :callback="search"></v-modal>
+    </div>
   </div>
 </template>
 
@@ -129,23 +123,19 @@
   import headcountIcon from '@/assets/img/headcount_icon.png';
   import { PLATFORM_SUBSIDY_QUERY, PLATFORM_SUBSIDY_COUNT, PLATFORM_SUBSIDY_STATISTICAL_AMOUNT } from '@/config/env';
   import modal from '@/page/subsidy/pending/modal';
+  import { SUBSIDY_STATE } from '@/config/mapping';
+  import { reomveBlank } from '@/config/utils';
 
   export default {
     name: 'pending',
     data() {
       return {
-        datagridParams: {
+        datagridParams: {},
+        filter: {
           organizName: null,
           bankCard: null,
           sn: null,
-          state: null,
-        },
-        organizName: null,
-        bankCard: null,
-        sn: null,
-        state: '',
-        modalHandler: () => {
-          // TODO
+          state: '',
         },
         modalParams: {},
         sumIcon,
@@ -176,12 +166,7 @@
         block_4: '',
         block_5: '',
         block_6: '',
-        status: {
-          pending: '待审核',
-          passed: '通过',
-          rejected: '未通过',
-          delayed: '延后',
-        },
+        SUBSIDY_STATE,
         dataUrl: PLATFORM_SUBSIDY_QUERY,
         countUrl: PLATFORM_SUBSIDY_COUNT,
         columns: [{ field: 'sn', header: '交易号', sort: 'id', width: 100 },
@@ -204,7 +189,7 @@
             field: 'state',
             header: '状态',
             width: 120,
-            formatter: row => this.status[row.state],
+            formatter: row => SUBSIDY_STATE[row.state],
           },
           {
             field: 'action',
@@ -215,7 +200,7 @@
               text: '【审核】',
               // return true 表示这个按钮要显示，否则不显示
               show(row) {
-                return row.state === 'pending';
+                return row.state === 'pending' || row.state === 'delayed';
               },
               // 处理器，参数：row-当前行数据，index当前行所属数据的第几行
               handler: (row) => {
@@ -235,24 +220,11 @@
     },
     methods: {
       search() {
-        this.datagridParams = {
-          organizName: this.organizName,
-          bankCard: this.bankCard,
-          sn: this.sn,
-          state: this.state,
-        };
+        this.datagridParams = reomveBlank(this.filter);
       },
       clear() {
-        this.organizName = null;
-        this.bankCard = null;
-        this.sn = null;
-        this.state = null;
-        this.datagridParams = {
-          organizName: null,
-          bankCard: null,
-          sn: null,
-          state: null,
-        };
+        this.params = {};
+        this.filter = { state: '' };
       },
       async getData() {
         const res = await this.$http.get(PLATFORM_SUBSIDY_STATISTICAL_AMOUNT);
@@ -279,76 +251,95 @@
 </script>
 
 <style lang="scss" scoped>
-@import '../../../assets/css/mixin.scss';
-.plat-content-con ul{
-  height: 80px;
-  display: block;
-}
-.plat-content-con ul li{
-  width: 300px;
-  height: 80px;
-  float: left;
-  border-right: 1px solid #e0e0e0;
-}
-.plat-content-con ul li:last-child{border:none}
-.total{
-  font-size: 16px;
+  @import '../../../assets/css/mixin.scss';
+
+  .plat-content-con ul {
+    height: 80px;
+    display: block;
+  }
+
+  .plat-content-con ul li {
+    width: 300px;
+    height: 80px;
+    float: left;
+    border-right: 1px solid #e0e0e0;
+  }
+
+  .plat-content-con ul li:last-child {
+    border: none
+  }
+
+  .total {
+    font-size: 16px;
     color: #888;
-}
-.the-total{
-  padding-left: 16px;
+  }
+
+  .the-total {
+    padding-left: 16px;
     color: #4e4e4e;
     font-weight: bold;
     font-size: 16px;
-}
-.the-total img{
-  width: 24px;
+  }
+
+  .the-total img {
+    width: 24px;
     height: 24px;
     margin-right: 6px;
     vertical-align: -6px;
-}
-.the-total-amount{
+  }
+
+  .the-total-amount {
     font-weight: 600;
     font-size: 30px;
     line-height: 60px;
     color: #2a3249;
     padding-left: 45px;
-}
-.number{
-  color: #2a3249;
+  }
+
+  .number {
+    color: #2a3249;
     font-size: 24px;
     font-weight: 600;
     line-height: 52px;
-}
-.subsidies{
-  /*width: 200px;*/
-  margin-left: 50px;
-}
-.gt{
-  height: 4px;
-  border-radius: 2px;
-}
-.block{
-  width: 200px;
-  background-color: #eeeeee;
-}
-.block_1{
-  background-color: #68ddd5;
-}
-.block_2{
-  background-color: #fd5765;
-}
-.block_3{
-  background-color: #589efe;
-}
-.block_4{
-  background-color: #68ddd5;
-}
-.block_5{
-  background-color: #fd5765;
-}
-.block_6{
-  background-color: #589efe;
-}
+  }
+
+  .subsidies {
+    /*width: 200px;*/
+    margin-left: 50px;
+  }
+
+  .gt {
+    height: 4px;
+    border-radius: 2px;
+  }
+
+  .block {
+    width: 200px;
+    background-color: #eeeeee;
+  }
+
+  .block_1 {
+    background-color: #68ddd5;
+  }
+
+  .block_2 {
+    background-color: #fd5765;
+  }
+
+  .block_3 {
+    background-color: #589efe;
+  }
+
+  .block_4 {
+    background-color: #68ddd5;
+  }
+
+  .block_5 {
+    background-color: #fd5765;
+  }
+
+  .block_6 {
+    background-color: #589efe;
+  }
 </style>
 

@@ -2,58 +2,58 @@
   <div>
     <v-modal 
       :title="title"
-      :commit="commit"
+      :ok="submit"
       ref="nopassmodal">
         <div slot="body">
-          <div style="text-align: center;font-size: 25px;">驳回请求！</div>
-          <textarea class="the-input" type="text" v-model="text" placeholder="驳回原因"></textarea>
+          <form class="form-horizontal">
+            <div class="form-group">
+              <label class="col-sm-2 control-label">原因</label>
+              <div class="col-sm-10">
+                <textarea rows="10" class="form-control" v-model="mark"></textarea>
+              </div>
+            </div>
+          </form>
         </div>
-        <slot name='footer'>
-        </slot>
     </v-modal>
-    <v-failuremodal ref="failuremodal"></v-failuremodal>
   </div>
 </template>
 
 <script>
-import failuremodal from '@/page/enterprise/collectting/failuremodal';
 import modal from '@/components/modal';
 import { PLATFORM_EP_REJECT2 } from '@/config/env';
 
 export default {
   name: 'nopassModal',
   props: {
-    goodsId: {
-      type: Number,
-      default: null,
-    },
-    handler: {
-      type: Function,
+    id: {
+      type: String,
       default: null,
     },
   },
   data() {
     return {
-      title: '提示',
-      enterpriseId: this.$route.params.id,
-      text: null,
+      mark: null,
+      title: '不通过',
     };
   },
   components: {
     'v-modal': modal,
-    'v-failuremodal': failuremodal,
   },
   watch: {},
   methods: {
-    async commit() {
-      const param = {
-        enterpriseId: this.enterpriseId,
-        mark: this.text,
+    async submit() {
+      const params = {
+        enterpriseId: this.id,
+        mark: this.mark,
       };
-      const res = await this.$http.post(PLATFORM_EP_REJECT2, param);
+      const res = await this.$http.post(PLATFORM_EP_REJECT2, params);
       if (res.success) {
-        this.$refs.nopassmodal.toggle();
-        this.$refs.failuremodal.$refs.failuremodal.toggle();
+        this.$transfer({
+          buttons: [{
+            text: '去列表',
+            link: '/enterprise/collectting',
+          }],
+        });
       }
     },
   },
@@ -61,11 +61,4 @@ export default {
 </script>
 
 <style scoped>
-
-.the-input{
-  max-width: 100%;
-  min-width: 100%;
-  height: 150px;
-}
-
 </style>

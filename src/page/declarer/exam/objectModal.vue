@@ -2,6 +2,7 @@
   <div>
     <v-modal 
       :title="title"
+      :ok="setTargetExam"
       ref="modal">
       <div slot="body">
         <form class="form-horizontal">
@@ -40,10 +41,6 @@
           </div>
         </form>
       </div>
-      <div slot="footer">
-        <button type="button" class="btn btn-info" @click="$refs.modal.toggle();setTargetExam()">确认</button>
-        <button type="button" class="btn btn-default" @click="$refs.modal.toggle();">取消</button>
-      </div>
     </v-modal>
   </div>
 </template>
@@ -60,14 +57,14 @@ import { formatDate } from '@/config/utils';
 import { PLATFORM_POST_EXAMS_EXAMINEE_OBJECTSETTING } from '@/config/env';
 
 export default {
-  name: 'timeModal',
+  name: 'objectModal',
   props: {
-    id: {
-      type: Number,
-      default: null,
-    },
     item: {
       type: Object,
+      default: null,
+    },
+    handler: {
+      type: Function,
       default: null,
     },
   },
@@ -87,7 +84,7 @@ export default {
     'el-checkbox-group': CheckboxGroup,
   },
   watch: {
-    id() {
+    item() {
       this.duration = this.item.duration;
       this.objectTime = [formatDate(new Date(this.item.objectStartTime), 'yyyy-MM-dd hh:mm:ss'), formatDate(new Date(this.item.objectEndTime), 'yyyy-MM-dd hh:mm:ss')];
       this.rules = this.item.rules.map((d) => {
@@ -105,8 +102,9 @@ export default {
   },
   methods: {
     async setTargetExam() {
+      if (!this.item.examinationId) return;
       const param = {};
-      param.id = this.examinationId;
+      param.id = this.item.examinationId;
       param.objectStartTime = new Date(this.objectTime[0]).getTime();
       param.objectEndTime = new Date(this.objectTime[1]).getTime();
       param.rules = this.rules.map((d) => {
@@ -118,11 +116,12 @@ export default {
         }
         return 0;
       });
+      param.rules = param.rules.length === 0 ? [0] : param.rules;
       param.illustrate = this.illustrate;
       param.name = this.examName;
       const res = await this.$http.post(PLATFORM_POST_EXAMS_EXAMINEE_OBJECTSETTING, param);
       if (res.success) {
-        this.search(1);
+        this.handler();
       }
     },
   },

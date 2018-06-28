@@ -46,7 +46,7 @@
               <a class="datagrid-action" v-for="(action, index) in col.actions"
                  v-if="action.show != null ? action.show(row) === true: true"
                  @click="action.handler != null && action.handler(row, rowIndex)">
-                {{ action.text || action.textFun(row) }}
+                {{ action.text }}
               </a>
             </span>
           </div>
@@ -70,6 +70,7 @@
 * checkable:Boolean   - 是否支持数据行被check选中， 默认为false（不支持）
 * singleCheck:Boolean - 是否单选，默认false（多选）
 * pageable:Boolean    - 是否支持分页，默认为true（支持）
+* pageSize:Number     - 每页大小，默认20
 * title:String        - title，默认没有
 * sortBy:String       - 按什么字段排序，默认不排序
 * orderBy:String      - ASC（正序）/DESC（倒序）排序，默认不排序
@@ -124,6 +125,11 @@
       pageable: {
         type: Boolean,
         default: true,
+      },
+      // 分页大小
+      pageSize: {
+        type: Number,
+        default: 20,
       },
       // datagrid的标题
       title: {
@@ -208,6 +214,7 @@
     mounted() {
       this.sort = this.sortBy;
       this.order = this.orderBy;
+      this.rows = this.pageSize || 20;
 
       const p = this.getPagerParams();
       const o = this.getOrderParams();

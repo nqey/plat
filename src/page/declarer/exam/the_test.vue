@@ -12,19 +12,19 @@
         <div class="form-group clearfix">
           <div class="content_left"><b>考试名称</b></div>
           <div class="content_right clearfix">
-            <input type="text" class="form-control" v-model="name"/>
+            <input type="text" class="form-control" v-model="name" val-required/>
           </div>
         </div>
         <div class="form-group clearfix">
           <div class="content_left"><b>说明</b></div>
           <div class="content_right clearfix">
-            <textarea type="text" rows="5" class="form-control" v-model="illustrate"/>
+            <textarea type="text" rows="5" class="form-control" v-model="illustrate" val-required/>
           </div>
         </div>
         <div class="form-group clearfix">
           <div class="content_left"><b>持续时间</b></div>
           <div class="content_right clearfix">
-            <input type="text" class="form-control" v-model="duration" style="width:90%; display: inline-block"/>
+            <input type="text" class="form-control" v-model="duration" style="width:90%; display: inline-block" val-required/>
             分钟
           </div>
         </div>
@@ -32,23 +32,11 @@
           <div class="content_left"><b>开考时间</b></div>
           <div class="content_right clearfix">
             <el-date-picker
-              v-model="examStartTime"
-              type="date"
-              placeholder="起始时间">
-            </el-date-picker>
-            <span class="text-center">至</span>
-            <el-date-picker
-              v-model="examEndTime"
-              type="date"
-              placeholder="结束时间">
-            </el-date-picker>
-            <!-- <el-date-picker
-              v-model="timerange"
+              v-model="examTime"
               type="datetimerange"
-              range-separator="至"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期">
-            </el-date-picker> -->
+              placeholder="起始时间"
+              val-required>
+            </el-date-picker>
           </div>
         </div>
         <div class="form-group clearfix">
@@ -65,13 +53,6 @@
               type="date"
               placeholder="结束时间">
             </el-date-picker>
-            <!-- <el-date-picker
-              v-model="objecttimerange"
-              type="datetimerange"
-              range-separator="至"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期">
-            </el-date-picker> -->
           </div>
         </div>
         <div class="form-group clearfix">
@@ -97,7 +78,7 @@
 import backicon from '@/assets/img/back_icon.png';
 import { PLATFORM_POST_EXAMS_CREATION } from '@/config/env';
 import { DatePicker, Checkbox, CheckboxGroup } from 'element-ui';
-import errInfo from '@/components/info/error';
+import { validate } from '@/config/validator';
 
 
 export default {
@@ -110,6 +91,7 @@ export default {
       rules: [],
       objectStartTime: '',
       objectEndTime: '',
+      examTime: [],
       examStartTime: '',
       examEndTime: '',
       objecttimerange: null,
@@ -119,37 +101,8 @@ export default {
     };
   },
   methods: {
-    validate() {
-      this.errMsg = [];
-      if (!this.name) {
-        this.errMsg.push('请输入考试名称');
-      }
-      if (!this.illustrate) {
-        this.errMsg.push('请输入考试说明');
-      }
-      if (!this.duration) {
-        this.errMsg.push('请输入持续时间');
-      }
-      if (!this.examStartTime) {
-        this.errMsg.push('请输入开考开始时间');
-      }
-      if (!this.examEndTime) {
-        this.errMsg.push('请输入开考结束时间');
-      }
-      if (!this.objectStartTime) {
-        this.errMsg.push('请输入审核通过开始时间');
-      }
-      if (!this.objectEndTime) {
-        this.errMsg.push('请输入审核通过结束时间');
-      }
-    },
+    @validate()
     async submit() {
-      this.validate();
-      if (this.errMsg.length !== 0) {
-        clearTimeout(this.infoTimer);
-        this.infoTimer = setTimeout(() => { this.errMsg = []; }, 3000);
-        return;
-      }
       const param = {};
       param.name = this.name;
       param.duration = this.duration;
@@ -169,11 +122,15 @@ export default {
       if (this.objectEndTime) {
         param.objectEndTime = new Date(this.objectEndTime).getTime();
       }
-      if (this.examStartTime) {
-        param.examStartTime = new Date(this.examStartTime).getTime();
-      }
-      if (this.examEndTime) {
-        param.examEndTime = new Date(this.examEndTime).getTime();
+      if (this.examTime.length > 0) {
+        this.examStartTime = this.examTime[0];
+        this.examEndTime = this.examTime[1];
+        if (this.examStartTime) {
+          param.examStartTime = new Date(this.examStartTime).getTime();
+        }
+        if (this.examEndTime) {
+          param.examEndTime = new Date(this.examEndTime).getTime();
+        }
       }
       const res = await this.$http.post(`${PLATFORM_POST_EXAMS_CREATION}`, param);
       if (res.success) {
@@ -185,9 +142,6 @@ export default {
     'el-date-picker': DatePicker,
     'el-checkbox': Checkbox,
     'el-checkbox-group': CheckboxGroup,
-    'v-error-info': errInfo,
-  },
-  mounted() {
   },
 };
 

@@ -3,7 +3,7 @@
     <div class="plat-content-con">
       <section>
         <h4 class="title"><span>{{ title }}</span></h4>
-        <form class="form-horizontal body">
+        <div class="form-horizontal body">
           <div class="form-group">
             <label for="name" class="col-sm-2 control-label">名称：</label>
             <div class="col-sm-6">
@@ -20,13 +20,13 @@
           <div class="form-group">
             <div class="col-sm-offset-2 col-sm-3">
               <button type="button" class="btn btn-default" @click="save" :disabled="disabled">
-                {{ disabled ? '正在保存…' : '&nbsp;&nbsp;保&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;存&nbsp;&nbsp;' }}
+                {{ disabled ? '正在保存…' : '&#8194;保&#12288;&#12288;存&#8194;' }}
               </button>
               <button class="btn" onclick="history.back(-1);">返回上一页<span
                 class="glyphicon glyphicon-share-alt"></span></button>
             </div>
           </div>
-        </form>
+        </div>
       </section>
     </div>
   </div>
@@ -60,7 +60,7 @@
                 back: '继续添加',
                 buttons: [{
                   text: '去列表',
-                  link: '#/system/role',
+                  link: '/system/role',
                 }],
               });
             },
@@ -78,7 +78,7 @@
               this.$transfer({
                 buttons: [{
                   text: '去列表',
-                  link: '#/system/role',
+                  link: '/system/role',
                 }],
               });
             },

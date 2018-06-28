@@ -8,7 +8,7 @@
     <v-modal
       :title="modalTitle"
       :mystyle="{width:'550px'}"
-      :commit="commit"
+      :ok="commit"
       ref="editModal">
       <div slot="body">
         <div class="form-group">
@@ -78,12 +78,12 @@
       edit(row) {
         this.modalTitle = '编辑菜单';
         this.editParams = Object.assign({}, row);
-        this.$refs.editModal.toggle();
+        this.$refs.editModal.open();
       },
       add() {
         this.modalTitle = '新增菜单';
         this.editParams = {};
-        this.$refs.editModal.toggle();
+        this.$refs.editModal.open();
       },
       async commit() {
         let res;
@@ -101,9 +101,9 @@
         if (res.success) {
           // 重新加载datagrid
           this.params = Object.assign({ _: new Date().getTime() }, this.params);
-
-          this.$refs.editModal.toggle();
+          return true;
         }
+        return false;
       },
     },
     components: {

@@ -8,31 +8,31 @@
           <div class="row clearfix sssrk">
             <div class="form-group col-md-4">
               <label>工厂名称</label>
-              <select class="form-control" v-model="factoryName">
+              <select class="form-control" v-model="filter.factoryName">
                 <option value="">请选择</option>
                 <option v-for="item in list" value="id">{{item.text}}</option>
               </select>
             </div>
             <div class="form-group col-md-4">
               <label>二维码类型</label>
-              <select class="form-control" v-model="type">
+              <select class="form-control" v-model="filter.type">
                 <option value="">请选择</option>
-                <option v-for="(v,k) of typeObj" :value="k">{{v}}</option>
+                <option v-for="(v,k) of CODE_TYPE" :value="k">{{v}}</option>
               </select>
             </div>
             <div class="form-group col-md-4">
               <label>二维码编号</label>
-              <input type="text" class="form-control" v-model="code" value="" placeholder="请输入二维码编号">
+              <input type="text" class="form-control" v-model="filter.code" value="" placeholder="请输入二维码编号">
             </div>
             <div class="form-group col-md-4">
               <label>扫描次数</label>
-              <input type="text" class="form-control" v-model="scanTimes" value="" placeholder="请输入扫描次数">
+              <input type="text" class="form-control" v-model="filter.scanTimes" value="" placeholder="请输入扫描次数(数字)">
             </div>
             <div class="form-group col-md-4">
               <label>二维码状态</label>
-              <select class="form-control" v-model="state">
+              <select class="form-control" v-model="filter.state">
                 <option value="">请选择</option>
-                <option v-for="(v,k) of stateObj" :value="k">{{v}}</option>
+                <option v-for="(v,k) of CODE_DETAIL_STATE" :value="k">{{v}}</option>
               </select>
             </div>
             <div class="form-group col-md-4">
@@ -51,7 +51,7 @@
       <v-datagrid :columns="columns"
                   :data-url="dataUrl"
                   :count-url="countUrl"
-                  :params="datagridParams">
+                  :params="params">
       </v-datagrid>
       <v-abnormalmodal ref="abnormalmodal" :id="id"></v-abnormalmodal>
     </div>
@@ -60,7 +60,8 @@
 
 <script>
   import datagrid from '@/components/datagrid';
-  import { formatDate } from '@/config/utils';
+  import { formatDate, reomveBlank } from '@/config/utils';
+  import { CODE_DETAIL_STATE, CODE_TYPE } from '@/config/mapping';
   import { PLATFORM_STATISTICAL_CODE_QUERY, PLATFORM_STATISTICAL_CODE_QUERY_COUNT, PLATFORM_FACTORY_USABLE } from '@/config/env';
 
   export default {
@@ -74,51 +75,32 @@
       return {
         id: null,
         list: '',
-        datagridParams: {
+        filter: {
           factoryName: '',
           type: '',
           code: null,
           scanTimes: null,
           state: '',
         },
-        stateObj: {
-          normal: '正常',
-          highRisk: '异常',
-        },
-        typeObj: {
-          1: '数据一物一码',
-          2: '图像一物一码',
-          3: '普通图像',
-        },
-        factoryName: '',
-        type: '',
-        code: null,
-        scanTimes: null,
-        state: '',
+        params: {},
+        CODE_DETAIL_STATE,
+        CODE_TYPE,
         dataUrl: PLATFORM_STATISTICAL_CODE_QUERY,
         countUrl: PLATFORM_STATISTICAL_CODE_QUERY_COUNT,
-        toolbar: [{
-          title: '二维码列表',
-          handler() {
-            window.console.log('二维码列表');
-          },
-        }],
-        checkable: true,
         columns: [{ field: 'code', header: '二维码编号', width: 200 },
           {
             field: 'type',
             header: '类型',
             sort: 'name',
             width: 220,
-            formatter: row => this.typeObj[row.type],
+            formatter: row => this.CODE_TYPE[row.type],
           },
-          { field: 'goodsName', header: '商品名称', sort: 'name', width: 220 },
+          { field: 'goodsName', header: '商品名称', width: 220 },
           { field: 'enterpriseName', header: '所属企业', width: 300 },
           { field: 'factoryName', header: '赋码工厂', width: 300 },
           {
             field: 'factoryTime',
             header: '生产时间',
-            sort: 'create_time',
             width: 200,
             formatter(row, index, value) {
               return value && formatDate(value);
@@ -129,23 +111,15 @@
           {
             field: 'state',
             header: '状态',
-            width: 120,
+            width: 140,
             html: true,
-            formatter: () => '',
+            formatter: row => (this.CODE_DETAIL_STATE[row.state] === '正常' ? '正常' : '<span style="color:red;">异常</span>'),
             actions: [{
-              textFun: (row) => {
-                if (this.stateObj[row.state] === '正常') {
-                  return '正常';
-                }
-                return '异常(查看原因)';
-              },
-              show() {
-                return true;
+              text: '(查看原因)',
+              show(row) {
+                return row.state === 'highRisk';
               },
               handler: (row) => {
-                if (this.stateObj[row.state] === '正常') {
-                  return;
-                }
                 this.id = row.riskId;
                 this.$refs.abnormalmodal.$refs.abnormalmodal.toggle();
               },
@@ -154,12 +128,9 @@
           {
             field: 'action',
             header: '详情',
-            width: 200,
+            width: 180,
             actions: [{
               text: '【查看详情】',
-              show() {
-                return true;
-              },
               handler: row => this.$router.push(`/code/list/log/${row.type}${row.id}`),
             }],
           },
@@ -175,21 +146,15 @@
     },
     methods: {
       search() {
-        this.datagridParams = {
-          factoryName: this.factoryName || '',
-          type: this.type || '',
-          code: this.code || null,
-          scanTimes: this.scanTimes || null,
-          state: this.state || '',
-        };
+        this.params = reomveBlank(this.filter);
       },
       clear() {
-        this.factoryName = '';
-        this.type = '';
-        this.code = null;
-        this.scanTimes = null;
-        this.state = '';
-        this.datagridParams = {};
+        this.params = {};
+        this.filter = {
+          factoryName: '',
+          type: '',
+          state: '',
+        };
       },
       async getData() {
         const param = {
@@ -205,6 +170,6 @@
 </script>
 
 <style lang="scss" scoped>
-@import '../../../assets/css/mixin.scss';
+  @import '../../../assets/css/mixin.scss';
 
 </style>

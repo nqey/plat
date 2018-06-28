@@ -2,7 +2,9 @@
   <div>
     <v-modal 
       :title="params.title"
-      :mystyle="mystyle"
+      :width="width"
+      :okText="okText"
+      :cancelText="cancelText"
       ref="detailModal">
        <div slot="body">
           <v-datagrid :toolbar="toolbar"
@@ -10,9 +12,6 @@
                       :pageable="true" :params="modalParams"
                       :data-url="dataUrl" :count-url="countUrl"
           ></v-datagrid>
-       </div>
-       <div slot="footer">
-         <button slot="footer" type="button" class="btn btn-primary" @click="$refs.detailModal.toggle()">关闭</button>
        </div>
     </v-modal>
     <v-value-modal ref="valueModal" :params="valueModalParams" :handler="modalHandler"></v-value-modal>
@@ -55,9 +54,9 @@ export default {
   },
   data() {
     return {
-      mystyle: {
-        width: '720px',
-      },
+      okText: '',
+      cancelText: '关闭',
+      width: 720,
       modalParams: {},
       valueModalParams: {},
       modalHandler: () => {

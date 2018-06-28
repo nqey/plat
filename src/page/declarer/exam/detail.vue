@@ -79,27 +79,8 @@
                 </div>
                 <textarea title="" class="inputtext" disabled>{{item.examineeAnswer}}</textarea>
               </div>
-              <div class="modal fade bs-example-modal-sm" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                <div class="modal-dialog" role="document">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                      <h4 class="modal-title" id="myModalLabel">简答题打分</h4>
-                    </div>
-                    <div class="modal-body">
-                      <div class="table_cont_bottom"> 
-                      	<span>
-                        <input type="text" placeholder="请输入分数" v-model="sScore"/>
-                        </span>
-                        <button class="btn btn_search" @click="setScore" data-dismiss="modal" aria-label="Close">确认</button>
-                        <div style="clear:both;"></div>
-                      </div>
-                      <p>最高分数：<span>10分</span></p>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
+             <v-score-modal ref="score" :id="$route.params.id" :subjectId="subjectId" :handler="init"></v-score-modal>
           </fieldset>
         </div>
       </div>
@@ -110,8 +91,9 @@
 
 <script>
 import backicon from '@/assets/img/back_icon.png';
-import { PLATFORM_POST_EXAMS_EXAMINEE_DETAILS, PLATFORM_POST_EXAMS_EXAMINEE_SCORES } from '@/config/env';
+import { PLATFORM_POST_EXAMS_EXAMINEE_DETAILS } from '@/config/env';
 import { formatDate } from '@/config/utils';
+import scoreModal from '@/page/declarer/exam/scoreModal';
 
 export default {
   data() {
@@ -139,19 +121,13 @@ export default {
       ],
     };
   },
+  components: {
+    'v-score-modal': scoreModal,
+  },
   methods: {
-    async setScore() {
-      const param = {};
-      param.score = this.sScore;
-      param.examExamineeId = this.$route.params.id;
-      param.subjectId = this.subjectId;
-      const res = await this.$xhr('post', PLATFORM_POST_EXAMS_EXAMINEE_SCORES, param);
-      if (res.data.code === 0) {
-        this.init();
-      }
-    },
     setSubjectId(id) {
       this.subjectId = id;
+      this.$refs.score.$refs.modal.toggle();
     },
     async init() {
       this.selectTotalScroe = 0;
@@ -160,12 +136,12 @@ export default {
       this.fillTotalScroe = 0;
       this.errQSJudge = [];
       this.judgeTotalScroe = 0;
-      const res = await this.$xhr('get', `${PLATFORM_POST_EXAMS_EXAMINEE_DETAILS}${this.$route.params.id}`);
-      if (res.data.code === 0) {
-        const examineeAnswerMap = res.data.data.examineeAnswerMap;
-        this.name = res.data.data.name;
-        this.submitTime = formatDate(new Date(res.data.data.submitTime), 'yyyy-MM-dd hh:mm:ss');
-        this.score = res.data.data.examinationScore;
+      const res = await this.$http.get(`${PLATFORM_POST_EXAMS_EXAMINEE_DETAILS}${this.$route.params.id}`);
+      if (res.success) {
+        const examineeAnswerMap = res.data.examineeAnswerMap;
+        this.name = res.data.name;
+        this.submitTime = formatDate(new Date(res.data.submitTime), 'yyyy-MM-dd hh:mm:ss');
+        this.score = res.data.examinationScore;
         this.singleQS = examineeAnswerMap.single;
         this.multipleQS = examineeAnswerMap.multiple;
         this.essayQS = examineeAnswerMap.essay;

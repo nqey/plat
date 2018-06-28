@@ -46,7 +46,7 @@
           <div class="form-group">
             <div class="col-sm-offset-2 col-sm-3">
               <button type="button" class="btn btn-default" @click="save" :disabled="disabled">
-                {{ disabled ? '正在保存…' : '&nbsp;&nbsp;保&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;存&nbsp;&nbsp;' }}
+                {{ disabled ? '正在保存…' : '&#8194;保&#12288;&#12288;存&#8194;' }}
               </button>
               <button class="btn" onclick="history.back(-1);">返回上一页<span
                 class="glyphicon glyphicon-share-alt"></span></button>
@@ -88,7 +88,7 @@
                 back: '继续添加',
                 buttons: [{
                   text: '去列表',
-                  link: '#/system/version',
+                  link: '/system/version',
                 }],
               });
             },
@@ -106,7 +106,7 @@
               this.$transfer({
                 buttons: [{
                   text: '去列表',
-                  link: '#/system/version',
+                  link: '/system/version',
                 }],
               });
             },

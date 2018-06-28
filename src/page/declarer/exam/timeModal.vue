@@ -2,6 +2,7 @@
   <div>
     <v-modal 
       :title="title"
+      :ok="setTimeExam"
       ref="modal">
       <div slot="body">
         <form class="form-horizontal">
@@ -28,10 +29,6 @@
           </div>
         </form>
       </div>
-      <div slot="footer">
-        <button type="button" class="btn btn-info" @click="$refs.modal.toggle();setTimeExam()">确认</button>
-        <button type="button" class="btn btn-default" @click="$refs.modal.toggle();">取消</button>
-      </div>
     </v-modal>
   </div>
 </template>
@@ -50,12 +47,12 @@ import { PLATFORM_POST_EXAMS_EXAMINEE_TIMESETTING } from '@/config/env';
 export default {
   name: 'timeModal',
   props: {
-    id: {
-      type: Number,
-      default: null,
-    },
     item: {
       type: Object,
+      default: null,
+    },
+    handler: {
+      type: Function,
       default: null,
     },
   },
@@ -71,19 +68,22 @@ export default {
     'el-date-picker': DatePicker,
   },
   watch: {
-    id() {
+    item() {
       this.duration = this.item.duration;
-      this.examTime = [formatDate(new Date(this.item.objectStartTime), 'yyyy-MM-dd hh:mm:ss'), formatDate(new Date(this.item.objectEndTime), 'yyyy-MM-dd hh:mm:ss')];
+      this.examTime = [formatDate(new Date(this.item.startTime), 'yyyy-MM-dd hh:mm:ss'), formatDate(new Date(this.item.endTime), 'yyyy-MM-dd hh:mm:ss')];
     },
   },
   methods: {
     async setTimeExam() {
       const param = {};
-      param.examinationId = this.id;
+      param.examinationId = this.item.examinationId;
       param.duration = this.duration;
       param.startTime = new Date(this.examTime[0]).getTime();
       param.endTime = new Date(this.examTime[1]).getTime();
-      await this.$http.post(PLATFORM_POST_EXAMS_EXAMINEE_TIMESETTING, param);
+      const res = await this.$http.post(PLATFORM_POST_EXAMS_EXAMINEE_TIMESETTING, param);
+      if (res.success) {
+        this.handler();
+      }
     },
   },
 };

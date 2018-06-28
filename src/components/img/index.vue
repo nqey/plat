@@ -1,9 +1,9 @@
 <template>
-  <div>
+  <div style="display: inline-block; margin-right: 10px; ">
     <v-big-img v-if="isShowBigImg" :imgSrc="getPictureUrl(imgSrc)" @hideBigImg="closeBigImg"></v-big-img>
-    <div class="imgW" :style="{ width: `${width}px`, height: `${height}px`}">
+    <div class="imgW" :style="{ width: `${width}px`, height: `${height}px` }">
       <img :src="getPictureUrl(imgSrc, {q : quality, w: width, h: height})" @click="showBigImg"/>
-      <span class="glyphicon glyphicon-resize-full" @click="showBigImg"></span>
+      <img :src="zoom" style="position: absolute;right: -5px;bottom: -3px;" @click="showBigImg"></img>
     </div>
   </div>
 </template>
@@ -20,6 +20,7 @@
 <script>
   import { getPictureUrl } from '@/config/utils';
   import vBigImg from '@/components/img/bigImg';
+  import zoom from '@/assets/img/zoom.png';
 
   export default {
     name: 'mimg',
@@ -43,6 +44,7 @@
     },
     data() {
       return {
+        zoom,
         isShowBigImg: false,
       };
     },

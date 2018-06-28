@@ -7,7 +7,7 @@
         <div class="form-inline">
           <div class="row clearfix sssrk">
             <div class="form-group col-md-4">
-              <label>版&nbsp;&nbsp;本&nbsp;&nbsp;号</label>
+              <label>版&#8194;本&#8194;号</label>
               <input type="text" class="form-control" v-model="filter.id" placeholder="输入版本号">
             </div>
             <div class="form-group col-md-4">
@@ -21,7 +21,7 @@
             <div class="form-group col-md-4">
               <label>强制更新</label>
               <select class="form-control" v-model="filter.force">
-                <option value="null">请选择</option>
+                <option value="">请选择</option>
                 <option value="true">是</option>
                 <option value="false">否</option>
               </select>
@@ -128,7 +128,7 @@
       },
       clear() {
         this.params = {};
-        this.filter = {};
+        this.filter = { force: '' };
       },
     },
     components: {

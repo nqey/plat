@@ -5,7 +5,6 @@
       <hr/>
       <div class="filters">
         <div class="form-inline">
-          <div class="row clearfix sssrk">
             <div class="form-group col-md-4">
               <label>企业名称</label>
               <input type="text" class="form-control" v-model="name" placeholder="请输入企业名称">
@@ -14,19 +13,19 @@
               <label>支付方式</label>
               <select class="form-control" v-model="payMethod">
                 <option value="">请选择</option>
-                <option v-for="(v, k) of payMethodObj" :value="k">{{v}}</option>
+                <option v-for="(v, k) of PAY_METHOD" :value="k">{{v}}</option>
               </select>
             </div>
             <div class="form-group col-md-4">
               <label>支付状态</label>
               <select class="form-control" v-model="payState">
                 <option value="">请选择</option>
-                <option v-for="(v, k) of payStateObj" :value="k">{{v}}</option>
+                <option v-for="(v, k) of ENTERPRISE_PAY_TYPE" :value="k">{{v}}</option>
               </select>
             </div>
             <div class="form-group col-md-4">
               <label>创建时间</label>
-              <el-date-picker v-model="createTimeGE" type="date" placeholder="选择日期">
+              <el-date-picker v-model="createTimeGE" value-format="yyyy-MM-dd" type="date" placeholder="选择日期">
               </el-date-picker>
             </div>
             <div class="form-group col-md-4">
@@ -36,7 +35,6 @@
               <button type="reset" class="btn btn-primary" @click="clear">清空
               </button>
             </div>
-          </div>
         </div>
       </div>
       <br/>
@@ -44,9 +42,9 @@
       <h4>初审列表</h4>
       <hr/>
       <v-datagrid :columns="columns"
-                  :data-url="dataUrl" 
+                  :data-url="dataUrl"
                   :count-url="countUrl"
-                  :params="datagridParams">
+                  :params="params">
       </v-datagrid>
     </div>
   </div>
@@ -57,6 +55,7 @@
   import { DatePicker } from 'element-ui';
   import { formatDate, getPictureUrl } from '@/config/utils';
   import { PLATFORM_EP_QUERY, PLATFORM_EP_QUERY_COUNT } from '@/config/env';
+  import { PAY_METHOD, ENTERPRISE_PAY_TYPE, ENTERPRISE_STATE } from '@/config/mapping';
 
   export default {
     name: 'index',
@@ -67,48 +66,16 @@
     },
     data() {
       return {
-        datagridParams: {
-          states: 'pending',
-          name: null,
-          payMethod: null,
-          payState: null,
-          createTimeGE: null,
-          page: 1,
-          rows: 20,
-        },
-        payMethod: '',
-        payMethodObj: {
-          alipayWeb: '支付宝',
-          wechatpayQrcode: '微信',
-          free: '全额补贴',
-        },
-        payState: '',
-        payStateObj: {
-          wait: '待支付',
-          success: '支付成功',
-          failed: '支付失败',
-        },
-        stateObj: {
-          wait: '待支付',
-          pending: '待初审',
-          collectting: '待采',
-          confirmFailed: '初审未通过',
-          reject2: '采集未通',
-          pending2: '待复审',
-          confirm2Failed: '复审未通过',
-          passed: '通过审',
-        },
-        amountObj: {},
-        status: {
-          0: '',
-          pending: '待审核',
-          delayed: '延后',
-          rejected: '未通过',
-          passed: '通过',
-        },
-        state: 0,
         name: null,
+        payMethod: '',
+        payState: '',
         createTimeGE: null,
+        params: {
+          states: ['pending', 'wait', 'confirmFailed'],
+        },
+        PAY_METHOD,
+        ENTERPRISE_PAY_TYPE,
+        ENTERPRISE_STATE,
         dataUrl: PLATFORM_EP_QUERY,
         countUrl: PLATFORM_EP_QUERY_COUNT,
         columns: [{ field: 'id', header: '企业ID', sort: 'name', width: 200 },
@@ -118,7 +85,7 @@
             width: 100,
             html: true,
             formatter(row, index, value) {
-              return `<img src='${getPictureUrl(value, { w: 40, h: 40, q: 40 })}'>`;
+              return `<img src='${getPictureUrl(value, { f: 'png', w: 40, h: 40, q: 40 })}'>`;
             },
           },
           { field: 'name', header: '企业名称', width: 250 },
@@ -128,13 +95,13 @@
             field: 'payState',
             header: '支付状态',
             width: 130,
-            formatter: row => this.payStateObj[row.payState],
+            formatter: row => this.ENTERPRISE_PAY_TYPE[row.payState],
           },
           {
             field: 'state',
             header: '状态',
             width: 200,
-            formatter: row => this.stateObj[row.state],
+            formatter: row => this.ENTERPRISE_STATE[row.state],
           },
           { field: 'license', header: '营业执照', width: 130 },
           {
@@ -177,14 +144,12 @@
     },
     methods: {
       search() {
-        this.datagridParams = {
-          states: 'pending',
-          name: this.name || null,
+        this.params = {
+          states: ['pending', 'wait', 'confirmFailed'],
+          name: this.name,
           payMethod: this.payMethod || null,
           payState: this.payState || null,
-          createTimeGE: this.createTimeGE ? formatDate(this.createTimeGE, 'yyyy-MM-dd') : null,
-          page: 1,
-          rows: 20,
+          createTimeGE: this.createTimeGE,
         };
       },
       clear() {
@@ -192,8 +157,8 @@
         this.payMethod = '';
         this.payState = '';
         this.createTimeGE = null;
-        this.datagridParams = {
-          states: 'pending',
+        this.params = {
+          states: ['pending', 'wait', 'confirmFailed'],
         };
       },
     },
@@ -201,6 +166,6 @@
 </script>
 
 <style lang="scss" scoped>
-@import '../../../assets/css/mixin.scss';
+  @import '../../../assets/css/mixin.scss';
 
 </style>

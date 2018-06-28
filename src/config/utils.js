@@ -180,14 +180,19 @@ export const formatDate = (date, fmt = 'yyyy-MM-dd hh:mm:ss') => {
  * @return [] | String : 传入的url是一个数组，则返回数组，传入一个string则返回单个url
  */
 export const getPictureUrl = (url, params = {}) => {
-  const p = Object.entries(params)
-    .map(s => `${s[0]}=${s[1]}`)
-    .join('&');
+  try {
+    if (!url) return;
+    const p = Object.entries(params)
+      .map(s => `${s[0]}=${s[1]}`)
+      .join('&');
 
-  if (typeof url === 'string') {
-    return IMAGE_SERVER_URL + url + (url.indexOf('?') >= 0 ? '&' : '?') + p;
+    if (typeof url === 'string') {
+      return IMAGE_SERVER_URL + url + (url.indexOf('?') >= 0 ? '&' : '?') + p;
+    }
+    return url.map(v => IMAGE_SERVER_URL + v + (v.indexOf('?') >= 0 ? '&' : '?') + p);
+  } catch (e) {
+    window.console.log("失败了：", e);
   }
-  return url.map(v => IMAGE_SERVER_URL + v + (v.indexOf('?') >= 0 ? '&' : '?') + p);
 };
 
 
@@ -207,3 +212,22 @@ export const transfer = function(opts = {}) {
   this.$router.push(`/transfer/${encodeURIComponent(JSON.stringify(opts))}`);
 };
 
+
+/**
+ * 下载文件
+ * @param
+  content: 指定下载地址
+ filename: 指定下载文件名
+ */
+export const download = (content, filename) => {
+  // 创建隐藏的可下载链接
+  const eleLink = document.createElement('a');
+  eleLink.download = filename;
+  eleLink.style.display = 'none';
+  eleLink.href = content;
+  // 触发点击
+  document.body.appendChild(eleLink);
+  eleLink.click();
+  // 然后移除
+  document.body.removeChild(eleLink);
+};

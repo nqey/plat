@@ -1,157 +1,272 @@
 <template>
   <div class="plat-content">
     <div class="plat-content-con">
-      <div class="box">
-        <div class="title">审核信息</div>
-        <div class="title_content">
-          <span>订单编号:</span><p>{{list.order.id}}</p>
-        </div>
-        <div class="title_content">
-          <span>支付方式:</span><p>{{payway[list.order.payMethod]}}</p>
-        </div>
-        <div class="title_content">
-          <span>支付状态:</span><p>{{stateOjb[list.order.state]}}</p>
-        </div>
-        <div class="title_content">
-          <span>支付金额:</span><p>{{list.order.amount}}</p>
-        </div>
-        <div class="title_content">
-          <span>创建时间:</span><p>{{list.order.createTime && formatDate(list.order.createTime)}}</p>
-        </div>
-        <div class="title_content"> 
-          <span>支付时间:</span><p>{{list.order.modifyTime && formatDate(list.order.modifyTime)}}</p>
-        </div>
-        <div class="title_content">
-          <span>审核操作:</span><p><button @click="pass">通过</button><button @click="nopass" id="color">不通过</button></p>
-        </div>
-      </div>
-      <div class="box">
-        <div class="title two">审核信息</div>
-        <div class="text"><span>初审资料</span></div>
-        <div class="title_box">
-          <div class="title_content">
-            <span>企业名称:</span><p>{{list.base.name}}</p>
-          </div>
-          <div class="title_content">
-            <span>企业logo:</span>
-            <img style="width: 150px;" :src="getImgSrc(list.base.logo)">
-          </div>
-          <div class="title_content">
-            <span>座机号码:</span><p>{{list.base.phone}}</p>
-          </div>
-          <div class="title_content">
-            <span>企业地址:</span><p>{{list.base.address}}785275272857</p>
-          </div>
-          <div class="title_content">
-            <span>企业介绍:</span><p>{{list.base.introduction}}</p>
+      <button type="button" class="btn btn-default" @click="$router.push('/enterprise/pending')">返回</button>
+      <button type="button" class="btn btn-primary pull-right" @click="$router.push(`/enterprise/pending/edit/${$route.params.id}`)">编辑</button>
+      <h4 class="title"><span>审核信息</span></h4>
+      <br/>
+      <form class="form-horizontal" v-if="list.order">
+        <div class="form-group">
+          <label class="col-sm-2 control-label">订单编号:</label>
+          <div class="col-sm-10">
+            <p class="form-control2">{{list.order.id}}</p>
           </div>
         </div>
-<!--    ............................................................................................     -->
-        <div class="text"><span>营业执照</span></div>
-        <div class="title_box">
-          <div class="title_content">
-            <span>营业执照号:</span><p>{{list.base.license}}</p>
-          </div>
-          <div class="title_content">
-            <span>注册地址:</span><p>{{list.base.licenseAddress}}</p>
-          </div>
-          <div class="title_content">
-            <span>营业期限:</span><p>{{list.base.businessValidStart}}</p>
-          </div>
-          <div class="title_content">
-            <span>营业执照影印件:</span>
-            <img style="width: 200px;" :src="getImgSrc(list.base.licenseImageUrl)">
-          </div>
-          <div class="title_content">
-            <span>经营范围:</span>
-            <p>{{list.base.businessScope}}</p>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">支付方式:</label>
+          <div class="col-sm-10">
+            <p class="form-control2">{{payway[list.order.payMethod]}}</p>
           </div>
         </div>
-<!--    ............................................................................................     -->
-        <div class="text"><span>法人信息</span></div>
-        <div class="title_box">
-          <div class="title_content">
-            <span>法人姓名:</span><p>{{list.legalPerson.name}}</p>
-          </div>
-          <div class="title_content">
-            <span>证件类型:</span><p>{{idtype[list.legalPerson.idType]}}</p>
-          </div>
-          <div class="title_content">
-            <span>身份证号码:</span><p>{{list.legalPerson.idNumber}}</p>
-          </div>
-          <div class="title_content">
-            <span>证件有效期:</span><p>{{list.legalPerson.idValidStart}}</p>
-          </div>
-          <div class="title_content">
-            <span class="">身份证正/反面:</span>
-            <img style="width: 300px" :src="getImgSrc(list.legalPerson.idFrontUrl)">
-            <img style="width: 300px" :src="getImgSrc(list.legalPerson.idBackUrl)">
+        <div class="form-group">
+          <label class="col-sm-2 control-label">支付状态:</label>
+          <div class="col-sm-10">
+            <p class="form-control2">{{ENTERPRISE_PAY_TYPE[list.order.state]}}</p>
           </div>
         </div>
-<!--    ............................................................................................     -->
-        <div class="text"><span>负责人信息</span></div>
-        <div class="title_box">
-          <div class="title_content">
-            <span>负责人姓名:</span><p>{{list.charger.name}}</p>
-          </div>
-          <div class="title_content">
-            <span>手机号码:</span><p>{{list.charger.cellphone}}</p>
-          </div>
-          <div class="title_content">
-            <span>邮箱地址:</span><p>{{list.charger.email}}</p>
-          </div>
-          <div class="title_content">
-            <span>证件类型:</span><p>{{idtype[list.charger.idType]}}</p>
-          </div>
-          <div class="title_content">
-            <span>身份证号码:</span><p>{{list.charger.idNumber}}</p>
-          </div>
-          <div class="title_content">
-            <span>证件有效期:</span><p>{{list.charger.idValidStart}}</p>
-          </div>
-          <div class="title_content">
-            <span>身份证正/反面:</span>
-            <img style="width: 300px;" :src="getImgSrc(list.legalPerson.idFrontUrl)">
-            <img style="width: 300px;" :src="getImgSrc(list.legalPerson.idBackUrl)"> 
-          </div>
-          <div class="title_content">
-            <span>手持身份证照:</span>
-            <img style="width: 200px;" :src="getImgSrc(list.charger.idHoldFrontUrl)">
+        <div class="form-group">
+          <label class="col-sm-2 control-label">支付金额:</label>
+          <div class="col-sm-10">
+            <p class="form-control2">{{list.order.amount}}</p>
           </div>
         </div>
-<!--    ............................................................................................     -->
-        <div class="text"><span>申请公函</span></div>
-        <div class="title_box">
-          <div class="title_content">
-            <span>申请公函编号:</span><p>{{list.base.letterNumber}}</p>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">创建时间:</label>
+          <div class="col-sm-10">
+            <p class="form-control2">{{list.order.createTime && formatDate(list.order.createTime)}}</p>
           </div>
-          <div class="title_content">
-            <span>公函有效期限:</span><p>{{list.base.letterValidStart}}  ——  {{list.base.letterValidEnd}}</p>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">支付时间:</label>
+          <div class="col-sm-10">
+            <p class="form-control2">{{list.order.modifyTime && formatDate(list.order.modifyTime)}}</p>
           </div>
-          <div class="title_content">
-            <span class="">申请公函影印件:</span>
-            <img style="width: 200px;" :src="getImgSrc(list.base.letterImageUrl)">
-          </div>
-          <div class="title_content">
-            <div class="spanblack">操作记录:</div>
-            <div class="ffleft">
-              <div v-for="item in list.logs">
-                {{item.createTime && formatDate(item.createTime)}}[{{item.owner}}][{{eventObj[item.event]}}]:
-              </div>
-            </div>
+        </div>
+      </form>
+      <div class="form-horizontal" v-if="list.base">
+        <div class="form-group" v-if="ENTERPRISE_STATE_PASS[list.base.state]">
+          <label class="col-sm-2 control-label">审核操作:</label>
+          <div class="col-sm-10">
+            <button type="button" class="btn btn-success" @click="pass">通过</button>
+            <button type="button" class="btn btn-danger" @click="nopass">不通过</button>
           </div>
         </div>
       </div>
-      <v-passmodal ref="passmodal"></v-passmodal>
-      <v-nopassmodal ref="nopassmodal"></v-nopassmodal>
+<!--    ............................................................................................     -->
+      <h4 class="title"><span>初审资料</span></h4>
+      <br/>
+      <form class="form-horizontal" v-if="list.base">
+        <div class="form-group">
+          <label class="col-sm-2 control-label">企业名称:</label>
+          <div class="col-sm-10">
+            <p class="form-control2">{{list.base.name}}</p>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">企业logo:</label>
+          <div class="col-sm-10">
+            <v-img :imgSrc="list.base.logo + '?f=png'" style="float: left;"></v-img>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">座机号码:</label>
+          <div class="col-sm-10">
+            <p class="form-control2">{{list.base.areaCode}}{{list.base.phone}}</p>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">企业地址:</label>
+          <div class="col-sm-10">
+            <p class="form-control2">{{list.address.areaId}}</p>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">企业介绍:</label>
+          <div class="col-sm-10">
+            <p class="form-control2">{{list.base.introduction}}</p>
+          </div>
+        </div>
+      </form>
+<!--    ............................................................................................     -->
+      <h4 class="title"><span>营业执照</span></h4>
+      <br/>
+      <form class="form-horizontal" v-if="list.base">
+        <div class="form-group">
+          <label class="col-sm-2 control-label">营业执照号:</label>
+          <div class="col-sm-10">
+            <p class="form-control2">{{list.base.license}}</p>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">注册地址:</label>
+          <div class="col-sm-10">
+            <p class="form-control2">{{list.base.licenseAddress}}</p>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">营业期限:</label>
+          <div class="col-sm-10">
+            <p class="form-control2">{{list.base.businessValidStart}}</p>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">营业执照影印件:</label>
+          <div class="col-sm-10">
+            <v-img :imgSrc="list.base.licenseImageUrl" style="float: left;"></v-img>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">经营范围:</label>
+          <div class="col-sm-10">
+            <p class="form-control2">{{list.base.businessScope}}</p>
+          </div>
+        </div>
+      </form>
+<!--    ............................................................................................     -->
+      <h4 class="title"><span>法人信息</span></h4>
+      <br/>
+      <form class="form-horizontal" v-if="list.legalPerson">
+        <div class="form-group">
+          <label class="col-sm-2 control-label">法人姓名:</label>
+          <div class="col-sm-10">
+            <p class="form-control2">{{list.legalPerson.name}}</p>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">证件类型:</label>
+          <div class="col-sm-10">
+            <p class="form-control2">{{ID_TYPE[list.legalPerson.idType]}}</p>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">身份证号码:</label>
+          <div class="col-sm-10">
+            <p class="form-control2">{{list.legalPerson.idNumber}}</p>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">证件有效期:</label>
+          <div class="col-sm-10">
+            <p class="form-control2">{{list.legalPerson.idValidStart}}</p>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">身份证正/反面:</label>
+          <div class="col-sm-10">
+            <v-img :imgSrc="list.legalPerson.idFrontUrl" style="float: left;"></v-img>
+            <v-img :imgSrc="list.legalPerson.idBackUrl" style="float: left;margin-left: 20px;"></v-img>
+          </div>
+        </div>
+      </form>
+<!--    ............................................................................................     -->
+      <h4 class="title"><span>负责人信息</span></h4>
+      <br/>
+      <form class="form-horizontal" v-if="list.charger">
+        <div class="form-group">
+          <label class="col-sm-2 control-label">负责人姓名:</label>
+          <div class="col-sm-10">
+            <p class="form-control2">{{list.charger.name}}</p>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">手机号码:</label>
+          <div class="col-sm-10">
+            <p class="form-control2">{{list.charger.cellphone}}</p>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">邮箱地址:</label>
+          <div class="col-sm-10">
+            <p class="form-control2">{{list.charger.email}}</p>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">证件类型:</label>
+          <div class="col-sm-10">
+            <p class="form-control2">{{ID_TYPE[list.charger.idType]}}</p>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">身份证号码:</label>
+          <div class="col-sm-10">
+            <p class="form-control2">{{list.charger.idNumber}}</p>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">证件有效期:</label>
+          <div class="col-sm-10">
+            <p class="form-control2">{{list.charger.idValidStart}}</p>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">身份证正/反面:</label>
+          <div class="col-sm-10">
+            <v-img :imgSrc="list.charger.idFrontUrl" style="float: left;"></v-img>
+            <v-img :imgSrc="list.charger.idBackUrl" style="float: left;margin-left: 20px;"></v-img>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">手持身份证照:</label>
+          <div class="col-sm-10">
+            <v-img :imgSrc="list.charger.idHoldFrontUrl" style="float: left;"></v-img>
+          </div>
+        </div>
+      </form>
+<!--    ............................................................................................     -->
+      <h4 class="title"><span>申请公函</span></h4>
+      <br/>
+      <form class="form-horizontal" v-if="list.base">
+        <div class="form-group">
+          <label class="col-sm-2 control-label">申请公函编号:</label>
+          <div class="col-sm-10">
+            <p class="form-control2">{{list.base.letterNumber}}</p>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">公函有效期限:</label>
+          <div class="col-sm-10">
+            <p class="form-control2">{{list.base.letterValidStart}}  ——  {{list.base.letterValidEnd}}</p>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">申请公函影印件:</label>
+          <div class="col-sm-10">
+            <v-img :imgSrc="list.base.letterImageUrl" style="float: left;"></v-img>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">操作记录:</label>
+          <div class="col-sm-10">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>创建时间</th>
+                  <th>操作帐号</th>
+                  <th>操作内容</th>
+                  <th>原因</th>
+                </tr>
+              </thead>
+              <tbody>
+               <tr v-for="item in list.logs">
+                  <td>{{item.createTime && formatDate(item.createTime)}}</td>
+                  <td>{{item.owner}}</td>
+                  <td>{{ENTERPRISE_EVENT[item.event]}}</td>
+                  <td>{{item.mark}}</td>
+               </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </form>
+      <v-nopassmodal ref="nopassmodal" :id="enterpriseId"></v-nopassmodal>
     </div>
   </div>
 </template>
 
 <script>
-  import { PLATFORM_EP_GET, PLATFORM_EP_CONFIRM, PLATFORM_EP_REJECT } from '@/config/env';
+  import { PLATFORM_EP_GET, PLATFORM_EP_CONFIRM } from '@/config/env';
+  import { ENTERPRISE_EVENT, ENTERPRISE_PAY_TYPE, ID_TYPE, ENTERPRISE_STATE_PASS } from '@/config/mapping';
   import { getPictureUrl, formatDate } from '@/config/utils';
-  import passmodal from '@/page/enterprise/pending/passmodal';
   import nopassmodal from '@/page/enterprise/pending/nopassmodal';
 
   export default {
@@ -174,37 +289,21 @@
           logs: {},
         },
         enterpriseId: this.$route.params.id,
-        eventObj: {
-          create: '创建',
-          pay: '支付',
-          confirm: '通过',
-          reject: '不通过',
-          authSubmit: '认证官采集完成',
-          reject2: '认证官采集未通过',
-          pendingModify: '初审修改',
-          pending2Modify: '复审修改',
-        },
+        ENTERPRISE_EVENT,
         payway: {
           alipayWeb: '支付宝',
           wachatpayQrcode: '微信支付',
           offline: '线下支付',
           free: '全额补贴',
         },
-        stateOjb: {
-          wait: '待支付',
-          success: '支付成',
-          failed: '支付失败',
-        },
-        idtype: {
-          1: '身份证',
-          2: '驾驶证',
-          3: '军官证',
-        },
+        ENTERPRISE_PAY_TYPE,
+        ENTERPRISE_STATE_PASS,
+        ID_TYPE,
       };
     },
     components: {
-      'v-passmodal': passmodal,
       'v-nopassmodal': nopassmodal,
+      'v-img': () => import('@/components/img'),
     },
     mounted() {
       this.getData();
@@ -220,26 +319,23 @@
         }
       },
       getImgSrc(value) {
-        return value && getPictureUrl(value, { w: 0, h: 0, q: 0 });
+        return value && getPictureUrl(value, { f: 'png', w: 0, h: 0, q: 0 });
       },
-      pass() {
+      async pass() {
         const param = {
           enterpriseId: this.enterpriseId,
         };
-        const res = this.$http.post(PLATFORM_EP_CONFIRM, param);
+        const res = await this.$http.post(PLATFORM_EP_CONFIRM, param);
         if (res.success) {
-          this.success = res.data;
+          this.$transfer({
+            buttons: [{
+              text: '去列表',
+              link: '/enterprise/pending',
+            }],
+          });
         }
-        this.$refs.passmodal.$refs.passmodal.toggle();
       },
       nopass() {
-        const param = {
-          enterpriseId: this.enterpriseId,
-        };
-        const res = this.$http.post(PLATFORM_EP_REJECT, param);
-        if (res.success) {
-          this.failure = res.data;
-        }
         this.$refs.nopassmodal.$refs.nopassmodal.toggle();
       },
     },
@@ -249,64 +345,26 @@
 <style lang="scss" scoped>
 @import '../../../assets/css/mixin.scss';
 
-.box{
-  width: 100%;
-  margin-bottom: 100px;
+.form-control2 {
+    display: block;
+    width: 100%;
+    height: 34px;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #555;
+    background-image: none;
 }
-.title{
-  width: 100%;
-  margin-bottom: 20px;
-  font-size: 24px; 
+.title {
+  border-bottom: 1px solid #EDF2F5;
+  margin: 0;
 }
-.two{
-  margin-bottom: 5px;
-}
-.text{
-  height: 32px;
-  font-size: 20px;
-  border-bottom: 2px solid #e9e9e9;
-  margin-bottom: 15px;
-}
-.text span{
-  height: 32px;
-  font-family: "黑体";
-  display: inline-block;
-  border-bottom: 2px solid #337CFD;
-}
-.title_content{
-  width: 100%;
-  line-height: 50px;
-}
-.title_content span{
-  display: inline-block;
-  font-size: 18px;
-  width: 200px;
-}
-.spanblack {
-  font-size: 18px;
-  width: 200px;
-  float: left;
-}
-.title_content p, .ffleft{
-  width: 80%;
-  display: inline-block;
-  font-weight: 600;
-  font-size: 16px;
-}
-.title_content p button{
+.title span {
+  display: block;
   width: 120px;
-  height: 40px;
-  line-height: 40px;
-  background: #337CFD;
-  border: none;
-  color: #fff;
-  margin: 5px 20px 0  0;
-  border-radius: 5px;
+  text-align: center;
+  border-bottom: 1px solid #015FE5;
+  padding: 28px 0 15px 0;
 }
-#color{
-  background: #ff6666,
-}
-.title_box > .title_content:last-child{
-  margin-bottom: 20px;
-}
+
 </style>

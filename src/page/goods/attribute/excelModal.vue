@@ -1,9 +1,8 @@
 <template>
   <div>
-    <v-modal 
+    <v-modal
       :title="title"
-      :errMsg="errMsg"
-      :commit="commit"
+      :ok="commit"
       ref="excelModal">
        <div slot="body">
        <div style="margin: 30px 20px" class="dialog-content">
@@ -21,7 +20,7 @@
            </tbody>
           </table>
         </div>
-       </div> 
+       </div>
     </v-modal>
   </div>
 </template>
@@ -45,7 +44,6 @@ export default {
     return {
       excel_server_url: EXCEL_SERVER_URL,
       title: '批量导入',
-      errMsg: [],
     };
   },
   methods: {
@@ -57,7 +55,6 @@ export default {
       if (res.success) {
         this.handler();
         this.$refs.excelModal.toggle();
-        window.console.log('导入成功！！！', res);
       }
     },
   },

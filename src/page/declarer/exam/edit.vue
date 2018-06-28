@@ -3,7 +3,7 @@
     <div class="plat-content-con">
     <div class="index_table_tit clearfix">
       <div class="col-md-10 col-md-offset-1">
-       <router-link to="/declarer/exam/the_test" class="btn back_icon"><img :src="backicon">返回</router-link>
+      <router-link to="/declarer/exam" class="btn back_icon"><img :src="backicon">返回</router-link>
       </div>
     </div>
     <div class="index_table index_table_con clearfix">
@@ -12,11 +12,21 @@
       <span class="inputtext_1">{{illustrate}}</span>
       <div class="cjst_btn">
        <ul>
-        <li class="text-center btn_search" @click="type='insert';item={};$refs.single.$refs.modal.toggle()">插入单选题</li>
-        <li class="text-center btn_search" @click="type='insert';item={};$refs.multiple.$refs.modal.toggle();">插入多选题</li>
-        <li class="text-center btn_search" @click="type='insert';item={};$refs.judge.$refs.modal.toggle();">插入判断题</li>
-        <li class="text-center btn_search" @click="type='insert';item={};$refs.fill.$refs.modal.toggle();">插入填空题</li>
-        <li class="text-center btn_search" @click="type='insert';item={};$refs.essay.$refs.modal.toggle();">插入简答题</li>
+        <li @click="type='insert';item={};$refs.single.$refs.modal.toggle()">
+          <button type="button" class="btn btn_search">插入单选题</button>
+        </li>
+        <li @click="type='insert';item={};$refs.multiple.$refs.modal.toggle();">
+          <button type="button" class="btn btn_search">插入多选题</button>
+        </li>
+        <li @click="type='insert';item={};$refs.judge.$refs.modal.toggle();">
+          <button type="button" class="btn btn_search">插入判断题</button>
+        </li>
+        <li @click="type='insert';item={};$refs.fill.$refs.modal.toggle();">
+          <button type="button" class="btn btn_search">插入填空题</button>
+        </li>
+        <li @click="type='insert';item={};$refs.essay.$refs.modal.toggle();">
+          <button type="button" class="btn btn_search">插入简答题</button>
+        </li>
        </ul>
        <div style="clear:both;"></div>
       </div>
@@ -43,7 +53,7 @@
                 </ul>
                 <div class="cjks_txxg clearfix"> 
                   <ul class="pull-right txxg_xx"> 
-                    <li class="text-center" @click="singleQI=index;type='edit';item=q;$refs.single.$refs.modal.toggle();"><a data-toggle="modal" data-target="#myModal"><img :src="bj" />编辑</a></li> 
+                    <li class="text-center" @click="singleQI=index;type='edit';item=JSON.parse(JSON.stringify(q));$refs.single.$refs.modal.toggle();"><a data-toggle="modal" data-target="#myModal"><img :src="bj" />编辑</a></li> 
                     <li class="text-center" @click="copy(index, 'single')"><img :src="cz" />复制</li> 
                     <li class="text-center" @click="del(index, 'single')"><img :src="sc" />删除</li> 
                   </ul> 
@@ -73,7 +83,7 @@
                 </ul>
                 <div class="cjks_txxg clearfix"> 
                   <ul class="pull-right txxg_xx"> 
-                    <li class="text-center" @click="multipleQI=index;type='edit';item=q;$refs.multiple.$refs.modal.toggle();"><a><img :src="bj" />编辑</a></li> 
+                    <li class="text-center" @click="multipleQI=index;type='edit';item=JSON.parse(JSON.stringify(q));$refs.multiple.$refs.modal.toggle();"><a><img :src="bj" />编辑</a></li> 
                     <li class="text-center" @click="copy(index, 'multiple')"><img :src="cz" />复制</li> 
                     <li class="text-center" @click="del(index, 'multiple')"><img :src="sc" />删除</li> 
                   </ul> 
@@ -101,7 +111,7 @@
                 </ul>
                 <div class="cjks_txxg clearfix"> 
                   <ul class="pull-right txxg_xx"> 
-                    <li class="text-center" @click="judgeQI=index;type='edit';item=q;$refs.judge.$refs.modal.toggle();"><a><img :src="bj" />编辑</a></li> 
+                    <li class="text-center" @click="judgeQI=index;type='edit';item=JSON.parse(JSON.stringify(q));$refs.judge.$refs.modal.toggle();"><a><img :src="bj" />编辑</a></li> 
                     <li class="text-center" @click="copy(index, 'judge')"><img :src="cz" />复制</li> 
                     <li class="text-center" @click="del(index, 'judge')"><img :src="sc" />删除</li> 
                   </ul> 
@@ -124,7 +134,7 @@
                 </div>
                 <div class="cjks_txxg clearfix"> 
                   <ul class="pull-right txxg_xx"> 
-                    <li class="text-center" @click="fillQI=index;type='edit';item=q;$refs.fill.$refs.modal.toggle();"><a data-toggle="modal" data-target="#myModal"><img :src="bj" />编辑</a></li> 
+                    <li class="text-center" @click="fillQI=index;type='edit';item=JSON.parse(JSON.stringify(q));$refs.fill.$refs.modal.toggle();"><a data-toggle="modal" data-target="#myModal"><img :src="bj" />编辑</a></li> 
                     <li class="text-center" @click="copy(index, 'fill')"><img :src="cz" />复制</li> 
                     <li class="text-center" @click="del(index, 'fill')"><img :src="sc" />删除</li> 
                   </ul> 
@@ -145,13 +155,13 @@
              <div class="jdt_jj">
               <textarea title="" class="inputtext" placeholder="请输入内容" disabled></textarea>
              </div>
-            </div>
-            <div class="cjks_txxg clearfix"> 
+             <div class="cjks_txxg clearfix"> 
               <ul class="pull-right txxg_xx"> 
-                <li class="text-center" @click="essayQI=index;type='edit';item=q;$refs.essay.$refs.modal.toggle();"><a><img :src="bj" />编辑</a></li> 
+                <li class="text-center" @click="essayQI=index;type='edit';item=JSON.parse(JSON.stringify(q));$refs.essay.$refs.modal.toggle();"><a><img :src="bj" />编辑</a></li> 
                 <li class="text-center" @click="copy(index, 'essay')"><img :src="cz" />复制</li> 
                 <li class="text-center" @click="del(index, 'essay')"><img :src="sc" />删除</li> 
               </ul> 
+            </div>
             </div>
            </div>
          </fieldset>
@@ -198,6 +208,7 @@ export default {
         o2.answer = o.answer;
         o2.options = o.options;
         o2.score = o.score;
+        this.singleQS = JSON.parse(JSON.stringify(this.singleQS));
       },
       multipleHandler: (o) => {
         if (this.type === 'insert') {
@@ -209,6 +220,7 @@ export default {
         o2.title = o.title;
         o2.options = o.options;
         o2.score = o.score;
+        this.multipleQS = JSON.parse(JSON.stringify(this.multipleQS));
       },
       judgeHandler: (o) => {
         if (this.type === 'insert') {
@@ -721,9 +733,9 @@ export default {
   background: #4786ff;
   border-radius: 20px;
   height: 35px;
-  line-height: 35px;
   color: #fff;
   margin-bottom: 20px;
+  width: 155px;
 }
 .inputtext_1 {
   display: block;

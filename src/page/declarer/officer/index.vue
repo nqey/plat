@@ -7,7 +7,7 @@
         <div class="form-inline">
           <div class="row clearfix sssrk">
             <div class="form-group col-md-4">
-              <label>姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名</label>
+              <label>姓&#12288;&#12288;名</label>
               <input type="text" class="form-control" v-model="filter.name" placeholder="输入申报官姓名">
             </div>
             <div class="form-group col-md-4">
@@ -21,12 +21,12 @@
             <div class="form-group col-md-4">
               <label>审核状态</label>
               <select class="form-control" v-model="filter.state">
-                <option value="null">请选择</option>
+                <option value="">请选择</option>
                 <option v-for="(v,k) of DECLARE_STATE" :value="k">{{ v.name }}</option>
               </select>
             </div>
             <div class="form-group col-md-6">
-              <label>时&nbsp;&nbsp;间&nbsp;&nbsp;段</label>
+              <label>时&#8194;间&#8194;段</label>
               <el-date-picker v-model="filter.startTime" type="date" value-format="yyyy-MM-dd" placeholder="起始时间"/>
               <span class="text-center">至</span>
               <el-date-picker v-model="filter.endTime" type="date" value-format="yyyy-MM-dd" placeholder="结束时间"/>
@@ -157,7 +157,7 @@
       },
       clear() {
         this.params = {};
-        this.filter = {};
+        this.filter = { state: '' };
       },
     },
     components: {

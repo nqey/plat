@@ -48,7 +48,7 @@
         </form>
       </div>
       <div slot="footer">
-        <button type="button" style="width: 100%" class="btn btn-info" @click="$refs.modal.toggle();handler({title, score, options})">完成编辑</button>
+        <button type="button" style="width: 100%" class="btn btn-info" @click="toEdit">完成编辑</button>
       </div>
     </v-modal>
   </div>
@@ -113,8 +113,19 @@ export default {
     'v-modal': modal,
   },
   methods: {
-    finishi() {
-
+    toEdit() {
+      this.answer = [];
+      this.options.forEach((o, i) => {
+        if (o.answer) this.answer.push(i);
+      });
+      window.console.log(this.answer);
+      this.$refs.modal.toggle();
+      this.handler({
+        title: this.title,
+        score: this.score,
+        options: this.options,
+        answer: this.answer,
+      });
     },
     addOption() {
       const option = {

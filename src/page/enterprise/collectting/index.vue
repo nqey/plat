@@ -7,29 +7,30 @@
         <div class="form-inline">
           <div class="row clearfix sssrk">
             <div class="form-group col-md-4">
-                <label>企业名称</label>
-                <input type="text" class="form-control" v-model="name" placeholder="请输入企业名称">
+              <label>企业名称</label>
+              <input type="text" class="form-control" v-model="filter.name" placeholder="请输入企业名称">
             </div>
             <div class="form-group col-md-4">
-                <label>创建时间</label>
-                <el-date-picker v-model="createTimeGE" type="date" placeholder="选择日期">
-                </el-date-picker>
+              <label>创建时间</label>
+              <el-date-picker v-model="filter.createTimeGE" type="date" value-format="yyyy-MM-dd" placeholder="选择日期">
+              </el-date-picker>
             </div>
             <div class="form-group col-md-4">
-                <label>指派认证官</label>
-                <select class="form-control" v-model="assign">
-                    <option value="">请选择</option>
-                    <option v-for="(v,k) of mark" :value="k">{{v}}</option>
-                </select>
+              <label>指派认证官</label>
+              <select class="form-control" v-model="filter.assign">
+                <option value="">请选择</option>
+                <option v-for="(v,k) of mark" :value="k">{{v}}</option>
+              </select>
             </div>
-            <div class="form-group col-md-8">
-                <label>区&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;域</label>
-                <v-area :code="areacode" :onAreaChanged="(code) => liveAddress = code"></v-area>
+            <div class="form-group col-md-6">
+              <label>区&#12288;域</label>
+              <v-area :code="filter.areaCode" :onAreaChanged="(code) => filter.areaCode = code"></v-area>
             </div>
-            <div class="form-group col-md-8">
-                <button type="button" class="search btn-primary btn datagrid-search" @click="search"><span class="glyphicon glyphicon-search"></span>搜索
-                </button>
-                <button type="reset" class="search clear btn-primary btn datagrid-clear" @click="clear">清空</button>
+            <div class="form-group col-md-4">
+              <button type="button" class="search btn-primary btn datagrid-search" @click="search"><span
+                class="glyphicon glyphicon-search"></span>搜索
+              </button>
+              <button type="reset" class="search clear btn-primary btn datagrid-clear" @click="clear">清空</button>
             </div>
           </div>
         </div>
@@ -41,18 +42,19 @@
       <v-datagrid :columns="columns"
                   :data-url="dataUrl"
                   :count-url="countUrl"
-                  :params="datagridParams">
+                  :params="params">
       </v-datagrid>
     </div>
   </div>
 </template>
 
 <script>
+  import area from '@/components/area';
   import datagrid from '@/components/datagrid';
   import { DatePicker } from 'element-ui';
-  import area from '@/components/area';
-  import { formatDate, getPictureUrl } from '@/config/utils';
+  import { formatDate, getPictureUrl, reomveBlank } from '@/config/utils';
   import { PLATFORM_EP_QUERY, PLATFORM_EP_QUERY_COUNT } from '@/config/env';
+  import { ENTERPRISE_STATE } from '@/config/mapping';
 
   export default {
     name: 'index',
@@ -63,44 +65,19 @@
     },
     data() {
       return {
-        datagridParams: {
-          states: 'collectting',
+        filter: {
           name: null,
           createTimeGE: null,
-          assign: null,
-          areacode: null,
-          page: 1,
-          rows: 20,
+          assign: '',
+          areaCode: '',
+        },
+        params: {
+          states: ['collectting'],
         },
         mark: {
           0: '未指定',
           1: '已指定',
         },
-        assign: '',
-        region: '',
-        areacode: null,
-        liveAddress: '',
-        stateObj: {
-          wait: '待支付',
-          pending: '待初审',
-          collectting: '待采集',
-          confirmFailed: '初审未通过',
-          reject2: '采集未通',
-          pending2: '待复审',
-          confirm2Failed: '复审未通过',
-          passed: '通过审',
-        },
-        amountObj: {},
-        status: {
-          0: '',
-          pending: '待审核',
-          delayed: '延后',
-          rejected: '未通过',
-          passed: '通过',
-        },
-        state: 0,
-        name: null,
-        createTimeGE: null,
         dataUrl: PLATFORM_EP_QUERY,
         countUrl: PLATFORM_EP_QUERY_COUNT,
         columns: [{ field: 'id', header: '企业ID', sort: 'name', width: 200 },
@@ -110,7 +87,7 @@
             width: 100,
             html: true,
             formatter(row, index, value) {
-              return `<img src='${getPictureUrl(value, { w: 40, h: 40, q: 40 })}'>`;
+              return `<img src='${getPictureUrl(value, { f: 'png', w: 40, h: 40, q: 40 })}'>`;
             },
           },
           { field: 'name', header: '企业名称', width: 250 },
@@ -120,7 +97,7 @@
             field: 'state',
             header: '状态',
             width: 200,
-            formatter: row => this.stateObj[row.state],
+            formatter: row => ENTERPRISE_STATE[row.state],
           },
           {
             field: 'authoName',
@@ -171,24 +148,18 @@
     },
     methods: {
       search() {
-        this.datagridParams = {
-          states: 'collectting',
-          name: this.name || null,
-          createTimeGE: this.createTimeGE ? formatDate(this.createTimeGE, 'yyyy-MM-dd') : null,
-          assign: this.assign || null,
-          areaCode: this.liveAddress || null,
-          page: 1,
-          rows: 20,
-        };
+        this.params = reomveBlank(this.filter);
+        this.params.states = ['collectting'];
       },
       clear() {
-        this.areacode = '';
-        setTimeout(() => { this.areacode = null; }, 10);
-        this.name = null;
-        this.createTimeGE = null;
-        this.assign = '';
-        this.datagridParams = {
+        this.params = {
           states: 'collectting',
+        };
+        this.filter = {
+          name: null,
+          createTimeGE: null,
+          assign: '',
+          areaCode: '',
         };
       },
     },
@@ -196,6 +167,6 @@
 </script>
 
 <style lang="scss" scoped>
-@import '../../../assets/css/mixin.scss';
+  @import '../../../assets/css/mixin.scss';
 
 </style>

@@ -50,6 +50,7 @@
   import loading from '@/assets/img/loading.gif';
   import videoUploadedBackgroud from '@/assets/img/video.jpg';
   import videoAddBackgroud from '@/assets/img/video-add.png';
+  import guajie from '@/assets/img/guajie.jpg';
   import videoPlay from '@/assets/img/play.png';
   import { VIDEO_SERVER_URL } from '@/config/env';
   import { Message } from 'element-ui';
@@ -174,6 +175,10 @@
       },
       increase(e, url) {
         setTimeout(() => {
+          if (this.version > 2) {
+            e.target.src = guajie;
+            return;
+          }
           this.version += 1;
           e.target.src = `${this.getPlaceholder(url)}?t=${this.version}`;
         }, 500);

@@ -8,21 +8,21 @@
           <div class="row clearfix sssrk">
             <div class="form-group col-md-4">
               <label>姓名：</label>
-              <input type="text" class="form-control" v-model="name" placeholder="请输入员工姓名">
+              <input type="text" class="form-control" v-model="filter.name" placeholder="请输入员工姓名">
             </div>
             <div class="form-group col-md-4">
               <label>手机号：</label>
-              <input type="text" class="form-control" v-model="cellphone" placeholder="请输入员工手机号码">
+              <input type="text" class="form-control" v-model="filter.cellphone" placeholder="请输入员工手机号码">
             </div>
             <div class="form-group col-md-4">
               <label>职责：</label>
-              <input type="text" class="form-control" v-model="duty" placeholder="请输入员工职责">
+              <input type="text" class="form-control" v-model="filter.duty" placeholder="请输入员工职责">
             </div>
             <div class="form-group col-md-4">
               <label>工厂：</label>
-              <input type="text" class="form-control" v-model="factoryName" placeholder="请输员工所属工厂">
+              <input type="text" class="form-control" v-model="filter.factoryName" placeholder="请输员工所属工厂">
             </div>
-            <div class="form-group col-md-8">
+            <div class="form-group col-md-3">
               <button type="button" class="btn btn-primary" @click="search">
                   <span class="glyphicon glyphicon-search"></span>搜索
               </button>
@@ -40,7 +40,7 @@
       <v-datagrid :columns="columns"
                   :data-url="dataUrl"
                   :count-url="countUrl"
-                  :params="datagridParams">
+                  :params="params">
       </v-datagrid>
     </div>
   </div>
@@ -49,7 +49,7 @@
 <script>
   import datagrid from '@/components/datagrid';
   import { PLATFORM_EMPLOYEE_QUERY, PLATFORM_EMPLOYEE_QUERY_COUNT } from '@/config/env';
-  import { formatDate } from '@/config/utils';
+  import { formatDate, reomveBlank } from '@/config/utils';
 
   export default {
     name: 'index',
@@ -60,14 +60,13 @@
     },
     data() {
       return {
-        datagridParams: {
+        filter: {
           name: null,
           cellphone: null,
           duty: null,
           factoryName: null,
-          page: 1,
-          rows: 20,
         },
+        params: {},
         name: null,
         cellphone: null,
         duty: null,
@@ -100,10 +99,19 @@
             },
           },
           {
-            field: 'number',
+            field: 'codeCount',
             header: '扫码总数',
             width: 120,
-            formatter: row => (!row.number ? '——' : row.number),
+            formatter: row => (row.codeCount === '' ? '——' : row.codeCount),
+          },
+          {
+            field: 'action',
+            header: '详情',
+            width: 120,
+            actions: [{
+              text: '【查看详情】',
+              handler: row => this.$router.push(`/employee/list/view/${row.factoryId}${row.id}`),
+            }],
           },
         ],
       };
@@ -113,24 +121,11 @@
     },
     methods: {
       search() {
-        this.datagridParams = {
-          name: this.name || null,
-          cellphone: this.cellphone || null,
-          duty: this.duty || null,
-          factoryName: this.factoryName || null,
-          page: 1,
-          rows: 20,
-        };
+        this.params = reomveBlank(this.filter);
       },
       clear() {
-        this.name = null;
-        this.cellphone = null;
-        this.duty = null;
-        this.factoryName = null;
-        this.datagridParams = {};
-      },
-      setLiveAddress(d) {
-        this.liveAddress = d;
+        this.params = {};
+        this.filter = {};
       },
     },
   };

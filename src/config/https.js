@@ -8,18 +8,19 @@ axios.defaults.withCredentials = true;
 // 超时时间20s
 axios.defaults.timeout = 20000;
 
+const paramsSerializer = params => toQueryString(removeIllegalParams(params));
+
 // 添加请求拦截器
 axios.interceptors.request.use((config) => {
   const con = config;
+  con.paramsSerializer = paramsSerializer;
   // 在发送请求之前做些什么
   if (['post', 'put', 'patch'].indexOf(config.method) >= 0) {
     // 序列化
-    con.data = toQueryString(con.data);
+    con.data = toQueryString(config.data);
     con.headers['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8';
   } else if (config.method === 'upload') {
     config.method = 'post';
-  } else if (config.method === 'get') {
-    con.params = removeIllegalParams(config.params);
   }
   return con;
 }, (error) => {
@@ -30,20 +31,33 @@ const resultHandler = (res) => {
   // 判断http状态码
   if (res && [200, 304, 400].indexOf(res.status) > -1) {
     if (!res.data.success) {
-      Message.error(res.data.message);
+      Message({
+        type: 'error',
+        position: 'bottom-right',
+        message: res.data.message || '操作失败！',
+        title: '错误',
+      });
+    } else {
+      // do nothing now
     }
   } else {
-    Message.error('网络异常');
+    Message({
+      type: 'error',
+      position: 'bottom-right',
+      message: '网络异常',
+      title: '错误',
+    });
   }
   return res.data;
 };
 
 axios.interceptors.response.use((response) => {
   // Do something with response data
-  const data = resultHandler(response);
+  const data = resultHandler(response, response.config.method !== 'get');
   // 如果设置了缓存就把数据存入缓存
   const opt = response.config.opt || ({});
-  if (opt.cache) {
+  // 数据返回成功才缓存
+  if (opt.cache && data.success) {
     set(opt.key, data, opt.cacheTimeout > 0 ? opt.cacheTimeout : 3600);
   }
   return response.data;

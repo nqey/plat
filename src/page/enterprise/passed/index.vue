@@ -8,18 +8,18 @@
           <div class="row clearfix sssrk">
             <div class="form-group col-md-4">
                 <label>企业名称</label>
-                <input type="text" class="form-control" v-model="name" placeholder="请输入企业名称">
+                <input type="text" class="form-control" v-model="filter.name" placeholder="请输入企业名称">
             </div>
             <div class="form-group col-md-4">
                 <label>入库时间</label>
-                <el-date-picker v-model="createTimeGE" type="date" placeholder="选择日期">
+                <el-date-picker v-model="filter.createTimeGE" value-format="yyyy-MM-dd" type="date" placeholder="选择日期">
                 </el-date-picker>
             </div>
-            <div class="form-group col-md-8">
-                <label>区&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;域</label>
-                <v-area :code="areaCode" :onAreaChanged="(code) => liveAddress = code"></v-area>
+            <div class="form-group col-md-6">
+                <label>区&#12288;&#12288;域</label>
+                <v-area :code="filter.areaCode" :onAreaChanged="(code) => filter.areaCode = code"></v-area>
             </div>
-            <div class="form-group col-md-8">
+            <div class="form-group col-md-4">
               <button type="button" class="btn btn-primary" @click="search">
                   <span class="glyphicon glyphicon-search"></span>搜索
               </button>
@@ -35,7 +35,7 @@
       <v-datagrid :columns="columns"
                   :data-url="dataUrl"
                   :count-url="countUrl"
-                  :params="datagridParams">
+                  :params="params">
       </v-datagrid>
       <v-modal ref="modal" :id="id"></v-modal>
     </div>
@@ -47,7 +47,7 @@
   import area from '@/components/area';
   import modal from '@/page/enterprise/passed/modal';
   import { DatePicker } from 'element-ui';
-  import { formatDate } from '@/config/utils';
+  import { formatDate, reomveBlank } from '@/config/utils';
   import { PLATFORM_EP_QUERY_PASSED, PLATFORM_EP_QUERY_PASSED_COUNT } from '@/config/env';
 
   export default {
@@ -59,22 +59,21 @@
     },
     data() {
       return {
-        datagridParams: {
-          states: 'passed',
+        filter: {
           name: null,
-          areaCode: null,
           createTimeGE: null,
-          page: 1,
-          rows: 20,
+          areaCode: null,
+        },
+        params: {
+          states: 'passed',
+          sort: 'a.id',
+          order: 'desc',
         },
         id: null,
-        name: null,
-        areaCode: null,
-        createTimeGE: null,
         state: 0,
         dataUrl: PLATFORM_EP_QUERY_PASSED,
         countUrl: PLATFORM_EP_QUERY_PASSED_COUNT,
-        columns: [{ field: 'id', header: '企业ID', sort: 'name', width: 200 },
+        columns: [{ field: 'id', header: '企业ID', sort: 'name', width: 120 },
           { field: 'name', header: '企业名称', width: 250 },
           {
             field: 'address',
@@ -110,6 +109,15 @@
               },
             }],
           },
+          {
+            field: 'look',
+            header: '详情',
+            width: 100,
+            actions: [{
+              text: '【查看】',
+              handler: row => this.$router.push(`/enterprise/passed/view/${row.id}`),
+            }],
+          },
         ],
       };
     },
@@ -121,23 +129,11 @@
     },
     methods: {
       search() {
-        this.datagridParams = {
-          states: 'passed',
-          name: this.name || null,
-          areaCode: this.liveAddress || null,
-          createTimeGE: this.createTimeGE ? formatDate(this.createTimeGE, 'yyyy-MM-dd') : null,
-          page: 1,
-          rows: 20,
-        };
+        this.params = reomveBlank(this.filter);
       },
       clear() {
-        this.areaCode = null;
-        setTimeout(() => { this.areaCode = null; }, 10);
-        this.name = null;
-        this.createTimeGE = null;
-        this.datagridParams = {
-          states: 'passed',
-        };
+        this.params = {};
+        this.filter = {};
       },
     },
   };

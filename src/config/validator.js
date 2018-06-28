@@ -11,6 +11,11 @@ const setMessager = (element, pass, notice) => {
     messager.remove();
   }
 
+  // 通过了，且没有正确提示。
+  if (pass && element.hasAttribute('no-validate-pass-tip')) {
+    return ;
+  }
+
   // 初始化messager相关属性
   notice = element.getAttribute('notice') || notice;
   let color = pass ? 'green' : 'red';
@@ -108,7 +113,7 @@ const VALIDATE_ROUTER = {
 }
 
 let inited = false;
-((parent) => {
+(() => {
   // 只初始化一次
   if (inited) {
     return;
@@ -127,7 +132,7 @@ let inited = false;
 
 })();
 
-// 切面使用
+// 切面使用, 一定不能改成箭头函数，不然this失效
 Function.prototype.before = function(beforefn) {
   var __self = this;
   return function() {
@@ -151,6 +156,13 @@ export const validate = function() {
     descriptor.value = descriptor.value.before(function() {
       // 在提交之前验证
       const parent = this.$el;
+      // 是否存在验证未通过的
+      let invalidated = parent.getElementsByClassName(_VALIDATE_FAILED_FLAG_);
+      if (invalidated.length > 0) {
+        scrollToDom(invalidated[0]);
+        return false;
+      }
+
       // 包含rules中的属性，如required 应该打上 val-required 标签
       [...parent.querySelectorAll(Object.keys(rules).map(k => `[${k}]`).join(','))]
         .forEach(dom => {
@@ -158,8 +170,8 @@ export const validate = function() {
           VALIDATE_ROUTER.decisior(dom);
         })
 
-      // 返回是否存在验证通过
-      const invalidated = parent.getElementsByClassName(_VALIDATE_FAILED_FLAG_);
+      // 是否存在验证未通过的
+      invalidated = parent.getElementsByClassName(_VALIDATE_FAILED_FLAG_);
       if (invalidated.length > 0) {
         scrollToDom(invalidated[0]);
         return false;

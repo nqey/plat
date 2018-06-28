@@ -21,15 +21,31 @@ export const PAY_METHOD = {
   free: '全额补贴',
 };
 
-export const ENTERPRISE_TYPE = {
+export const ENTERPRISE_STATE = {
+  // 初审列表， 修改初审信息
   wait: '待支付',
   pending: '待初审',
-  collectting: '待认证官上门采集',
   confirmFailed: '初审未通过',
-  reject2: '审核未通过',
+  // 待采集列表
+  collectting: '待采集',
+  // 待复审， 修改复审信息
   pending2: '待复审',
   confirm2Failed: '复审未通过',
+  // 入库企业
   passed: '通过审核',
+  // 作废的
+  reject2: '审核未通过',
+};
+
+export const ENTERPRISE_STATE_PASS = {
+  wait: false,
+  pending: true,
+  collectting: false,
+  confirmFailed: true,
+  reject2: true,
+  pending2: true,
+  confirm2Failed: true,
+  passed: false,
 };
 
 export const ID_TYPE = {
@@ -81,6 +97,7 @@ export const FACTORY_STATE = {
   passed: '已审核',
   // deleted: '已作废',
   failed: '未通过',
+  draft: '待提交',
 };
 
 export const FACTORY_EVENT = {
@@ -111,9 +128,9 @@ export const getShelflife = (value, type) => {
 };
 
 export const GOODS_STATE = {
-  onshelf: '上架',
-  deleted: '删除',
-  offshelf: '下架',
+  onshelf: '正常',
+  deleted: '已删除',
+  offshelf: '已下架',
 };
 
 export const CODE_TYPE = {
@@ -282,4 +299,17 @@ export const ORGANIZ_ENTERPRISE_STATE = {
     name: '认证材料复审已通过',
     color: TRAFFIC_LIGHT.green,
   },
+};
+
+export const SUBSIDY_STATE = {
+  pending: '待审核',
+  passed: '通过',
+  rejected: '未通过',
+  delayed: '延后',
+};
+
+export const SUBSIDY_FEE_TYPE = {
+  1: '入库费用',
+  2: '二维码赋码费用',
+  3: '粉丝推送费用',
 };

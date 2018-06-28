@@ -1,14 +1,13 @@
 <template>
   <div>
-    <v-modal 
+    <v-modal
       :title="param.title"
-      :errMsg="errMsg"
-      :commit="commit"
+      :ok="commit"
       ref="modal">
        <div slot="body">
-        <label>SKU属性名 ：</label> 
+        <label>SKU属性名 ：</label>
         <input type="text" v-model="param.name" class="form-control" />
-       </div> 
+       </div>
     </v-modal>
   </div>
 </template>
@@ -38,24 +37,11 @@ export default {
       default: null,
     },
   },
-  data() {
-    return {
-      errMsg: [],
-    };
-  },
   components: {
     'v-modal': modal,
   },
   methods: {
-    val() {
-      this.errMsg = [];
-      if (!this.param.name) {
-        this.errMsg.push('请输入SKU属性名');
-      }
-    },
     async commit() {
-      this.val();
-      if (this.errMsg.length > 0) return;
       const param = {
         name: this.param.name,
       };
@@ -68,7 +54,6 @@ export default {
       }
       const res = await this.$http.post(api, param);
       if (res.success) {
-        window.console.log(this.api, '访问成功！！！', this.param);
         this.$refs.modal.toggle();
         this.handler();
       }

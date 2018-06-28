@@ -15,7 +15,8 @@
               <input type="text" class="form-control" v-model="authoName" placeholder="请输入认证官姓名">
             </div>
             <div class="form-group col-md-4">
-              <button type="button" class="search btn-primary btn datagrid-search" @click="search"><span class="glyphicon glyphicon-search"></span>搜索
+              <button type="button" class="search btn-primary btn datagrid-search" @click="search"><span
+                class="glyphicon glyphicon-search"></span>搜索
               </button>
               <button type="reset" class="search clear btn-primary btn datagrid-clear" @click="clear">清空</button>
             </div>
@@ -27,7 +28,7 @@
       <v-datagrid :columns="columns"
                   :data-url="dataUrl"
                   :count-url="countUrl"
-                  :params="datagridParams">
+                  :params="params">
       </v-datagrid>
     </div>
   </div>
@@ -39,6 +40,7 @@
   import area from '@/components/area';
   import { formatDate, getPictureUrl } from '@/config/utils';
   import { PLATFORM_EP_QUERY, PLATFORM_EP_QUERY_COUNT } from '@/config/env';
+  import { ENTERPRISE_STATE, ENTERPRISE_PAY_TYPE } from '@/config/mapping';
 
   export default {
     name: 'index',
@@ -49,8 +51,10 @@
     },
     data() {
       return {
-        datagridParams: {
-          states: 'pending2',
+        name: null,
+        authoName: null,
+        params: {
+          states: ['pending2', 'confirm2Failed'],
           name: null,
           authoName: null,
           page: 1,
@@ -60,31 +64,8 @@
           0: '已指定',
           1: '未指定',
         },
-        name: null,
-        authoName: null,
-        liveAddress: '',
-        stateObj: {
-          wait: '待支付',
-          pending: '待初审',
-          collectting: '待采',
-          confirmFailed: '初审未通过',
-          reject2: '采集未通',
-          pending2: '待复审',
-          confirm2Failed: '复审未通过',
-          passed: '通过审',
-        },
-        payStateObj: {
-          wait: '待支付',
-          success: '支付成功',
-          failed: '支付失败',
-        },
-        status: {
-          0: '',
-          pending: '待审核',
-          delayed: '延后',
-          rejected: '未通过',
-          passed: '通过',
-        },
+        ENTERPRISE_STATE,
+        ENTERPRISE_PAY_TYPE,
         state: 0,
         dataUrl: PLATFORM_EP_QUERY,
         countUrl: PLATFORM_EP_QUERY_COUNT,
@@ -95,7 +76,7 @@
             width: 100,
             html: true,
             formatter(row, index, value) {
-              return `<img src='${getPictureUrl(value, { w: 40, h: 40, q: 40 })}'>`;
+              return `<img src='${getPictureUrl(value, { f: 'png', w: 40, h: 40, q: 40 })}'>`;
             },
           },
           { field: 'name', header: '企业名称', width: 250 },
@@ -105,14 +86,15 @@
             field: 'payState',
             header: '支付状态',
             width: 200,
-            formatter: row => (this.payStateObj[row.payState] ? this.payStateObj[row.payState] : '未支付'),
+            formatter: row => (this.ENTERPRISE_PAY_TYPE[row.payState] ? this.ENTERPRISE_PAY_TYPE[row.payState] : '未支付'),
           },
           {
             field: 'state',
             header: '状态',
             width: 150,
-            formatter: row => this.stateObj[row.state],
+            formatter: row => this.ENTERPRISE_STATE[row.state],
           },
+          { field: 'authoName', header: '认证官', width: 120 },
           { field: 'license', header: '营业执照', width: 130 },
           {
             field: 'area',
@@ -155,29 +137,24 @@
     },
     methods: {
       search() {
-        this.datagridParams = {
-          states: 'pending2',
+        this.params = {
+          states: ['pending2', 'confirm2Failed'],
           name: this.name || null,
           authoName: this.authoName || null,
-          page: 1,
-          rows: 20,
         };
       },
       clear() {
         this.name = null;
         this.authoName = null;
-        this.datagridParams = {
-          states: 'pending2',
+        this.params = {
+          states: ['pending2', 'confirm2Failed'],
         };
-      },
-      setLiveAddress(d) {
-        this.liveAddress = d;
       },
     },
   };
 </script>
 
 <style lang="scss" scoped>
-@import '../../../assets/css/mixin.scss';
+  @import '../../../assets/css/mixin.scss';
 
 </style>

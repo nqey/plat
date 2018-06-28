@@ -107,11 +107,6 @@ const router = new Router({
       component: r => require.ensure([], require => r(require('@/page/subsidy/apply_subsidy')), 'subsidyApplySubsidy'),
     },
     {
-      path: '/subsidy/successful',
-      name: 'subsidySuccessful',
-      component: r => require.ensure([], require => r(require('@/page/subsidy/successful')), 'subsidySuccessful'),
-    },
-    {
       path: '/subsidy/apply',
       name: 'subsidyApply',
       component: r => require.ensure([], require => r(require('@/page/subsidy/apply')), 'subsidyApply'),
@@ -211,14 +206,14 @@ const router = new Router({
       component: r => require.ensure([], require => r(require('@/page/factory/pending')), 'factoryPending'),
     },
     {
-      path: '/factory/pending/view/:id',
-      name: 'factoryPendingView',
-      component: r => require.ensure([], require => r(require('@/page/factory/pending/view')), 'factoryPendingView'),
-    },
-    {
       path: '/employee/list',
       name: 'employeeList',
       component: r => require.ensure([], require => r(require('@/page/employee/list')), 'employeeList'),
+    },
+    {
+      path: '/employee/list/view/:id:employeeId',
+      name: 'employeeListView',
+      component: r => require.ensure([], require => r(require('@/page/employee/list/view')), 'employeeListView'),
     },
     // 二维码管理路由路径
     {
@@ -241,6 +236,11 @@ const router = new Router({
       path: '/authofficer/entry',
       name: 'authofficerEntry',
       component: r => require.ensure([], require => r(require('@/page/authofficer/list/entry')), 'authofficerEntry'),
+    },
+    {
+      path: '/authofficer/edit/:id',
+      name: 'authofficereEdit',
+      component: r => require.ensure([], require => r(require('@/page/authofficer/list/edit')), 'authofficereEdit'),
     },
     {
       path: '/authofficer/list/view/:id',
@@ -273,6 +273,11 @@ const router = new Router({
       component: r => require.ensure([], require => r(require('@/page/enterprise/pending/view')), 'enterpriseView'),
     },
     {
+      path: '/enterprise/pending/edit/:id',
+      name: 'enterpriseedit',
+      component: r => require.ensure([], require => r(require('@/page/enterprise/pending/edit')), 'enterpriseedit'),
+    },
+    {
       path: '/enterprise/collectting',
       name: 'enterpriseCollectting',
       component: r => require.ensure([], require => r(require('@/page/enterprise/collectting')), 'enterpriseCollectting'),
@@ -288,6 +293,11 @@ const router = new Router({
       component: r => require.ensure([], require => r(require('@/page/enterprise/pending2')), 'enterprisePending2'),
     },
     {
+      path: '/enterprise/pending2/edit/:id',
+      name: 'enterprisePending2Edit',
+      component: r => require.ensure([], require => r(require('@/page/enterprise/pending2/edit')), 'enterprisePending2Edit'),
+    },
+    {
       path: '/enterprise/pending2/view/:id',
       name: 'enterprisePending2View',
       component: r => require.ensure([], require => r(require('@/page/enterprise/pending2/view')), 'enterprisePending2View'),
@@ -296,6 +306,11 @@ const router = new Router({
       path: '/enterprise/passed',
       name: 'enterprisePassed',
       component: r => require.ensure([], require => r(require('@/page/enterprise/passed')), 'enterprisePassed'),
+    },
+    {
+      path: '/enterprise/passed/view/:id',
+      name: 'enterprisePassedView',
+      component: r => require.ensure([], require => r(require('@/page/enterprise/passed/view')), 'enterprisePassedView'),
     },
     // 条码管理
     {
@@ -315,6 +330,11 @@ const router = new Router({
       path: '/goods/list',
       name: 'goodslist',
       component: r => require.ensure([], require => r(require('@/page/goods/list')), 'goodslist'),
+    },
+    {
+      path: '/goods/list/view/:id',
+      name: 'goodsDetail',
+      component: r => require.ensure([], require => r(require('@/page/goods/list/view')), 'goodsDetail'),
     },
     {
       path: '/goods/category',

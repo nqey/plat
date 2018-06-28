@@ -8,20 +8,20 @@
           <div class="row clearfix sssrk">
             <div class="form-group col-md-4">
               <label>工厂名称</label>
-              <input type="text" class="form-control" v-model="name" placeholder="请输入企业名称">
+              <input type="text" class="form-control" v-model="filter.name" placeholder="请输入企业名称">
             </div>
             <div class="form-group col-md-4">
               <label>工厂类型</label>
-              <select class="form-control" v-model="type">
+              <select class="form-control" v-model="filter.type">
                 <option value="">请选择</option>
                 <option v-for="(v,k) of plant_type" :value="k">{{v}}</option>
               </select>
             </div>
-            <div class="form-group col-md-8">
-              <label>区&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;域</label>
-              <v-area :code="areaCode" :onAreaChanged="(code) => liveAddress = code"></v-area>
+            <div class="form-group col-md-6">
+              <label>区&#12288;&#12288;域</label>
+              <v-area :code="filter.areaCode" :onAreaChanged="(code) => filter.areaCode = code"></v-area>
             </div>
-            <div class="form-group col-md-8">
+            <div class="form-group col-md-4">
               <button type="button" class="search btn-primary btn" @click="search">搜索</button>
               <button type="reset" class="search clear btn-primary btn" @click="clear">清空</button>
             </div>
@@ -35,7 +35,7 @@
       <v-datagrid :columns="columns"
                   :data-url="dataUrl"
                   :count-url="countUrl"
-                  :params="datagridParams">
+                  :params="params">
       </v-datagrid>
     </div>
   </div>
@@ -44,7 +44,7 @@
 <script>
   import datagrid from '@/components/datagrid';
   import area from '@/components/area';
-  import { formatDate } from '@/config/utils';
+  import { formatDate, reomveBlank } from '@/config/utils';
   import { PLATFORM_FACTORY_QUERY, PLATFORM_FACTORY_QUERY_COUNT } from '@/config/env';
 
   export default {
@@ -56,12 +56,13 @@
     },
     data() {
       return {
-        datagridParams: {
+        filter: {
           name: null,
-          type: null,
-          areaCode: null,
-          page: 1,
-          rows: 20,
+          type: '',
+          areaCode: '',
+        },
+        params: {
+          states: 'pending',
         },
         name: null,
         type: '',
@@ -101,22 +102,36 @@
           {
             field: 'type',
             header: '工厂类型',
-            width: 200,
+            width: 100,
             formatter: row => this.typeObj[row.type],
           },
           {
             field: 'state',
             header: '状态',
-            width: 100,
+            width: 150,
             formatter: row => this.stateObj[row.state],
           },
-          { field: 'phone', header: '工厂电话', width: 120 },
-          { field: 'areaCode', header: '地址', width: 300 },
+          {
+            field: 'phone',
+            header: '工厂电话',
+            width: 200,
+            formatter(row) {
+              return `${row.areaCode === undefined ? '' : `${row.areaCode}-`}${row.phone}${row.extendNumber === undefined ? '' : `(${row.extendNumber})`}`;
+            },
+          },
+          {
+            field: 'areaCode',
+            header: '地址',
+            width: 300,
+            formatter(row) {
+              return `${row.area}${row.address}`;
+            },
+          },
           {
             field: 'createTime',
             header: '创建时间',
             sort: 'create_time',
-            width: 200,
+            width: 180,
             formatter(row, index, value) {
               return formatDate(value);
             },
@@ -124,14 +139,14 @@
           {
             field: 'action',
             header: '操作',
-            width: 200,
+            width: 150,
             actions: [{
-              text: '【查看】',
+              text: '【审核】',
               show() {
                 return true;
               },
               handler: (row) => {
-                this.$router.push(`/factory/pending/view/${row.id}`);
+                this.$router.push(`/factory/list/view/${row.id}`);
               },
             }],
           },
@@ -144,20 +159,19 @@
     },
     methods: {
       search() {
-        this.datagridParams = {
-          name: this.name || null,
-          type: this.type || null,
-          areaCode: this.liveAddress || null,
-          page: 1,
-          rows: 20,
+        this.params = reomveBlank(this.filter);
+        this.params = {
+          states: 'pending',
         };
       },
       clear() {
-        this.areaCode = '';
-        setTimeout(() => { this.areaCode = null; }, 10);
-        this.name = null;
-        this.type = '';
-        this.datagridParams = {};
+        this.params = {
+          states: 'pending',
+        };
+        this.filter = {
+          type: '',
+          areaCode: '',
+        };
       },
     },
   };

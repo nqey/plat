@@ -1,7 +1,7 @@
 <template>
   <div class="plat-content">
     <div class="plat-content-con">
-      <div class="index-main-left-content"> 
+      <div class="index-main-left-content">
         <!-- 粉丝开始 -->
         <p class="jrsj_bj">粉丝</p>
         <div class="index-main-left-section-content row index-fans">
@@ -223,7 +223,7 @@
         <!-- 商品 工厂结束-->
         <div style="height:40px;"></div>
         <!-- 实时状态开始 -->
-        
+
         <div class="index-main-left-content-section-tit row">
           <div class="bsbj">
             <p>实时状态</p>
@@ -246,7 +246,7 @@
             </div>
           </div>
         </div>
-        <!-- 实时状态结束 --> 
+        <!-- 实时状态结束 -->
       </div>
     </div>
   </div>
@@ -770,7 +770,6 @@ export default {
     },
     timeLight(time) {
       this.timeFlag = time;
-      window.console.log(time === 0);
       if (time === 0) {
         this.isFansDisabled = false;
       } else {

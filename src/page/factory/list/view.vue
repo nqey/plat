@@ -1,198 +1,187 @@
 <template>
   <div class="plat-content">
     <div class="plat-content-con">
-      <div class="box">
-        <div class="title">工厂详情</div>
-        <div class="title_content">
-          <span>工厂名称:</span><p>{{list.name}}</p>
+      <h4 class="title"><span>工厂详情</span></h4>
+      <br/>
+      <form class="form-horizontal">
+        <div class="form-group">
+          <label class="col-sm-2 control-label">工厂名称:</label>
+          <div class="col-sm-10">
+            <p class="form-control2">{{list.name}}<label style="display: inline;color: red;margin-left: 20px">（{{FACTORY_STATE[list.state]}}）</label>
+            </p>
+          </div>
         </div>
-        <div class="title_content">
-          <span>工厂类型:</span><p>{{typeOjb[list.type]}}</p>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">工厂类型:</label>
+          <div class="col-sm-10">
+            <p class="form-control2">{{FACTORY_TYPE[list.type]}}</p>
+          </div>
         </div>
-        <div class="title_content">
-          <span>联系电话:</span><p>{{list.areaCode}}-{{list.phone}}</p>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">联系电话:</label>
+          <div class="col-sm-10">
+            <p class="form-control2">{{list.areaCode === undefined ? '' : list.areaCode +
+              '-'}}{{list.phone}}{{list.extendNumber === undefined ? '' : '('+list.extendNumber+')'}}</p>
+          </div>
         </div>
-        <div class="title_content">
-          <span>企业地址:</span><p>{{list.address.area}}{{list.address.address}}</p>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">企业地址:</label>
+          <div class="col-sm-10">
+            <p class="form-control2">{{list.address.area}}{{list.address.address}}</p>
+          </div>
         </div>
-        <div class="title_content">
-          <div class="spanblack">操作记录:</div>
-           <div class="ffleft">
+        <div class="form-group">
+          <label class="col-sm-2 control-label">操作记录:</label>
+          <div class="col-sm-10">
             <div v-for="item in list.logs">
-              {{item.createTime && formatDate(item.createTime)}}[{{item.owner}}][{{eventObj[item.event]}}]:
+              {{item.createTime && formatDate(item.createTime)}}[{{item.owner}}][{{ENTERPRISE_EVENT[item.event]}}]:
             </div>
           </div>
         </div>
-        <div class="title_content">
-          <div class="spanblack">工厂图片:</div>
-          <div class="ffleft">
+        <div class="form-group">
+          <label class="col-sm-2 control-label">工厂图片:</label>
+          <div class="col-sm-10">
             <div v-for="item of images.qualification">
-              <v-img style="width: 200px;" :imgSrc="item"></v-img>
+              <v-img :imgSrc="item" style="float: left;margin-right: 10px;"></v-img>
             </div>
+            <div style="clear: both;"></div>
           </div>
         </div>
-        <div class="title_content">
-          <div class="spanblack">工厂资质:</div>
-          <div class="ffleft">
+        <div class="form-group">
+          <label class="col-sm-2 control-label">工厂资质:</label>
+          <div class="col-sm-10">
             <div v-for="item of images.main">
-              <v-img style="width: 200px;" :imgSrc="item"></v-img>
+              <v-img :imgSrc="item" style="float: left;margin-right: 10px;"></v-img>
             </div>
+            <div style="clear: both;"></div>
           </div>
         </div>
-        <div class="title_content">
-          <div class="spanblack">承诺函:</div>
-          <div class="ffleft">
+        <div class="form-group">
+          <label class="col-sm-2 control-label">工厂资质:</label>
+          <div class="col-sm-10">
             <div v-for="item of images.promise">
-              <v-img style="width: 200px;" :imgSrc="item"></v-img>
+              <v-img :imgSrc="item" style="float: left;margin-right: 10px;"></v-img>
             </div>
+            <div style="clear: both;"></div>
           </div>
         </div>
-        <div class="title_content">
-          <span>审核操作:</span><p style="color: red;">{{stateObj[list.state]}}</p>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">审核操作:</label>
+          <div class="col-sm-10">
+            <p class="form-control2" v-if="list.state === 'pending'">
+              <button type="button" class="btn btn-primary" @click="pass">通过</button>
+              <button type="button" class="btn btn-danger" style="margin-left: 10px;" @click="nopass">不通过</button>
+            </p>
+            <p class="form-control2" v-else style="color: red;">{{FACTORY_STATE[list.state]}}
+            </p>
+          </div>
         </div>
         <div class="title_content in_the">
-          <button class="return" @click="back">返回上一页</button>
+          <button class="return" @click="$router.back(-1)">返回上一页</button>
         </div>
-      </div>
+      </form>
+      <v-passmodal ref="passmodal" :factoryId="factoryId"></v-passmodal>
+      <v-nopassmodal ref="nopassmodal" :factoryId="factoryId"></v-nopassmodal>
     </div>
   </div>
 </template>
 
 <script>
-import { PLATFORM_FACTORY_GET } from '@/config/env';
-import { formatDate, getPictureUrl } from '@/config/utils';
+  import { formatDate } from '@/config/utils';
+  import { PLATFORM_FACTORY_GET } from '@/config/env';
+  import { ENTERPRISE_EVENT, FACTORY_TYPE, FACTORY_STATE } from '@/config/mapping';
 
-export default {
-  name: '',
-  props: {
-    value: {
-      type: String,
+  export default {
+    name: '',
+    props: {
+      value: {
+        type: String,
+      },
     },
-  },
-  data() {
-    return {
-      formatDate,
-      list: {
-        logs: {},
-        address: {},
-      },
-      images: {},
-      typeOjb: {
-        1: '生产工厂',
-        2: '赋码工厂',
-      },
-      stateObj: {
-        pending: '待审核',
-        passed: '通过审核',
-        failed: '未通过审核',
-        draft: '待提交',
-      },
-      eventObj: {
-        create: '创建',
-        pay: '支付',
-        confirm: '通过',
-        reject: '不通过',
-        authSubmit: '认证官采集完成',
-        reject2: '认证官采集未通过',
-        pendingModify: '初审修改',
-        pending2Modify: '复审修改',
-      },
-      factoryId: this.$route.params.id,
-    };
-  },
-  components: {
-    'v-img': () => import('@/components/img'),
-  },
-  mounted() {
-    this.getData();
-  },
-  methods: {
-    async getData() {
-      const param = {
-        factoryId: this.factoryId,
+    data() {
+      return {
+        formatDate,
+        list: {
+          logs: {},
+          address: {},
+        },
+        images: {},
+        FACTORY_TYPE,
+        FACTORY_STATE,
+        ENTERPRISE_EVENT,
+        factoryId: this.$route.params.id,
       };
-      const res = await this.$http.get(PLATFORM_FACTORY_GET, param);
-      if (res.success) {
-        this.list = res.data;
-        this.images = JSON.parse(this.list.images || '[]');
-      }
     },
-    getImgSrc(value) {
-      return value && getPictureUrl(value, { w: 0, h: 0, q: 0 });
+    components: {
+      'v-img': () => import('@/components/img'),
+      'v-passmodal': () => import('@/page/factory/list/passmodal'),
+      'v-nopassmodal': () => import('@/page/factory/list/nopassmodal'),
     },
-    back() {
-      history.back(-1);
+    mounted() {
+      this.getData();
     },
-  },
-};
+    methods: {
+      async getData() {
+        const param = {
+          factoryId: this.factoryId,
+        };
+        const res = await this.$http.get(PLATFORM_FACTORY_GET, param);
+        if (res.success) {
+          this.list = res.data;
+          this.images = JSON.parse(this.list.images || '[]');
+        }
+      },
+      pass() {
+        this.$refs.passmodal.$refs.passmodal.toggle();
+      },
+      nopass() {
+        this.$refs.nopassmodal.$refs.nopassmodal.toggle();
+      },
+    },
+  };
 </script>
 
 <style lang="scss" scoped>
-@import '../../../assets/css/mixin.scss';
+  @import '../../../assets/css/mixin.scss';
 
-.box{
-  width: 100%;
-  margin-bottom: 100px;
-}
-.title{
-  width: 100%;
-  margin-bottom: 20px;
-  font-size: 28px;
-}
-.two{
-  margin-bottom: 5px;
-}
-.text{
-  height: 32px;
-  font-size: 20px;
-  border-bottom: 2px solid #e9e9e9;
-  margin-bottom: 15px;
-}
-.text span{
-  height: 32px;
-  font-family: "黑体";
-  display: inline-block;
-  border-bottom: 2px solid #337CFD;
-}
-.title_content{
-  width: 100%;
-  line-height: 50px;
-}
-.title_content span{
-  display: inline-block;
-  font-size: 18px;
-  width: 180px;
-}
-.spanblack {
-  font-size: 18px;
-  width: 180px;
-  float: left;
-}
-.title_content p, .ffleft{
-  width: 80%;
-  display: inline-block;
-  font-weight: 600;
-  font-size: 16px;
-}
-.title_content p button, .return {
-  width: 120px;
-  height: 40px;
-  line-height: 40px;
-  background: #337CFD;
-  border: none;
-  color: #fff;
-  margin: 5px 20px 0  0;
-  border-radius: 5px;
-}
-#color{
-  background: #ff6666,
-}
-.title_box > .title_content:last-child{
-  margin-bottom: 20px;
-}
-.in_the{
-  text-align: center;
-  margin-top:50px;
-}
+  .form-control2 {
+    display: block;
+    width: 100%;
+    height: 34px;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #555;
+    background-image: none;
+  }
+
+  .title {
+    border-bottom: 1px solid #EDF2F5;
+    margin: 0;
+  }
+
+  .title span {
+    display: block;
+    width: 120px;
+    text-align: center;
+    border-bottom: 1px solid #015FE5;
+    padding: 28px 0 15px 0;
+  }
+
+  .in_the {
+    text-align: center;
+    margin-top: 50px;
+  }
+
+  .return {
+    width: 120px;
+    height: 40px;
+    line-height: 40px;
+    background: #337CFD;
+    border: none;
+    color: #fff;
+    margin: 5px 20px 0 0;
+    border-radius: 5px;
+  }
 
 </style>

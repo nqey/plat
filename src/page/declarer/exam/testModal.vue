@@ -2,6 +2,8 @@
   <div>
     <v-modal 
       :title="title"
+      :cancelText="cancelText"
+      :okText="okText"
       ref="modal">
       <div slot="body">
         <span v-if="examineeLists.length === 0">无提交答卷</span>
@@ -29,9 +31,6 @@
           <v-pagination :page="examineePages" :total="examineeCount" @nextPage="examineeSearch"></v-pagination>
         </div>
       </div>
-      <div slot="footer">
-        <button type="button" class="btn btn-info" @click="$refs.modal.toggle();">确认</button>
-      </div>
     </v-modal>
   </div>
 </template>
@@ -54,13 +53,11 @@ export default {
       type: Number,
       default: null,
     },
-    item: {
-      type: Object,
-      default: null,
-    },
   },
   data() {
     return {
+      cancelText: '关闭',
+      okText: '',
       title: '答卷',
       examineeLists: [],
       examineePage: 1,
@@ -83,14 +80,12 @@ export default {
   },
   watch: {
     id() {
-      this.examineeSearch(1, this.id);
+      this.examineeSearch();
     },
   },
   methods: {
-    async examineeSearch(page, id) {
-      if (id) {
-        this.examinationId = id;
-      }
+    async examineeSearch() {
+      if (!this.id) return;
       const param = {};
       param.page = this.page;
       param.rows = this.rows;

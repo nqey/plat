@@ -1,6 +1,5 @@
 <template>
   <v-modal :title="title"
-           :commit="commit"
            ref="promptmodal">
             <div slot="body" style="padding: 40px 0;">
               <div style="text-align: center;font-size: 20px;">修改成功！</div>
@@ -28,20 +27,7 @@ export default {
   components: {
     'v-modal': modal,
   },
-  methods: {
-    async commit() {
-      // const param = {
-      //   enterpriseId: this.id,
-      //   total: this.znumber,
-      //   remain: this.snumber,
-      // };
-      // const data = await this.$http.post(PLATFORM_FREECODE_SET, param);
-      // if (data.success) {
-      //   this.$refs.modal.toggle();
-      //   this.getData();
-      // }
-    },
-  },
+  methods: {},
 };
 </script>
 

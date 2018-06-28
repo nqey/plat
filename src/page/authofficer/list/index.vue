@@ -8,21 +8,21 @@
           <div class="row clearfix sssrk">
             <div class="form-group col-md-4">
               <label>姓名</label>
-              <input type="text" class="form-control" v-model="name" placeholder="请输入经销商名称">
+              <input type="text" class="form-control" v-model="filter.name" placeholder="请输入经销商名称">
             </div>
             <div class="form-group col-md-4">
                 <label>手机号码</label>
-                <input type="text" class="form-control" v-model="cellphone" placeholder="请输入手机号码">
+                <input type="text" class="form-control" v-model="filter.cellphone" placeholder="请输入手机号码">
             </div>
             <div class="form-group col-md-4">
                 <label>机构</label>
-                <input type="text" class="form-control" v-model="organiz" placeholder="请输入隶属机构(服务中心)">
+                <input type="text" class="form-control" v-model="filter.organiz" placeholder="请输入隶属机构(服务中心)">
             </div>
-            <div class="form-group col-md-8">
+            <div class="form-group col-md-4">
                 <button type="button" class="btn btn-primary" @click="search">
                     <span class="glyphicon glyphicon-search"></span>搜索
                 </button>
-                <button type="reset" class="btn btn-primary" @click="claer">清空</button>
+                <button type="reset" class="btn btn-primary" @click="clear">清空</button>
             </div>
           </div>
         </div>
@@ -34,7 +34,7 @@
       <v-datagrid :columns="columns"
                   :data-url="dataUrl"
                   :count-url="countUrl"
-                  :params="datagridParams">
+                  :params="params">
       </v-datagrid>
     </div>
   </div>
@@ -42,7 +42,7 @@
 
 <script>
   import datagrid from '@/components/datagrid';
-  import { formatDate } from '@/config/utils';
+  import { formatDate, reomveBlank } from '@/config/utils';
   import { PLATFORM_AUTHOFFICER_QUERY, PLATFORM_AUTHOFFICER_QUERY_COUNT } from '@/config/env';
 
   export default {
@@ -54,20 +54,16 @@
     },
     data() {
       return {
-        datagridParams: {
+        filter: {
           name: null,
           cellphone: null,
           organiz: null,
-          page: 1,
-          rows: 20,
         },
+        params: {},
         stateObj: {
           true: '通过',
           false: '不通过',
         },
-        name: null,
-        cellphone: null,
-        organiz: null,
         dataUrl: PLATFORM_AUTHOFFICER_QUERY,
         countUrl: PLATFORM_AUTHOFFICER_QUERY_COUNT,
         columns: [{ field: 'name', header: '姓名', sort: 'name', width: 260 },
@@ -86,12 +82,12 @@
             field: 'state',
             header: '状态',
             width: 260,
-            formatter: row => this.stateObj[row.state],
+            formatter: row => (row.state ? '通过' : '待审核'),
           },
           {
             field: 'action',
             header: '编辑',
-            width: 150,
+            width: 200,
             actions: [{
               text: '【查看详情】',
               show() {
@@ -108,19 +104,11 @@
     },
     methods: {
       search() {
-        this.datagridParams = {
-          name: this.name || null,
-          cellphone: this.cellphone || null,
-          organiz: this.organiz || null,
-          page: 1,
-          rows: 20,
-        };
+        this.params = reomveBlank(this.filter);
       },
-      claer() {
-        this.name = null;
-        this.cellphone = null;
-        this.organiz = null;
-        this.datagridParams = {};
+      clear() {
+        this.params = {};
+        this.filter = {};
       },
     },
   };

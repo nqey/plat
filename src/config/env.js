@@ -6,7 +6,6 @@ export const env = (() => {
   }
   return 'local';
 })();
-export const LOCAL_URL = '.test.com';
 
 export const ENTERPRISE_BASE_URL = {
   test: '//ep.cpsdb61.com/',
@@ -47,19 +46,19 @@ export const VIDEO_SERVER_URL = {
 export const DOMAIN = {
   test: 'cpsdb61.com',
   online: 'cpsdb.com',
-  local: location.hostname.indexOf(LOCAL_URL) >= 0 ? LOCAL_URL : location.hostname,
+  local: location.hostname,
 }[env];
 
 export const GOODS_BASE_URL = {
   test: '//g.cpsdb61.com/',
   online: '//g.cpsdb.com/',
-  local: location.hostname.indexOf(LOCAL_URL) >= 0 ? LOCAL_URL : location.hostname,
+  local: location.hostname,
 }[env];
 
 export const FANS_BASE_URL = {
   test: '//fans.cpsdb61.com/',
   online: '//fans.cpsdb.com/',
-  local: location.hostname.indexOf(LOCAL_URL) >= 0 ? LOCAL_URL : location.hostname,
+  local: location.hostname,
 }[env];
 
 export const EXCEL_SERVER_URL = {
@@ -69,8 +68,11 @@ export const EXCEL_SERVER_URL = {
 }[env];
 
 // api
-// 申报机构登录接口地址
-export const DECLARE_LOGIN_DO_ADDRESS = `${BASE_URL}publics/user/login`;
+// 获取二维码 + id
+export const DECLARE_QCODE = `${DECLARE_BASE_URL}publics/qcode.jpg`;
+export const DECLARE_QCODE2 = `${DECLARE_BASE_URL}platform/authofficer/download/qrcode.jpg?id=`;
+// 总后台登录接口地址
+export const PLATFORM_LOGIN_DO_ADDRESS = `${BASE_URL}publics/user/login`;
 // 获取图片验证码
 export const CHECKNUMBER = `${BASE_URL}publics/checknumber.jpg?t=`;
 // 粉丝接口地址
@@ -225,8 +227,16 @@ export const PLATFORM_FREECODE_SET = `${GOODS_BASE_URL}platform/freecode/set`;
 export const PLATFORM_FACTORY_QUERY = `${ENTERPRISE_BASE_URL}platform/factory/query`;
 // 企业管理、工厂中心列表（分页） 总数
 export const PLATFORM_FACTORY_QUERY_COUNT = `${ENTERPRISE_BASE_URL}platform/factory/query/count`;
+// 企业管理、工厂审核通过（通过）
+export const PLATFORM_FACTORY_CONFIRM = `${ENTERPRISE_BASE_URL}platform/factory/confirm`;
+// 企业管理、工厂审核通过（不通过）
+export const PLATFORM_FACTORY_REJECT = `${ENTERPRISE_BASE_URL}platform/factory/reject`;
 // 企业管理、工厂详情
 export const PLATFORM_FACTORY_GET = `${ENTERPRISE_BASE_URL}platform/factory/get`;
+// 企业管理、工厂详情列表 （分页）
+export const PLATFORM_CODE_EMPLOYEE_OPERATION = `${GOODS_BASE_URL}platform/code/employee/operation`;
+// 企业管理、工厂详情列表 （总数）
+export const PLATFORM_CODE_EMPLOYEE_OPERATION_COUNT = `${GOODS_BASE_URL}platform/code/employee/operation/count`;
 // 企业管理、经销商列表（分页）
 export const PLATFORM_FRANCHISER_QUERY = `${ENTERPRISE_BASE_URL}platform/franchiser/query`;
 // 企业管理、经销商列表（分页） 总数
@@ -335,3 +345,13 @@ export const PLATFORM_PUT_DECLARER_ENTERPRISE_WAITAUDIT = `${DECLARE_BASE_URL}pl
 export const PLATFORM_POST_EXAMS_EXAMINEE_DETAILS = `${EXAM_BASE_URL}/platform/declareexamination/details/`;
 // 简答题打分
 export const PLATFORM_POST_EXAMS_EXAMINEE_SCORES = `${EXAM_BASE_URL}/platform/declareexamination/scores`;
+//  添加认证官
+export const PUBLICS_AUTHOFFICER_CREATE = `${DECLARE_BASE_URL}publics/authofficer/create`;
+// 认证官审核
+export const PLATFORM_AUTHOFFICER_CONFIRM = `${DECLARE_BASE_URL}platform/authofficer/confirm`;
+// 初审企业更新
+export const PLATFORM_EP_PENDING_MODIFY = `${ENTERPRISE_BASE_URL}platform/ep/pending/modify`;
+// 复审企业更新
+export const PLATFORM_EP_PENDING2_MODIFY = `${ENTERPRISE_BASE_URL}platform/ep/pending2/modify`;
+// 下载公函
+export const PUBLICS_REGISTER_GET_LETTER_PDF = `${ENTERPRISE_BASE_URL}publics/register/get/letter.pdf`;

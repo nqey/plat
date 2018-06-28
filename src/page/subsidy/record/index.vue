@@ -1,11 +1,9 @@
-
 <template>
   <div class="plat-content">
     <div class="plat-content-con">
-      <h4>申请记录</h4> 
+      <h4>申请记录</h4>
       <hr/>
-      <v-datagrid :columns="columns" :checkable="false"
-          :data-url="dataUrl" :count-url="countUrl"></v-datagrid>
+      <v-datagrid :columns="columns" :data-url="dataUrl" :count-url="countUrl"></v-datagrid>
     </div>
   </div>
 </template>
@@ -72,15 +70,5 @@
 </script>
 
 <style lang="scss" scoped>
-@import '../../../assets/css/mixin.scss';
-.index_more{background: #f6f7fb;
-  height: 100%;
-  padding-bottom: 200px;
-    width: 100%;}
-.index_chunk{ 
-position: relative;
-top:120px;
-left: 19%;
-margin: 0;
-width: 78%;background:#fff; padding: 40px 70px 55px;border-radius: 4px; box-shadow: 0px 20px 20px -20px #ddd;}
+  @import '../../../assets/css/mixin.scss';
 </style>

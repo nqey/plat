@@ -38,11 +38,10 @@
 </template>
 
 <script>
-import datagrid from '@/components/datagrid';
 import { formatDate } from '@/config/utils';
-import modal from '@/page/goods/list/modal';
 import { PLATFORM_TEMPLATE_QUERY, PLATFORM_TEMPLATE_QUERY_COUNT } from '@/config/env';
 
+// TODO : 这个页面的功能下期再做了
 export default {
   name: 'attribute',
   data() {
@@ -115,7 +114,7 @@ export default {
             },
             handler: (row) => {
               this.goodsId = row.id;
-              this.$refs.modal.$refs.modal.toggle();
+              this.$refs.modal.toggle();
             },
           }],
         },
@@ -138,8 +137,8 @@ export default {
     },
   },
   components: {
-    'v-datagrid': datagrid,
-    'v-modal': modal,
+    'v-datagrid': () => import('@/components/datagrid'),
+    'v-modal': () => import('@/components/modal'),
   },
   mounted() {
   },

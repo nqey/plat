@@ -2,26 +2,24 @@
   <div>
     <v-modal 
       :title="title"
-      :errMsg="errMsg"
-      :commit="commit"
+      :ok="commit"
       ref="modal">
         <div slot="body">
-          <table>
-            <tbody>
-              <tr>
-                <td>名称：</td>
-                <td>
-                  <input type="text" v-model="name"></td>
-              </tr>
-              <tr>
-                <td>内容：</td>
-                <td>
-                  <textarea v-model="content" style="width: 600px; height: 300px;resize:none;"></textarea>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div> 
+          <form class="form-horizontal">
+            <div class="form-group">
+              <label class="col-sm-2 control-label">名称：</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" placeholder="请输入名称" v-model="name" val-required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-2 control-label">内容：</label>
+              <div class="col-sm-10">
+                <textarea v-model="content"  row="5" placeholder="请输入内容" class="form-control" val-required></textarea>
+              </div>
+            </div>
+          </form>
+         </div> 
     </v-modal>
   </div>
 </template>
@@ -66,15 +64,6 @@ export default {
     },
   },
   methods: {
-    val() {
-      this.errMsg = [];
-      if (!this.name) {
-        this.errMsg.push('请输入名称');
-      }
-      if (!this.content) {
-        this.errMsg.push('请输入内容');
-      }
-    },
     async init() {
       const api = `${PLATFORM_GOODS_RULES}${this.goodsId}`;
       const res = await this.$http.get(api);
@@ -86,8 +75,6 @@ export default {
       }
     },
     async commit() {
-      this.val();
-      if (this.errMsg.length > 0) return;
       const o = {
         radius: this.radius,
         innerTimes: this.innerTimes,
@@ -95,7 +82,7 @@ export default {
       };
       const params = {};
       params.rules = JSON.stringify(o);
-      const api = `${PLATFORM_GOODS_RULES}${this.goodsId}`;
+      const api = `${PLATFORM_TEMPLATE_QUERY_UPDATE}${this.goodsId}`;
       const res = await this.$http.xhr('put', api, params);
       if (res.success) {
         window.console.log(this.api, '访问成功！！！', this);

@@ -4,15 +4,13 @@
     <div class="imageuploader-viewer-container" v-show="imageUrls.length > 0">
       <div class="imageuploader-viewer-cell" v-for="(image, index) of imageUrls"
            :style="{ width: `${width}px`, height: `${height}px`}">
-        <div v-if="!image.loading" class="imageuploader-viewer-delete">
-          <img :src="delImageBtn" class="imageuploader-viewer-delete-btn"
-               @click="imageUrls.splice(index, 1); notifyImageChanged();">
-        </div>
+        <span  v-if="!image.loading" class="imageuploader-viewer-delete-btn el-icon-error"
+               @click="imageUrls.splice(index, 1); notifyImageChanged();"/>
         <div v-if="!image.loading" class="imageuploader-viewer-show-big" @click="showBigImg(image.url)">
           <span class="glyphicon glyphicon-resize-full"></span>
         </div>
         <img class="imageuploader-loading" v-if="image.loading" :src="loading"/>
-        <img v-else :src="getPictureUrl(image.url, {q : quality, w: width, h: height})"/>
+        <img v-else :src="getPictureUrl(image.url, {q : quality, w: width, h: height})" @click="showBigImg(image.url)"/>
       </div>
     </div>
     <div class="imageuploader-backgroud-container" v-show="imageUrls.length < multiple">
@@ -110,11 +108,6 @@
       initImageUrls: 'setImageUrls',
     },
     mounted() {
-      // 初始化验证器
-      // window.console.log(this.$el.hasAttribute('val-required'));
-      // window.console.log(this.$el.getAttribute('val-required'));
-      // window.console.log(this.$el);
-
       // 初始化外部传入的图片资源
       this.setImageUrls();
     },
@@ -209,7 +202,7 @@
   }
 
   .imageuploader-viewer-container {
-    overflow: hidden;
+    /*overflow: hidden;*/
     float: left;
   }
 
@@ -225,24 +218,12 @@
     border-radius: 4px;
   }
 
-  .imageuploader-viewer-delete {
-    position: absolute;
-    top: 0;
-    width: 100%;
-    height: 30px;
-    background-color: rgba(0, 0, 0, 0.4);
-    line-height: 30px;
-    text-align: left;
-    color: #fff;
-    font-size: 12px;
-    text-indent: 4px;
-  }
-
   .imageuploader-viewer-delete-btn {
     position: absolute;
-    top: 6px;
-    width: 16px;
-    right: 4px;
+    top: -7px;
+    right: -6px;
+    font-size: 20px;
+    color: #303133;
   }
 
   .imageuploader-viewer-show-big {

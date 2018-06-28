@@ -36,21 +36,7 @@
       <br/>
       <h4>公告列表</h4>
       <hr>
-      <v-datagrid 
-        :columns="columns"
-        :data-url="dataUrl"
-        :count-url="countUrl"
-        :params="datagridParams"
-        >
-     </v-datagrid>
-<!--       <ul>
-        <li class="news" v-for="(item, index) of news">
-          <router-link :to="'/message/detail/'+item.id">{{item.title}}</router-link>
-          <span class="news_new text-uppercase" v-show="index < 3 && page === 1">new</span>
-          <span class="news_time">{{item.pushTime}}</span>
-        </li>
-      </ul>
-      <v-pagination :page="pages" @nextPage="search"></v-pagination> -->
+      <v-datagrid :columns="columns" :data-url="dataUrl" :count-url="countUrl" :params="datagridParams" />
     </div>
   </div>
 </template>

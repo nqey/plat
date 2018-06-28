@@ -41,11 +41,12 @@
             <div class="form-group">
               <label class="col-sm-2 control-label">资质证书：</label>
               <div class="col-sm-6">
-                <input class="form-control" v-model="data.diplomaUrl">
+                <v-imageuploader :title="'请上传资质证书'" :initImageUrls="[data.diplomaUrl]"
+                                 :onImageChanged="(urls) => { data.diplomaUrl = urls[0] }"/>
               </div>
             </div>
             <div class="form-group">
-              <label class="col-sm-2 control-label">姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名：</label>
+              <label class="col-sm-2 control-label">姓&#12288;&#12288;名：</label>
               <div class="col-sm-6">
                 <input class="form-control" v-model="data.chargerName" placeholder="负责人姓名">
               </div>
@@ -87,10 +88,10 @@
           <div class="form-group" style="margin-top: 51px;">
             <div class="col-sm-offset-2 col-sm-3">
               <button type="button" class="btn btn-default" @click="save" :disabled="disabled">
-                {{ disabled ? '正在保存…' : '&nbsp;&nbsp;保&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;存&nbsp;&nbsp;' }}
+                {{ disabled ? '正在保存…' : '&#8194;保&#12288;&#12288;存&#8194;' }}
               </button>
-              <button type="button" class="btn" onclick="history.back(-1);">返回上一页<span
-                class="glyphicon glyphicon-share-alt"></span>
+              <button type="button" class="btn" onclick="history.back(-1);">返回上一页
+                <span class="glyphicon glyphicon-share-alt"></span>
               </button>
             </div>
           </div>
@@ -147,7 +148,7 @@
                 back: '继续添加',
                 buttons: [{
                   text: '去列表',
-                  link: '#/system/user',
+                  link: '/system/user',
                 }],
               });
             },
@@ -165,7 +166,7 @@
               this.$transfer({
                 buttons: [{
                   text: '去列表',
-                  link: '#/system/user',
+                  link: '/system/user',
                 }],
               });
             },
@@ -178,9 +179,6 @@
       this.init();
     },
     methods: {
-      test() {
-        window.console.log(111);
-      },
       async init() {
         // 加载角色树
         const tree = await this.$http.get(`${BASE_URL}platform/system/role/tree`);

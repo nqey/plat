@@ -1,12 +1,12 @@
 <template>
   <div>
-    <v-modal 
+    <v-modal
       :title="title"
-      :mystyle="mystyle"
+      :width="width"
       ref="abnormalmodal">
         <div slot="body">
           <img :src="warn" style="display: block;margin: 30px auto 0;">
-          <div style="text-align: center; margin: 10px 0; font-size: 25px;">二维码异常</div>
+          <div style="text-align: center; margin: 10px 0; font-size: 25px;">二维码异常！</div>
           <div style="text-align: center;padding:0 40px; margin-bottom: 20px;line-height: 20px;">该二维码于{{data.createTime && formatDate(data.createTime)}}在{{data.address}}被扫描，{{data.reason}}</div>
         </div>
         <div slot='footer'>
@@ -28,10 +28,6 @@ export default {
       type: Number,
       default: null,
     },
-    handler: {
-      type: Function,
-      default: null,
-    },
   },
   data() {
     return {
@@ -42,10 +38,8 @@ export default {
         address: null,
         reason: null,
       },
-      title: '提示',
-      mystyle: {
-        width: '500px',
-      },
+      title: '异常原因',
+      width: 500,
     };
   },
   components: {

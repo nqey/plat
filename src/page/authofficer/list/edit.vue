@@ -1,7 +1,7 @@
 <template>
   <div class="plat-content">
     <div class="plat-content-con">
-    	<form class="form-horizontal">
+        <form class="form-horizontal">
           <div class="form-group">
             <h1 class="col-sm-12" style="text-align: center;">认证官认证</h1>
           </div>
@@ -14,7 +14,7 @@
                 <span style="color:red;font-size:12px; display:block;margin:0; padding:0; line-height:20px;">* 必须上传蓝色背景寸照，否则审核不通过</span>
               </div>
               <br/>
-              <v-imageuploader :width="150" :title="'请上传头像/LOGO'" :onImageChanged="(urls) => form.avator = urls[0]"/>
+              <v-imageuploader :width="150" :initImageUrls="[form.avator]" :title="'请上传头像/LOGO'" :onImageChanged="(urls) => form.avator = urls[0]" />
               <img class="slz" :src="slz">
             </div>
           </div>
@@ -51,10 +51,10 @@
           <div class="form-group ytz">
               <label class="col-sm-4 control-label">身份证(正/反面)</label>
               <div class="col-sm-2">
-                 <v-imageuploader :title="'请上传身份证正面'" :onImageChanged="(urls) => form.idFrontUrl = urls[0]"/>
+                 <v-imageuploader :title="'请上传身份证正面'" :initImageUrls="[form.idFrontUrl]" :onImageChanged="(urls) => form.idFrontUrl = urls[0]"/>
               </div>
               <div class="col-sm-2">
-                 <v-imageuploader :title="'请上传身份证反面'" :onImageChanged="(urls) => form.idBackUrl = urls[0]"/>
+                 <v-imageuploader :title="'请上传身份证反面'" :initImageUrls="[form.idBackUrl]" :onImageChanged="(urls) => form.idBackUrl = urls[0]"/>
               </div>
               <div class="col-sm-2">
                  <img class="slz" :src="sfzsl">
@@ -69,31 +69,15 @@
                     * 请按照示例图格式上传图片，否则审核不通过</span>
               </div>
               <br/>
-              <v-imageuploader :title="'请上传承诺公函'" postname="agreement" :onImageChanged="(urls) => form.agreement = urls[0]"/>
+              <v-imageuploader :title="'请上传承诺公函'" :initImageUrls="[form.agreement]" :onImageChanged="(urls) => form.agreement = urls[0]"/>
               <img class="slz" :src="ghsl">
             </div>
-          </div>
-          <div class="form-group" v-show="!this.$route.params.id">
-              <label class="col-sm-4 control-label">手机验证</label>
-              <div class="col-sm-5">
-                 <input class="form-control" type="text" v-model="form.cellphone" placeholder="手机号 例：156******83" val-required val-cellphone>
-              </div>
-          </div>
-          <div class="form-group" v-show="!this.$route.params.id">
-              <label class="col-sm-4 control-label"></label>
-              <div class="col-sm-5">
-                 <input class="form-control" type="text" v-model="form.validateCode" placeholder="请输入验证码" val-required>
-              </div>
-              <div>
-                  <button type="button" class="btn btn-primary" @click="sendMsg" :disabled="isDisabled">
-                    {{buttonName}}
-                  </button>
-              </div>
           </div>
           <div class="form-group">
               <label class="col-sm-4 control-label"></label>
               <div class="col-sm-5">
-                 <button type="button" class="btn btn-primary" @click="submit">提交</button>
+                 <button type="button" class="btn btn-primary" @click="submit">保存</button>
+                 <button type="button" class="btn btn-default" @click="$router.push(`/authofficer/list/view/${$route.params.id}`)">取消</button>
               </div>
           </div>
       </form>
@@ -106,17 +90,14 @@
   import idcar from '@/assets/img/idcar.png';
   import sfzsl from '@/assets/img/sfzsl.jpg';
   import ghsl from '@/assets/img/ghsl.jpg';
-  import { DECLARE_GET_VALIDATECODE, PUBLICS_AUTHOFFICER_CREATE } from '@/config/env';
+  import { PLATFORM_AUTHOFFICER_GET, PLATFORM_AUTHOFFICER_UPDATE } from '@/config/env';
   import { validate } from '@/config/validator';
 
   export default {
-    name: 'entry',
+    name: 'eidt',
     data() {
       return {
-        buttonName: '获取验证码',
-        isDisabled: false,
-        time: 60,
-        lists: [],
+        width: 150,
         slz,
         idcar,
         sfzsl,
@@ -137,37 +118,28 @@
       };
     },
     methods: {
-      async sendMsg() {
-        const me = this;
-        me.isDisabled = true;
-        const interval = window.setInterval(() => {
-          me.buttonName = me.time;
-          me.time -= 1;
-          if (me.time < 0) {
-            me.buttonName = '重新发送';
-            me.time = 60;
-            me.isDisabled = false;
-            window.clearInterval(interval);
-          }
-        }, 1000);
-        await this.$http.get(`${DECLARE_GET_VALIDATECODE}addAuthoffer/${this.form.cellphone}`);
+      async init() {
+        const param = {
+          id: this.$route.params.id,
+        };
+        const res = await this.$http.get(PLATFORM_AUTHOFFICER_GET, param);
+        if (res.success) {
+          this.form = res.data;
+        }
       },
       @validate()
       async submit() {
-        const res = await this.$http.post(PUBLICS_AUTHOFFICER_CREATE, this.form);
+        const res = await this.$http.post(PLATFORM_AUTHOFFICER_UPDATE, this.form);
         if (res.success) {
-          this.$transfer({
-            back: '继续添加',
-            buttons: [{
-              text: '去列表',
-              link: '/authofficer/list',
-            }],
-          });
+          this.$router.push(`/authofficer/list/view/${this.$route.params.id}`);
         }
       },
     },
     components: {
       'v-imageuploader': () => import('@/components/imageuploader'),
+    },
+    mounted() {
+      this.init();
     },
   };
 </script>
