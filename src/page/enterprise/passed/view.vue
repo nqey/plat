@@ -60,8 +60,9 @@
           <div class="form-group">
             <label class="col-sm-2 control-label">企业logo：</label>
             <div class="col-sm-10">
-              <v-img :imgSrc="list.base.logo && list.base.logo.indexOf('?') >= 0 ? `${list.base.logo}&f=png` : `${list.base.logo}?f=png`"
-                     style="float: left;"></v-img>
+              <v-img
+                :imgSrc="list.base.logo && list.base.logo.indexOf('?') >= 0 ? `${list.base.logo}&f=png` : `${list.base.logo}?f=png`"
+                style="float: left;"></v-img>
               <div style="clear: both;"></div>
             </div>
           </div>
@@ -412,7 +413,7 @@
           base: {},
           charger: {},
           legalPerson: {},
-          logs: {},
+          logs: [],
           order: {},
         },
         imageList: [],
@@ -451,7 +452,7 @@
         };
         const res = await this.$http.get(PLATFORM_EP_GET, param);
         if (res.success) {
-          this.list = res.data;
+          this.list = Object.assign({}, this.list, res.data);
           this.imageList = this.list.authentication && JSON.parse(this.list.authentication.imageList || '[]');
           this.imageList = this.imageList || [];
           this.center = [res.data.authentication.longitude, res.data.authentication.latitude];

@@ -90,11 +90,11 @@
           },
           { field: 'name', header: '企业名称', width: 250 },
           { field: 'chargerName', header: '负责人', width: 120 },
-          { field: 'chargerCellphone', header: '企业账号', width: 200 },
+          { field: 'chargerCellphone', header: '企业账号', width: 150 },
           {
             field: 'payState',
             header: '支付状态',
-            width: 130,
+            width: 150,
             formatter: row => this.ENTERPRISE_PAY_TYPE[row.payState],
           },
           {

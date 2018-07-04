@@ -92,11 +92,11 @@
           },
           { field: 'name', header: '企业名称', width: 250 },
           { field: 'chargerName', header: '负责人', width: 120 },
-          { field: 'chargerCellphone', header: '企业账号', width: 200 },
+          { field: 'chargerCellphone', header: '企业账号', width: 150 },
           {
             field: 'state',
             header: '状态',
-            width: 200,
+            width: 150,
             formatter: row => ENTERPRISE_STATE[row.state],
           },
           {
@@ -110,7 +110,7 @@
           {
             field: 'area',
             header: '地址',
-            width: 300,
+            width: 400,
             formatter(row) {
               return `${row.area}${row.address}`;
             },

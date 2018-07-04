@@ -3,7 +3,7 @@
     <transition name="fade">
         <div class="img-view">
             <!-- 遮罩层 -->
-            <div class="img-layer"></div>
+            <div class="img-layer" @click="close"></div>
             <div class="img">
                 <img :src="imgSrc" class="bigimg">
             </div>

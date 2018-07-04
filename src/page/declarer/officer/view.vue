@@ -29,7 +29,7 @@
         <div class="form-group">
           <label class="col-sm-offset-3 col-sm-1 control-label txr">常住地址</label>
           <div class="col-sm-8">
-            <p class="form-control2">{{`${data.area} ${data.address}`}}</p>
+            <p class="form-control2">{{`${data.areaCode}${data.address}`}}</p>
           </div>
         </div>
         <div class="form-group">
@@ -72,6 +72,20 @@
             <v-img v-if="data.letterImageUrl" :imgSrc="data.letterImageUrl"></v-img>
           </div>
         </div>
+        <div class="form-group">
+          <label class="col-sm-offset-3 col-sm-1 control-label txr">二维码</label>
+          <div class="col-sm-8">
+            <img :src="DECLARE_QCODE2 + $route.params.id"></img>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-offset-3 col-sm-1 control-label txr">操作日志</label>
+          <div class="col-sm-8">
+            <div v-for="item in data.logs">
+                {{item.createTime && formatDate(item.createTime)}} [{{item.owner}}] [{{ENTERPRISE_EVENT[item.event]}}]:
+            </div>
+          </div>
+        </div>
         <div class="form-group" v-show="isShowStatus">
           <label class="col-sm-offset-3 col-sm-1 control-label txr">审核操作</label>
           <div class="col-sm-8">
@@ -96,9 +110,10 @@
 </template>
 
 <script>
-  import { PLATFORM_DECLARER, PLATFORM_PUT_DECLARER_AUDIT, PLATFORM_PUT_DECLARER_WAITAUDIT } from '@/config/env';
+  import { PLATFORM_DECLARER, PLATFORM_PUT_DECLARER_AUDIT, PLATFORM_PUT_DECLARER_WAITAUDIT, DECLARE_QCODE2 } from '@/config/env';
   import { formatDate } from '@/config/utils';
   import { MessageBox } from 'element-ui';
+  import { ENTERPRISE_EVENT } from '@/config/mapping';
 
   export default {
     name: 'officerView',
@@ -106,6 +121,8 @@
       return {
         data: {},
         formatDate,
+        DECLARE_QCODE2,
+        ENTERPRISE_EVENT,
         status: {
           create: ['添加', 'pass'],
           waitPending: ['待初审', 'base'],

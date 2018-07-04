@@ -36,7 +36,7 @@
               </select>
             </div>
           </div>
-          <!--2， 3为省级市级服务中心，需要录入以下信息-->
+          <!--2， 3为省级市级管理中心，需要录入以下信息-->
           <div v-if="[2, 3].indexOf(+data.type) > -1">
             <div class="form-group">
               <label class="col-sm-2 control-label">资质证书：</label>

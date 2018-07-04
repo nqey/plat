@@ -1,92 +1,96 @@
 <template>
- <section class="index_content clearfix">
-  <div class="col-md-10 col-md-offset-1">
-    <div class="index_table_tit clearfix">
+  <div class="plat-content">
+    <div class="plat-content-con">
+     <section class="index_content clearfix">
       <div class="col-md-10 col-md-offset-1">
-       <router-link to="/exam/list" class="btn back_icon"><img :src="backicon">返回</router-link>
-      </div>
-    </div>
-    <div class="index_table index_table_con clearfix">
-      <div class="col-md-10 col-md-offset-1">
-        <div class="clearfix ckkj_ks"><span><b>姓名：</b>{{name}}</span><span><b>交卷时间：</b>{{submitTime}}</span><span class="pull-right"><b>分数：</b>{{score}}</span></div>
-        <div class="ckkj_kt">
-          <fieldset>
-            <div class="div_title_cut_question"><b>一、选择题</b> (得分<span class="green">{{this.selectTotalScroe}}</span>分;错误题号<span class="red" v-for="e of errQS">{{e}}题&nbsp;</span>)</div>
-            <div class="div_question"> 
-              <div class="div_table_radio_question" v-for="(item, index) of singleQS">
-                <div class="div_title_question_all">
-                  <div class="div_title_question"><span class="number">{{item.subjectSort}}、</span>{{item.title}}( <span class="red">{{optionMap[item.examineeAnswer]}}</span> )<span class="req">&nbsp;*（分值：{{item.score}}分）</span></div>
-                </div>
-                <ul class="ulradiocheck">
-                  <li v-for="(o, oi) of item.options">
-                    <label class="radio-inline">
-                      <input type="radio" :value="oi" :name="index" v-model="item.examineeAnswer" disabled/>
-                      <b>{{optionMap[oi]}}、{{o.option}}</b> </label>
-                  </li>
-                  <div class="ckkj_zq"><b>[正确答案]:<span>{{optionMap[item.correctAnswer]}}</span></b></div>
-                </ul>
-              </div>
-              <div class="div_table_radio_question" v-for="(item, index) of multipleQS">
-                <div class="div_title_question_all">
-                  <div class="div_title_question"><span class="number">{{item.subjectSort}}、</span><span class="color_qf">[多选题]</span>{{item.title}}<span class="req">&nbsp;*( <span class="red" v-for="k of item.examineeAnswer">{{optionMap[k]}}&nbsp;</span> )（分值：{{item.score}}分）</span></div>
-                </div>
-                <ul class="ulradiocheck">
-                  <li v-for="(o, oi) of item.options">
-                    <label class="radio-inline">
-                      <input type="checkbox" :checked="o.answer" disabled/>
-                      <b>{{optionMap[oi]}}、{{o.option}}</b>
-                    </label>
-                  </li>
-                </ul>
-                <div class="ckkj_zq"><b>[正确答案]:<span v-for="k of item.correctAnswer">{{optionMap[k]}}&nbsp;</span></b></div>
-              </div>
-            </div>
-            <div class="div_title_cut_question"><b>二、判断题</b> (得分<span class="green">{{this.judgeTotalScroe}}</span>分;错误题号<span class="red" v-for="e of errQSJudge">{{e}}题&nbsp;</span>)</div>
-            <div class="div_question"> 
-              <div class="div_table_radio_question" v-for="(item, index) of judgeQS">
-                <div class="div_title_question_all">
-                  <div class="div_title_question"><span class="number">{{item.subjectSort}}、</span>{{item.title}}( <span class="red">{{optionMap[item.examineeAnswer]}}</span> )<span class="req">&nbsp;*（分值：{{item.score}}分）</span></div>
-                </div>
-                <ul class="ulradiocheck">
-                  <li v-for="(o, oi) of item.options">
-                    <label class="radio-inline">
-                      <input type="radio" :value="oi" :name="'ju' + index" v-model="item.examineeAnswer" disabled/>
-                      <b>{{optionMap[oi]}}、{{o.option}}</b> </label>
-                  </li>
-                  <div class="ckkj_zq"><b>[正确答案]:<span>{{optionMap[item.correctAnswer]}}</span></b></div>
-                </ul>
-              </div>
-            </div>
-            <div class="div_title_cut_question"><b>三、填空题</b> (得分<span class="green">{{this.fillTotalScroe}}</span>分;错误题号<span class="red" v-for="e of errQSFill">{{e}}题&nbsp;</span>)</div>
-            <div class="div_question"> 
-              <div class="div_table_radio_question" v-for="(item, index) of fillQS">
-                <div class="div_title_question_all">
-                  <div class="div_title_question"><span class="number">{{item.subjectSort}}、</span>{{item.title}}<span class="req">&nbsp;*（分值：{{item.score}}分）</span>
+        <div class="index_table_tit clearfix">
+          <div class="col-md-10 col-md-offset-1">
+           <router-link to="/declarer/exam" class="btn back_icon"><img :src="backicon">返回</router-link>
+          </div>
+        </div>
+        <div class="index_table index_table_con clearfix">
+          <div class="col-md-10 col-md-offset-1">
+            <div class="clearfix ckkj_ks"><span><b>姓名：</b>{{name}}</span><span><b>交卷时间：</b>{{submitTime}}</span><span class="pull-right"><b>分数：</b>{{score}}</span></div>
+            <div class="ckkj_kt">
+              <fieldset>
+                <div class="div_title_cut_question"><b>一、选择题</b> (得分<span class="green">{{this.selectTotalScroe}}</span>分;错误题号<span class="red" v-for="e of errQS">{{e}}题&nbsp;</span>)</div>
+                <div class="div_question"> 
+                  <div class="div_table_radio_question" v-for="(item, index) of singleQS">
+                    <div class="div_title_question_all">
+                      <div class="div_title_question"><span class="number">{{item.subjectSort}}、</span>{{item.title}}( <span class="red">{{optionMap[item.examineeAnswer]}}</span> )<span class="req">&nbsp;*（分值：{{item.score}}分）</span></div>
+                    </div>
+                    <ul class="ulradiocheck">
+                      <li v-for="(o, oi) of item.options">
+                        <label class="radio-inline">
+                          <input type="radio" :value="oi" :name="index" v-model="item.examineeAnswer" disabled/>
+                          <b>{{optionMap[oi]}}、{{o.option}}</b> </label>
+                      </li>
+                      <div class="ckkj_zq"><b>[正确答案]:<span>{{optionMap[item.correctAnswer]}}</span></b></div>
+                    </ul>
+                  </div>
+                  <div class="div_table_radio_question" v-for="(item, index) of multipleQS">
+                    <div class="div_title_question_all">
+                      <div class="div_title_question"><span class="number">{{item.subjectSort}}、</span><span class="color_qf">[多选题]</span>{{item.title}}<span class="req">&nbsp;*( <span class="red" v-for="k of item.examineeAnswer">{{optionMap[k]}}&nbsp;</span> )（分值：{{item.score}}分）</span></div>
+                    </div>
+                    <ul class="ulradiocheck">
+                      <li v-for="(o, oi) of item.options">
+                        <label class="radio-inline">
+                          <input type="checkbox" :checked="o.answer" disabled/>
+                          <b>{{optionMap[oi]}}、{{o.option}}</b>
+                        </label>
+                      </li>
+                    </ul>
+                    <div class="ckkj_zq"><b>[正确答案]:<span v-for="k of item.correctAnswer">{{optionMap[k]}}&nbsp;</span></b></div>
                   </div>
                 </div>
-                <!-- <input style="border: 0px;" type="text" disabled="disabled" :value="item.examineeAnswer"></input> -->
-                <div class="ckkj_zq"><b>[提交答案]:<span>{{item.examineeAnswer}}</span></b></div>
-                <div class="ckkj_zq"><b>[正确答案]:<span>{{item.correctAnswer}}</span></b></div>
-              </div>
-            </div>
-            <div class="div_title_cut_question"><b>四、简答题</b></div>
-            <div class="div_question"> 
-              <div class="div_table_radio_question" v-for="(item, index) of essayQS">
-                <div class="div_title_question_all">
-                  <div class="div_title_question"><span class="number">{{item.subjectSort}}、</span>{{item.title}}<span class="req">&nbsp;*（分值：{{item.score}}分）</span>
-                    <button type="submit" class="btn btn_search" data-toggle="modal" data-target=".bs-example-modal-sm" @click="setSubjectId(item.subjectId)">打分</button>
+                <div class="div_title_cut_question"><b>二、判断题</b> (得分<span class="green">{{this.judgeTotalScroe}}</span>分;错误题号<span class="red" v-for="e of errQSJudge">{{e}}题&nbsp;</span>)</div>
+                <div class="div_question"> 
+                  <div class="div_table_radio_question" v-for="(item, index) of judgeQS">
+                    <div class="div_title_question_all">
+                      <div class="div_title_question"><span class="number">{{item.subjectSort}}、</span>{{item.title}}( <span class="red">{{optionMap[item.examineeAnswer]}}</span> )<span class="req">&nbsp;*（分值：{{item.score}}分）</span></div>
+                    </div>
+                    <ul class="ulradiocheck">
+                      <li v-for="(o, oi) of item.options">
+                        <label class="radio-inline">
+                          <input type="radio" :value="oi" :name="'ju' + index" v-model="item.examineeAnswer" disabled/>
+                          <b>{{optionMap[oi]}}、{{o.option}}</b> </label>
+                      </li>
+                      <div class="ckkj_zq"><b>[正确答案]:<span>{{optionMap[item.correctAnswer]}}</span></b></div>
+                    </ul>
                   </div>
                 </div>
-                <textarea title="" class="inputtext" disabled>{{item.examineeAnswer}}</textarea>
-              </div>
+                <div class="div_title_cut_question"><b>三、填空题</b> (得分<span class="green">{{this.fillTotalScroe}}</span>分;错误题号<span class="red" v-for="e of errQSFill">{{e}}题&nbsp;</span>)</div>
+                <div class="div_question"> 
+                  <div class="div_table_radio_question" v-for="(item, index) of fillQS">
+                    <div class="div_title_question_all">
+                      <div class="div_title_question"><span class="number">{{item.subjectSort}}、</span>{{item.title}}<span class="req">&nbsp;*（分值：{{item.score}}分）</span>
+                      </div>
+                    </div>
+                    <!-- <input style="border: 0px;" type="text" disabled="disabled" :value="item.examineeAnswer"></input> -->
+                    <div class="ckkj_zq"><b>[提交答案]:<span>{{item.examineeAnswer}}</span></b></div>
+                    <div class="ckkj_zq"><b>[正确答案]:<span>{{item.correctAnswer}}</span></b></div>
+                  </div>
+                </div>
+                <div class="div_title_cut_question"><b>四、简答题</b></div>
+                <div class="div_question"> 
+                  <div class="div_table_radio_question" v-for="(item, index) of essayQS">
+                    <div class="div_title_question_all">
+                      <div class="div_title_question"><span class="number">{{item.subjectSort}}、</span>{{item.title}}<span class="req">&nbsp;*（分值：{{item.score}}分）</span>
+                        <button type="submit" class="btn btn_search" data-toggle="modal" data-target=".bs-example-modal-sm" @click="setSubjectId(item.subjectId)">打分</button>
+                      </div>
+                    </div>
+                    <textarea title="" class="inputtext" disabled>{{item.examineeAnswer}}</textarea>
+                  </div>
+                </div>
+                 <v-score-modal ref="score" :id="$route.params.id" :subjectId="subjectId" :handler="init"></v-score-modal>
+              </fieldset>
             </div>
-             <v-score-modal ref="score" :id="$route.params.id" :subjectId="subjectId" :handler="init"></v-score-modal>
-          </fieldset>
+          </div>
         </div>
       </div>
-    </div>
+    </section>
   </div>
-</section>
+</div>
 </template>
 
 <script>

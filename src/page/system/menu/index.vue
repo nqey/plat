@@ -1,8 +1,27 @@
 <template>
   <div class="plat-content">
     <div class="plat-content-con">
-      <v-datagrid :toolbar="toolbar" :columns="columns" :data-url="dataUrl" :count-url="countUrl"
-                  :checkable="checkable" :params="params"></v-datagrid>
+      <h4>筛选条件</h4>
+      <hr/>
+      <div class="filters">
+        <div class="form-inline">
+          <div class="row clearfix sssrk">
+            <div class="form-group col-md-4">
+              <label>菜单名称</label>
+              <input type="text" class="form-control" v-model="filter.name" placeholder="输入菜单名称">
+            </div>
+            <div class="form-group col-md-4">
+              <button type="button" class="btn btn-primary" @click="search">
+                <span class="glyphicon glyphicon-search"></span>搜索
+              </button>
+              <button type="button" class="btn btn-primary" @click="clear">清空</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <h4>菜单列表</h4>
+      <hr/>
+      <v-datagrid :toolbar="toolbar" :columns="columns" :data-url="dataUrl" :count-url="countUrl" :params="params"/>
     </div>
 
     <v-modal
@@ -41,11 +60,15 @@
 
 <script>
   import { BASE_URL } from '@/config/env';
+  import { reomveBlank } from '@/config/utils';
 
   export default {
     name: 'user',
     data() {
       return {
+        filter: {
+          name: null,
+        },
         dataUrl: `${BASE_URL}platform/system/menu/list`,
         countUrl: `${BASE_URL}platform/system/menu/list/count`,
         toolbar: [{
@@ -53,7 +76,6 @@
           handler: this.add,
         }],
         params: {},
-        checkable: true,
         columns: [{ field: 'id', header: '序号', sort: 'id', width: 150 },
           { field: 'name', header: '菜单名称', sort: 'name', width: 250 },
           { field: 'hash', header: '访问链接', sort: 'hash', width: 250 },
@@ -104,6 +126,13 @@
           return true;
         }
         return false;
+      },
+      search() {
+        this.params = reomveBlank(this.filter);
+      },
+      clear() {
+        this.params = {};
+        this.filter = {};
       },
     },
     components: {

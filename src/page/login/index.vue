@@ -90,8 +90,9 @@
         this.lo = '正在登录...';
         const res = await this.$http.post(PLATFORM_LOGIN_DO_ADDRESS, data);
         if (res.success) {
-          window.sessionStorage.setItem('username', this.username);
+          window.sessionStorage.setItem('username', res.data.username);
           window.sessionStorage.setItem('avatar', res.data.logo);
+          window.sessionStorage.setItem('type', res.data.type);
           setCookie('platform_user', res.data.token, 1000 * 60);
           this.$router.push('/index');
         } else {

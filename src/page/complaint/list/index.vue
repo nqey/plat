@@ -81,7 +81,7 @@
             header: '编辑',
             width: 250,
             actions: [{
-              text: '【查看】',
+              text: '【暂无查看】',
               show() {
                 return true;
               },

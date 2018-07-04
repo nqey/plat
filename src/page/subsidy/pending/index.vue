@@ -113,6 +113,7 @@
         </div>
       </div>
       <v-modal ref="modal" :param="modalParams" :callback="search"></v-modal>
+      <v-nopassmodal ref="nopassmodal" :param="modalnopass"></v-nopassmodal>
     </div>
   </div>
 </template>
@@ -123,13 +124,15 @@
   import headcountIcon from '@/assets/img/headcount_icon.png';
   import { PLATFORM_SUBSIDY_QUERY, PLATFORM_SUBSIDY_COUNT, PLATFORM_SUBSIDY_STATISTICAL_AMOUNT } from '@/config/env';
   import modal from '@/page/subsidy/pending/modal';
+  import nopassmodal from '@/page/subsidy/pending/nopassmodal';
   import { SUBSIDY_STATE } from '@/config/mapping';
-  import { reomveBlank } from '@/config/utils';
+  import { formatDate, reomveBlank } from '@/config/utils';
 
   export default {
     name: 'pending',
     data() {
       return {
+        formatDate,
         datagridParams: {},
         filter: {
           organizName: null,
@@ -138,6 +141,7 @@
           state: '',
         },
         modalParams: {},
+        modalnopass: {},
         sumIcon,
         headcountIcon,
         amountObj: {
@@ -160,6 +164,18 @@
           amountTtl: 0,
           countTtl: 0,
         },
+        typeObj: {
+          1: '企业入库',
+          2: '二维码',
+          3: '粉丝',
+          4: '推荐',
+        },
+        userTypeObj: {
+          1: '申报官',
+          2: '申报机构',
+          3: '省级服务中心',
+          4: '市级管理中心',
+        },
         block_1: '',
         block_2: '',
         block_3: '',
@@ -169,27 +185,50 @@
         SUBSIDY_STATE,
         dataUrl: PLATFORM_SUBSIDY_QUERY,
         countUrl: PLATFORM_SUBSIDY_COUNT,
-        columns: [{ field: 'sn', header: '交易号', sort: 'id', width: 100 },
-          { field: 'organizName', header: '申请机构', sort: 'name', width: 180 },
+        columns: [{ field: 'sn', header: '交易号', sort: 'id', width: 120 },
+          {
+            field: 'type',
+            header: '申请类型',
+            width: 120,
+            formatter: row => this.typeObj[row.type],
+          },
+          {
+            field: 'userType',
+            header: '用户类型',
+            width: 120,
+            formatter: row => this.userTypeObj[row.userType],
+          },
+          { field: 'organizName', header: '申请机构', sort: 'name', width: 120 },
           { field: 'name', header: '开户名', width: 100 },
           { field: 'bankBranch', header: '开户行', width: 100 },
-          { field: 'bankCard', header: '卡号', width: 220 },
+          { field: 'bankCard', header: '卡号', width: 250 },
           { field: 'amount', header: '金额', width: 100 },
           { field: 'cellphone', header: '手机号', width: 150 },
           {
             field: 'createTime',
             header: '申请时间',
             sort: 'create_time',
-            width: 200,
+            width: 180,
             formatter(row, index, value) {
-              return value;
+              return formatDate(value);
             },
           },
           {
             field: 'state',
             header: '状态',
             width: 120,
-            formatter: row => SUBSIDY_STATE[row.state],
+            html: true,
+            formatter: row => (this.SUBSIDY_STATE[row.state] === '通过' ? '通过' : '<span style="color:red;">未通过</span><br/>'),
+            actions: [{
+              text: '(查看原因)',
+              show(row) {
+                return row.state === 'rejected';
+              },
+              handler: (row) => {
+                this.modalParams = row.reason;
+                this.$refs.nopassmodal.$refs.nopassmodal.toggle();
+              },
+            }],
           },
           {
             field: 'action',
@@ -214,6 +253,7 @@
     components: {
       'v-datagrid': datagrid,
       'v-modal': modal,
+      'v-nopassmodal': nopassmodal,
     },
     mounted() {
       this.getData();

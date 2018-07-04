@@ -2,11 +2,14 @@
   <div class="left_nodes">
     <div class="left_nodes2">
       <div class="logo">
-        <img src="//pic.cpsdb.com/72747ee92c3fdf007ae76c8e259f46cf?w=120&f=png">
-        <h3>
+        <img :src="getPictureUrl(avatar, {f:'png',w:120,h:120})">
+        <h3 v-if="type === '1'">
           中国商品诚信数据库
           <br>
           <span>管理后台</span>
+        </h3>
+        <h3 v-if="type !== '1'">
+          {{username}}
         </h3>
       </div>
       <div class="left-nav">
@@ -21,12 +24,17 @@
 </template>
 <script>
   import item from '@/components/menu/item';
+  import { getPictureUrl } from '@/config/utils';
   import { MENU_MINE } from '@/config/env';
 
   export default {
     name: 'leftMemu',
     data() {
       return {
+        getPictureUrl,
+        username: window.sessionStorage.getItem('username'),
+        avatar: window.sessionStorage.getItem('avatar'),
+        type: window.sessionStorage.getItem('type'),
         selected: [],
         nodes: null,
       };

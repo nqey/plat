@@ -147,7 +147,7 @@ export const CODE_DETAIL_STATE = {
 export const PLATFORM_USER_TYPE = {
   1: '平台',
   2: '省级服务中心',
-  3: '市级服务中心',
+  3: '市级管理中心',
   4: '市场部',
 };
 
